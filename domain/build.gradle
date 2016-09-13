@@ -1,0 +1,7 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':entities')
+    compile 'io.reactivex:rxjava:1.1.10'
+}
