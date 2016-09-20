@@ -1,7 +1,6 @@
 package net.skyscanner.cleanarchitecture.entities;
 
 public class Item {
-// State
     private String id;
     private String content;
     private String detail;
@@ -13,8 +12,6 @@ public class Item {
         this.detail = detail;
     }
 
-
-// region Getters & Setters
     public String getId() {
         return id;
     }

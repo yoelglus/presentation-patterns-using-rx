@@ -14,11 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import net.skyscanner.cleanarchitecture.dummy.DummyContent;
+import com.memoizrlabs.Scope;
+import com.memoizrlabs.Shank;
+
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresenter;
 
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 /**
  * An activity representing a list of Items. This activity
@@ -35,10 +39,17 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
      * device.
      */
     private boolean mTwoPane;
+    private SimpleItemRecyclerViewAdapter mAdapter;
+    private ItemsListPresenter mPresenter;
+    private Scope mScope;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mScope = Scope.scope(ItemListActivity.class);
+
+        mPresenter = Shank.with(mScope).provideSingleton(ItemsListPresenter.class);
+
         setContentView(R.layout.activity_item_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -71,20 +82,34 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
     }
 
     @Override
-    public void showItems(List<ItemModel> itemModel) {
+    protected void onStart() {
+        super.onStart();
+        mPresenter.takeView(this);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.dropView(this);
+    }
+
+    @Override
+    public void showItems(List<ItemModel> itemModels) {
+        mAdapter.setValues(itemModels);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+        mAdapter = new SimpleItemRecyclerViewAdapter();
+        recyclerView.setAdapter(mAdapter);
     }
 
     public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyContent.DummyItem> mValues;
+        private List<ItemModel> mValues = emptyList();
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
-            mValues = items;
+        void setValues(List<ItemModel> values) {
+            mValues = values;
         }
 
         @Override
@@ -96,15 +121,15 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mIdView.setText(mValues.get(position).getId());
+            holder.mContentView.setText(mValues.get(position).getContent());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(ItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        arguments.putString(ItemDetailFragment.ARG_ITEM_ID, holder.mItem.getId());
                         ItemDetailFragment fragment = new ItemDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -113,7 +138,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ItemDetailActivity.class);
-                        intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, holder.mItem.getId());
 
                         context.startActivity(intent);
                     }
@@ -126,13 +151,13 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
             return mValues.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
+        class ViewHolder extends RecyclerView.ViewHolder {
+            private final View mView;
+            private final TextView mIdView;
+            private final TextView mContentView;
+            private ItemModel mItem;
 
-            public ViewHolder(View view) {
+            ViewHolder(View view) {
                 super(view);
                 mView = view;
                 mIdView = (TextView) view.findViewById(R.id.id);
@@ -143,6 +168,14 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
             public String toString() {
                 return super.toString() + " '" + mContentView.getText() + "'";
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isFinishing()) {
+            mScope.clear();
         }
     }
 }

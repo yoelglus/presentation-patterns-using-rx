@@ -1,6 +1,6 @@
 package net.skyscanner.cleanarchitecture.data;
 
-import com.cleanarchitecture.entities.Item;
+import net.skyscanner.cleanarchitecture.entities.Item;
 
 import net.skyscanner.cleanarchitecture.domain.interfaces.ItemsRepository;
 

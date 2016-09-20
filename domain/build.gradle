@@ -4,4 +4,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':entities')
     compile 'io.reactivex:rxjava:1.1.10'
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 }

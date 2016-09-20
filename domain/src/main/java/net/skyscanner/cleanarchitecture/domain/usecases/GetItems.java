@@ -5,26 +5,22 @@ import net.skyscanner.cleanarchitecture.entities.Item;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
 import rx.Subscription;
 
-public class GetItems {
+public class GetItems extends AbstractUseCase<List<Item>> {
 
-    // State
     private ItemsRepository mItemsRepository;
-    private final Scheduler mIoScheduler;
-    private final Scheduler mMainScheduler;
 
     public GetItems(ItemsRepository itemsRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
+        super(ioScheduler, mainScheduler);
         mItemsRepository = itemsRepository;
-        mIoScheduler = ioScheduler;
-        mMainScheduler = mainScheduler;
     }
 
-    // region Public methods
-    public Subscription execute(Subscriber<List<Item>> subscriber) {
-        return mItemsRepository.getItems().subscribeOn(mIoScheduler).observeOn(mMainScheduler).subscribe(subscriber);
+    @Override
+    public Observable<List<Item>> getObservable() {
+        return mItemsRepository.getItems();
     }
-// endregion Public methods
 }

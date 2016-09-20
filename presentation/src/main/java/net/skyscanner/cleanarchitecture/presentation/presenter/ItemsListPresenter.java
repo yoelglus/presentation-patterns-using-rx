@@ -46,7 +46,9 @@ public class ItemsListPresenter {
     public void dropView(View view) {
         if (mView.equals(view)) {
             mView = null;
-            mGetItemsSubscription.unsubscribe();
+            if (!mGetItemsSubscription.isUnsubscribed()) {
+                mGetItemsSubscription.unsubscribe();
+            }
         }
     }
 
