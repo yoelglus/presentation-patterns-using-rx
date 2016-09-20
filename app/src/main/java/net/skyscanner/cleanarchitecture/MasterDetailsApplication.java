@@ -1,16 +1,20 @@
 package net.skyscanner.cleanarchitecture;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatActivity;
 
 import com.memoizrlabs.Shank;
 import com.memoizrlabs.functions.Func0;
 import com.memoizrlabs.functions.Func1;
+import com.memoizrlabs.functions.Func2;
 
 import net.skyscanner.cleanarchitecture.data.DummyItemsRepository;
 import net.skyscanner.cleanarchitecture.domain.interfaces.ItemsRepository;
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItem;
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItems;
+import net.skyscanner.cleanarchitecture.navigator.AppCompatActivityNavigator;
 import net.skyscanner.cleanarchitecture.presentation.mapper.ItemModelsMapper;
+import net.skyscanner.cleanarchitecture.presentation.navigator.Navigator;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresenter;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresenter;
 
@@ -52,10 +56,18 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(ItemsListPresenter.class, new Func0<ItemsListPresenter>() {
+        Shank.registerFactory(Navigator.class, new Func2<AppCompatActivity, Boolean, Navigator>() {
             @Override
-            public ItemsListPresenter call() {
-                return new ItemsListPresenter(Shank.provideNew(GetItems.class), new ItemModelsMapper());
+            public Navigator call(AppCompatActivity activity, Boolean twoPane) {
+                return new AppCompatActivityNavigator(activity, twoPane);
+            }
+        });
+
+        Shank.registerFactory(ItemsListPresenter.class, new Func2<AppCompatActivity, Boolean, ItemsListPresenter>() {
+            @Override
+            public ItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
+                return new ItemsListPresenter(Shank.provideNew(GetItems.class), new ItemModelsMapper(),
+                        Shank.provideNew(Navigator.class, activity, twoPane));
             }
         });
 
