@@ -11,25 +11,31 @@ import java.util.Map;
 
 import rx.Observable;
 
+import static rx.Observable.just;
+
 public class DummyItemsRepository implements ItemsRepository {
 
-    // Constants
     private static final List<Item> ITEMS = new ArrayList<>();
     private static final Map<String, Item> ITEM_MAP = new HashMap<>();
     private static final int COUNT = 25;
 
-    // region Getters & Setters
     @Override
     public Observable<List<Item>> getItems() {
-        return Observable.just(ITEMS);
+        return just(ITEMS);
     }
 
     @Override
     public Observable<Item> getItem(String id) {
-        return Observable.just(ITEM_MAP.get(id));
+        return just(ITEM_MAP.get(id));
     }
 
-    // region Private methods
+    @Override
+    public Observable<String> addItem(String content, String detail) {
+        String id = String.valueOf(ITEMS.size() + 1);
+        addItem(new Item(id, content, detail));
+        return just(id);
+    }
+
     private static void addItem(Item item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.getId(), item);
@@ -47,10 +53,8 @@ public class DummyItemsRepository implements ItemsRepository {
         }
         return builder.toString();
     }
-// endregion Private methods
 
     static {
-        // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
         }

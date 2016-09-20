@@ -11,4 +11,6 @@ public interface ItemsRepository {
     Observable<List<Item>> getItems();
 
     Observable<Item> getItem(String id);
+
+    Observable<String> addItem(String content, String detail);
 }

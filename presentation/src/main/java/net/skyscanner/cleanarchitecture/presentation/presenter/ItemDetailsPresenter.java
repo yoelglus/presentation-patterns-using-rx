@@ -10,7 +10,7 @@ import rx.Subscription;
 public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter.View> {
 
     private GetItem mGetItem;
-    private Subscription mSubscription;
+    private Subscription mGetItemSubscription;
 
     public ItemDetailsPresenter(GetItem getItem) {
         mGetItem = getItem;
@@ -19,7 +19,7 @@ public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter
 
     @Override
     void onTakeView() {
-        mSubscription = mGetItem.execute(new Subscriber<Item>() {
+        mGetItemSubscription = mGetItem.execute(new Subscriber<Item>() {
             @Override
             public void onCompleted() {
 
@@ -39,9 +39,7 @@ public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter
 
     @Override
     void onDropView() {
-        if (!mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
+        mGetItemSubscription.unsubscribe();
     }
 
     public interface View {

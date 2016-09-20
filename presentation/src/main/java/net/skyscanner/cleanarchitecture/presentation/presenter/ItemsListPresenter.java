@@ -10,15 +10,15 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.functions.Action1;
+import rx.internal.util.SubscriptionList;
 
 public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.View> {
 
     private GetItems mGetItems;
     private ItemModelsMapper mItemModelsMapper;
-    private Subscription mGetItemsSubscription;
     private Navigator mNavigator;
+    private SubscriptionList mSubscriptionList = new SubscriptionList();
 
     public ItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
         mGetItems = getItems;
@@ -28,21 +28,21 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
 
     @Override
     void onTakeView() {
-        mView.addItemClicks().subscribe(new Action1<Void>() {
+        mSubscriptionList.add(mView.addItemClicks().subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
                 mNavigator.navigateToAddItem();
             }
-        });
+        }));
 
-        mView.itemClicks().subscribe(new Action1<String>() {
+        mSubscriptionList.add(mView.itemClicks().subscribe(new Action1<String>() {
             @Override
             public void call(String id) {
                 mNavigator.navigateToItem(id);
             }
-        });
+        }));
 
-        mGetItemsSubscription = mGetItems.execute(new Subscriber<List<Item>>() {
+        mSubscriptionList.add(mGetItems.execute(new Subscriber<List<Item>>() {
             @Override
             public void onCompleted() {
 
@@ -57,14 +57,12 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
             public void onNext(List<Item> items) {
                 mView.showItems(mItemModelsMapper.map(items));
             }
-        });
+        }));
     }
 
     @Override
     void onDropView() {
-        if (!mGetItemsSubscription.isUnsubscribed()) {
-            mGetItemsSubscription.unsubscribe();
-        }
+        mSubscriptionList.unsubscribe();
     }
 
     public interface View {

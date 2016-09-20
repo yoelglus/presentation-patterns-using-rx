@@ -10,6 +10,7 @@ import com.memoizrlabs.functions.Func2;
 
 import net.skyscanner.cleanarchitecture.data.DummyItemsRepository;
 import net.skyscanner.cleanarchitecture.domain.interfaces.ItemsRepository;
+import net.skyscanner.cleanarchitecture.domain.usecases.AddItem;
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItem;
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItems;
 import net.skyscanner.cleanarchitecture.navigator.AppCompatActivityNavigator;
@@ -66,7 +67,8 @@ public class MasterDetailsApplication extends Application {
         Shank.registerFactory(ItemsListPresenter.class, new Func2<AppCompatActivity, Boolean, ItemsListPresenter>() {
             @Override
             public ItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
-                return new ItemsListPresenter(Shank.provideNew(GetItems.class), new ItemModelsMapper(),
+                return new ItemsListPresenter(Shank.provideNew(GetItems.class),
+                        new ItemModelsMapper(),
                         Shank.provideNew(Navigator.class, activity, twoPane));
             }
         });
@@ -87,5 +89,17 @@ public class MasterDetailsApplication extends Application {
                 return new ItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
             }
         });
+
+        Shank.registerFactory(AddItem.class, new Func2<String, String, AddItem>() {
+            @Override
+            public AddItem call(String content, String details) {
+                return new AddItem(Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class),
+                        Shank.provideSingleton(ItemsRepository.class),
+                        content,
+                        details);
+            }
+        });
+
     }
 }
