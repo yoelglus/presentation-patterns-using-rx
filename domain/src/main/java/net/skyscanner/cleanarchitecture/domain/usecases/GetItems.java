@@ -14,7 +14,7 @@ public class GetItems extends AbstractUseCase<List<Item>> {
 
     private ItemsRepository mItemsRepository;
 
-    public GetItems(ItemsRepository itemsRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
+    public GetItems(Scheduler ioScheduler, Scheduler mainScheduler, ItemsRepository itemsRepository) {
         super(ioScheduler, mainScheduler);
         mItemsRepository = itemsRepository;
     }

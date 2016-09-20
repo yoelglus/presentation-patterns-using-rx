@@ -9,4 +9,6 @@ import rx.Observable;
 
 public interface ItemsRepository {
     Observable<List<Item>> getItems();
+
+    Observable<Item> getItem(String id);
 }

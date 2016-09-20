@@ -10,9 +10,7 @@ import java.util.List;
 import rx.Subscriber;
 import rx.Subscription;
 
-public class ItemsListPresenter {
-
-    private View mView;
+public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.View> {
 
     private GetItems mGetItems;
     private ItemModelsMapper mItemModelsMapper;
@@ -23,8 +21,8 @@ public class ItemsListPresenter {
         mItemModelsMapper = itemModelsMapper;
     }
 
-    public void takeView(View view) {
-        mView = view;
+    @Override
+    void onTakeView() {
         mGetItemsSubscription = mGetItems.execute(new Subscriber<List<Item>>() {
             @Override
             public void onCompleted() {
@@ -43,12 +41,10 @@ public class ItemsListPresenter {
         });
     }
 
-    public void dropView(View view) {
-        if (mView.equals(view)) {
-            mView = null;
-            if (!mGetItemsSubscription.isUnsubscribed()) {
-                mGetItemsSubscription.unsubscribe();
-            }
+    @Override
+    void onDropView() {
+        if (!mGetItemsSubscription.isUnsubscribed()) {
+            mGetItemsSubscription.unsubscribe();
         }
     }
 

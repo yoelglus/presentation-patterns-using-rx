@@ -24,6 +24,11 @@ public class DummyItemsRepository implements ItemsRepository {
         return Observable.just(ITEMS);
     }
 
+    @Override
+    public Observable<Item> getItem(String id) {
+        return Observable.just(ITEM_MAP.get(id));
+    }
+
     // region Private methods
     private static void addItem(Item item) {
         ITEMS.add(item);
