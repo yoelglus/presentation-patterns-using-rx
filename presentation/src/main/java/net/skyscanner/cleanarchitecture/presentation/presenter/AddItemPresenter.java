@@ -1,14 +1,22 @@
 package net.skyscanner.cleanarchitecture.presentation.presenter;
 
+import net.skyscanner.cleanarchitecture.domain.usecases.AddItem;
+
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
 public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
 
+    private AddItem mAddItem;
     private String mContentText;
     private String mDetailText;
     private SubscriptionList mSubscriptionList = new SubscriptionList();
+
+    public AddItemPresenter(AddItem addItem) {
+        mAddItem = addItem;
+    }
 
     @Override
     void onTakeView() {
@@ -30,14 +38,29 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
         mSubscriptionList.add(mView.addButtonClicks().subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
+                mAddItem.execute(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(String id) {
+                        mView.dismissView();
+                    }
+                }, mContentText, mDetailText);
             }
         }));
 
         mSubscriptionList.add(mView.cancelButtonClicks().subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
-
+                mView.dismissView();
             }
         }));
     }
@@ -61,5 +84,7 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
         Observable<Void> cancelButtonClicks();
 
         void setAddButtonEnabled(boolean enabled);
+
+        void dismissView();
     }
 }

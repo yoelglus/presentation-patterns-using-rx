@@ -4,22 +4,26 @@ import net.skyscanner.cleanarchitecture.domain.interfaces.ItemsRepository;
 
 import rx.Observable;
 import rx.Scheduler;
+import rx.Subscriber;
+import rx.Subscription;
 
 public class AddItem extends AbstractUseCase<String> {
 
     private final ItemsRepository mItemsRepository;
-    private final String mContent;
-    private final String mDetail;
+    private String mContent;
+    private String mDetail;
 
     public AddItem(Scheduler ioScheduler,
                    Scheduler mainScheduler,
-                   ItemsRepository itemsRepository,
-                   String content,
-                   String detail) {
+                   ItemsRepository itemsRepository) {
         super(ioScheduler, mainScheduler);
         mItemsRepository = itemsRepository;
+    }
+
+    public Subscription execute(Subscriber<String> subscriber, String content, String detail) {
         mContent = content;
         mDetail = detail;
+        return execute(subscriber);
     }
 
     @Override

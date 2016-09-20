@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import net.skyscanner.cleanarchitecture.AddItemActivity;
 import net.skyscanner.cleanarchitecture.ItemDetailActivity;
 import net.skyscanner.cleanarchitecture.ItemDetailFragment;
 import net.skyscanner.cleanarchitecture.R;
@@ -22,7 +23,7 @@ public class AppCompatActivityNavigator implements Navigator {
 
     @Override
     public void navigateToAddItem() {
-
+        mActivity.startActivity(new Intent(mActivity, AddItemActivity.class));
     }
 
     @Override

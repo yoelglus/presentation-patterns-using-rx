@@ -16,6 +16,7 @@ import net.skyscanner.cleanarchitecture.domain.usecases.GetItems;
 import net.skyscanner.cleanarchitecture.navigator.AppCompatActivityNavigator;
 import net.skyscanner.cleanarchitecture.presentation.mapper.ItemModelsMapper;
 import net.skyscanner.cleanarchitecture.presentation.navigator.Navigator;
+import net.skyscanner.cleanarchitecture.presentation.presenter.AddItemPresenter;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresenter;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresenter;
 
@@ -90,16 +91,20 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(AddItem.class, new Func2<String, String, AddItem>() {
+        Shank.registerFactory(AddItem.class, new Func0<AddItem>() {
             @Override
-            public AddItem call(String content, String details) {
+            public AddItem call() {
                 return new AddItem(Shank.named("io").provideSingleton(Scheduler.class),
                         Shank.named("main").provideSingleton(Scheduler.class),
-                        Shank.provideSingleton(ItemsRepository.class),
-                        content,
-                        details);
+                        Shank.provideSingleton(ItemsRepository.class));
             }
         });
 
+        Shank.registerFactory(AddItemPresenter.class, new Func0<AddItemPresenter>() {
+            @Override
+            public AddItemPresenter call() {
+                return new AddItemPresenter(Shank.provideNew(AddItem.class));
+            }
+        });
     }
 }
