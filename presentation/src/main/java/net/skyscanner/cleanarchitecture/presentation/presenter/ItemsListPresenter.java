@@ -18,7 +18,7 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
     private GetItems mGetItems;
     private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
-    private SubscriptionList mSubscriptionList = new SubscriptionList();
+    private SubscriptionList mSubscriptionList;
 
     public ItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
         mGetItems = getItems;
@@ -28,6 +28,7 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
 
     @Override
     void onTakeView() {
+        mSubscriptionList = new SubscriptionList();
         mSubscriptionList.add(mView.addItemClicks().subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
@@ -63,6 +64,7 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
     @Override
     void onDropView() {
         mSubscriptionList.unsubscribe();
+        mSubscriptionList = null;
     }
 
     public interface View {
