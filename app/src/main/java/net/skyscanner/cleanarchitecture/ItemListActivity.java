@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.memoizrlabs.Scope;
 import com.memoizrlabs.Shank;
 
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
@@ -36,17 +35,14 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
 
     private SimpleItemRecyclerViewAdapter mAdapter;
     private ItemsListPresenter mPresenter;
-    private Scope mScope;
     private PublishSubject<Void> mAddItemClicks = PublishSubject.create();
     private PublishSubject<String> mItemClicks = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mScope = Scope.scope(ItemListActivity.class);
-
         boolean twoPane = findViewById(R.id.item_detail_container) != null;
-        mPresenter = Shank.with(mScope).provideSingleton(ItemsListPresenter.class, this, twoPane);
+        mPresenter = Shank.provideNew(ItemsListPresenter.class, this, twoPane);
 
         setContentView(R.layout.activity_item_list);
 
@@ -153,11 +149,4 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (isFinishing()) {
-            mScope.clear();
-        }
-    }
 }

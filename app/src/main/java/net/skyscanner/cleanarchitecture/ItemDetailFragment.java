@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.memoizrlabs.Scope;
 import com.memoizrlabs.Shank;
 
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
@@ -24,7 +23,6 @@ import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresen
 public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter.View {
 
     private ItemDetailsPresenter mPresenter;
-    private Scope mScope;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -45,12 +43,7 @@ public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            mScope = Scope.scope(ItemDetailFragment.class);
-            mPresenter = Shank.with(mScope)
-                    .provideSingleton(ItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
+            mPresenter = Shank.provideNew(ItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -80,6 +73,5 @@ public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter
     public void onDestroy() {
         super.onDestroy();
         mPresenter.dropView(this);
-        mScope.clear();
     }
 }
