@@ -17,6 +17,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        dummy {
+            applicationId 'net.skyscanner.cleanarchitecture.dummy'
+        }
+        empty {
+            applicationId 'net.skyscanner.cleanarchitecture.empty'
+        }
+    }
 }
 
 dependencies {

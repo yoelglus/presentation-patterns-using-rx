@@ -13,6 +13,7 @@ import net.skyscanner.cleanarchitecture.domain.interfaces.ItemsRepository;
 import net.skyscanner.cleanarchitecture.domain.usecases.AddItem;
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItem;
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItems;
+import net.skyscanner.cleanarchitecture.inject.RepositoryFactory;
 import net.skyscanner.cleanarchitecture.navigator.AppCompatActivityNavigator;
 import net.skyscanner.cleanarchitecture.presentation.mapper.ItemModelsMapper;
 import net.skyscanner.cleanarchitecture.presentation.navigator.Navigator;
@@ -33,7 +34,7 @@ public class MasterDetailsApplication extends Application {
         Shank.registerFactory(ItemsRepository.class, new Func0<ItemsRepository>() {
             @Override
             public ItemsRepository call() {
-                return new DummyItemsRepository();
+                return RepositoryFactory.createItemsRepo();
             }
         });
         Shank.registerNamedFactory(Scheduler.class, "io", new Func0<Scheduler>() {
