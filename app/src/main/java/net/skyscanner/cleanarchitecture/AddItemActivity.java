@@ -1,88 +1,98 @@
 package net.skyscanner.cleanarchitecture;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
-import com.memoizrlabs.Scope;
 import com.memoizrlabs.Shank;
 
+import net.skyscanner.cleanarchitecture.presentation.model.AddItemViewModel;
 import net.skyscanner.cleanarchitecture.presentation.presenter.AddItemPresenter;
 
-import rx.Observable;
-import rx.functions.Func1;
+import rx.Subscription;
+import rx.functions.Action1;
 
-public class AddItemActivity extends AppCompatActivity implements AddItemPresenter.View {
+public class AddItemActivity extends AppCompatActivity {
 
-    private Scope mScope;
     private AddItemPresenter mPresenter;
     private View mAddButton;
+    private Subscription mPresenterSubscription;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mScope = Scope.scope(AddItemActivity.class);
-        mPresenter = Shank.with(mScope).provideSingleton(AddItemPresenter.class);
+        mPresenter = Shank.provideSingleton(AddItemPresenter.class);
         setContentView(R.layout.activity_add_item);
         mAddButton = findViewById(R.id.add_button);
-        mPresenter.takeView(this);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.onAddButtonClicked();
+            }
+        });
+        findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.onCancelButtonClicked();
+            }
+        });
+        mPresenterSubscription = mPresenter.subscribe(new Action1<AddItemViewModel>() {
+            @Override
+            public void call(AddItemViewModel addItemViewModel) {
+                if (addItemViewModel.shouldDismiss()) {
+                    finish();
+                } else {
+                    mAddButton.setEnabled(addItemViewModel.isAddButtonEnabled());
+                }
+            }
+        });
+
+        EditText contentEditText = (EditText) findViewById(R.id.content);
+        contentEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mPresenter.onContentTextChanged(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        EditText detailEditText = (EditText) findViewById(R.id.detail);
+        detailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mPresenter.onDetailTextChanged(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (isFinishing()) {
-            mPresenter.dropView(this);
-            mScope.clear();
+            mPresenterSubscription.unsubscribe();
         }
-    }
-
-    @Override
-    public Observable<String> contentTextChanged() {
-        return getObservableForTextView(R.id.content);
-    }
-
-    @NonNull
-    private Observable<String> getObservableForTextView(int viewId) {
-        return RxTextView.textChangeEvents((TextView) findViewById(viewId)).map(new Func1<TextViewTextChangeEvent, String>() {
-            @Override
-            public String call(TextViewTextChangeEvent textViewTextChangeEvent) {
-                return textViewTextChangeEvent.text().toString();
-            }
-        });
-    }
-
-    @Override
-    public Observable<String> detailTextChanged() {
-        return getObservableForTextView(R.id.detail);
-    }
-
-    @Override
-    public Observable<Void> addButtonClicks() {
-        return RxView.clicks(mAddButton);
-    }
-
-    @Override
-    public Observable<Void> cancelButtonClicks() {
-        return RxView.clicks(findViewById(R.id.cancel_button));
-    }
-
-    @Override
-    public void setAddButtonEnabled(boolean enabled) {
-        mAddButton.setEnabled(enabled);
-    }
-
-    @Override
-    public void dismissView() {
-        finish();
     }
 }

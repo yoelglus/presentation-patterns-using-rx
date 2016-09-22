@@ -14,12 +14,13 @@ import android.widget.TextView;
 import com.memoizrlabs.Shank;
 
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
+import net.skyscanner.cleanarchitecture.presentation.model.ItemsListViewModel;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresenter;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.subjects.PublishSubject;
+import rx.Subscription;
+import rx.functions.Action1;
 
 import static java.util.Collections.emptyList;
 
@@ -31,12 +32,11 @@ import static java.util.Collections.emptyList;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ItemListActivity extends AppCompatActivity implements ItemsListPresenter.View {
+public class ItemListActivity extends AppCompatActivity {
 
     private SimpleItemRecyclerViewAdapter mAdapter;
     private ItemsListPresenter mPresenter;
-    private PublishSubject<Void> mAddItemClicks = PublishSubject.create();
-    private PublishSubject<String> mItemClicks = PublishSubject.create();
+    private Subscription mPresenterSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAddItemClicks.onNext(null);
+                mPresenter.onAddItemClicked();
             }
         });
 
@@ -66,29 +66,23 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.takeView(this);
+        mPresenterSubscription = mPresenter.subscribe(new Action1<ItemsListViewModel>() {
+            @Override
+            public void call(ItemsListViewModel itemsListViewModel) {
+                showItems(itemsListViewModel.getItemModels());
+            }
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.dropView(this);
+        mPresenterSubscription.unsubscribe();
     }
 
-    @Override
-    public void showItems(List<ItemModel> itemModels) {
+    private void showItems(List<ItemModel> itemModels) {
         mAdapter.setValues(itemModels);
         mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public Observable<Void> addItemClicks() {
-        return mAddItemClicks;
-    }
-
-    @Override
-    public Observable<String> itemClicks() {
-        return mItemClicks;
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -119,7 +113,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mItemClicks.onNext(holder.mItem.getId());
+                    mPresenter.onItemClicked(holder.mItem.getId());
                 }
             });
         }

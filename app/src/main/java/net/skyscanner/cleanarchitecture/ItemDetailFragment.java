@@ -11,8 +11,12 @@ import android.widget.TextView;
 
 import com.memoizrlabs.Shank;
 
+import net.skyscanner.cleanarchitecture.presentation.model.ItemDetailViewModel;
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresenter;
+
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -20,7 +24,7 @@ import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresen
  * in two-pane mode (on tablets) or a {@link ItemDetailActivity}
  * on handsets.
  */
-public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter.View {
+public class ItemDetailFragment extends Fragment {
 
     private ItemDetailsPresenter mPresenter;
 
@@ -30,6 +34,7 @@ public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter
      */
     public static final String ARG_ITEM_ID = "item_id";
     private TextView mItemDetail;
+    private Subscription mPresenterSubscription;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,11 +62,16 @@ public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.takeView(this);
+        mPresenterSubscription = mPresenter.subscribe(new Action1<ItemDetailViewModel>() {
+            @Override
+            public void call(ItemDetailViewModel itemDetailViewModel) {
+                showItem(itemDetailViewModel.getItemModel());
+            }
+        });
     }
 
-    @Override
-    public void showItem(ItemModel itemModel) {
+
+    private void showItem(ItemModel itemModel) {
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
         if (appBarLayout != null) {
             appBarLayout.setTitle(itemModel.getContent());
@@ -72,6 +82,6 @@ public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.dropView(this);
+        mPresenterSubscription.unsubscribe();
     }
 }

@@ -1,22 +1,35 @@
 package net.skyscanner.cleanarchitecture.presentation.presenter;
 
+import rx.Subscription;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.subjects.PublishSubject;
+
 public abstract class AbstractPresenter<T> {
 
-    protected T mView;
+    private PublishSubject<T> mViewModelSubject = PublishSubject.create();
 
-    public void takeView(T view) {
-        mView = view;
-        onTakeView();
+    protected AbstractPresenter() {
+        mViewModelSubject.doOnUnsubscribe(new Action0() {
+            @Override
+            public void call() {
+                onUnSubscribe();
+            }
+        });
     }
 
-    public void dropView(T view) {
-        if (mView == view) {
-            mView = null;
-            onDropView();
-        }
+    public Subscription subscribe(Action1<T> onLoadAction) {
+        Subscription subscription = mViewModelSubject.subscribe(onLoadAction);
+        onSubscribe();
+        return subscription;
     }
 
-    abstract void onTakeView();
+    protected void notifyOnChange(T viewModel) {
+        mViewModelSubject.onNext(viewModel);
+    }
 
-    abstract void onDropView();
+
+    protected void onSubscribe() {}
+
+    protected void onUnSubscribe() {}
 }
