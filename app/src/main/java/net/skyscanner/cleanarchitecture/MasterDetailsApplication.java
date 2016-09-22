@@ -17,8 +17,8 @@ import net.skyscanner.cleanarchitecture.navigator.AppCompatActivityNavigator;
 import net.skyscanner.cleanarchitecture.presentation.mapper.ItemModelsMapper;
 import net.skyscanner.cleanarchitecture.presentation.navigator.Navigator;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresenter;
-import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresenter;
 import net.skyscanner.cleanarchitecture.presentation.viewmodel.AddItemViewModel;
+import net.skyscanner.cleanarchitecture.presentation.viewmodel.ItemsListViewModel;
 
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
@@ -65,10 +65,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(ItemsListPresenter.class, new Func2<AppCompatActivity, Boolean, ItemsListPresenter>() {
+        Shank.registerFactory(ItemsListViewModel.class, new Func2<AppCompatActivity, Boolean, ItemsListViewModel>() {
             @Override
-            public ItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
-                return new ItemsListPresenter(Shank.provideNew(GetItems.class),
+            public ItemsListViewModel call(AppCompatActivity activity, Boolean twoPane) {
+                return new ItemsListViewModel(Shank.provideNew(GetItems.class),
                         new ItemModelsMapper(),
                         Shank.provideNew(Navigator.class, activity, twoPane));
             }

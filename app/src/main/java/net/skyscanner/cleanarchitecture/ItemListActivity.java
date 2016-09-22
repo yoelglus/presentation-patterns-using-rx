@@ -2,7 +2,6 @@ package net.skyscanner.cleanarchitecture;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,16 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
 import com.memoizrlabs.Shank;
 
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
-import net.skyscanner.cleanarchitecture.presentation.model.ItemsListViewModel;
-import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresenter;
+import net.skyscanner.cleanarchitecture.presentation.viewmodel.ItemsListViewModel;
 
 import java.util.List;
 
-import rx.Subscription;
 import rx.functions.Action1;
+import rx.internal.util.SubscriptionList;
 
 import static java.util.Collections.emptyList;
 
@@ -35,49 +34,42 @@ import static java.util.Collections.emptyList;
 public class ItemListActivity extends AppCompatActivity {
 
     private SimpleItemRecyclerViewAdapter mAdapter;
-    private ItemsListPresenter mPresenter;
-    private Subscription mPresenterSubscription;
+    private ItemsListViewModel mViewModel;
+    private SubscriptionList mSubscriptionList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         boolean twoPane = findViewById(R.id.item_detail_container) != null;
-        mPresenter = Shank.provideNew(ItemsListPresenter.class, this, twoPane);
+        mViewModel = Shank.provideNew(ItemsListViewModel.class, this, twoPane);
 
         setContentView(R.layout.activity_item_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.onAddItemClicked();
-            }
-        });
-
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenterSubscription = mPresenter.subscribe(new Action1<ItemsListViewModel>() {
+        mSubscriptionList = new SubscriptionList();
+        mSubscriptionList.add(RxView.clicks(findViewById(R.id.fab)).doOnNext(mViewModel.addItemClicks()).subscribe());
+
+        mSubscriptionList.add(mViewModel.itemModels().doOnNext(new Action1<List<ItemModel>>() {
             @Override
-            public void call(ItemsListViewModel itemsListViewModel) {
-                showItems(itemsListViewModel.getItemModels());
+            public void call(List<ItemModel> itemModels) {
+                showItems(itemModels);
             }
-        });
+        }).subscribe());
+
+        mViewModel.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenterSubscription.unsubscribe();
+        mViewModel.onStop();
+        mSubscriptionList.unsubscribe();
     }
 
     private void showItems(List<ItemModel> itemModels) {
@@ -113,7 +105,7 @@ public class ItemListActivity extends AppCompatActivity {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPresenter.onItemClicked(holder.mItem.getId());
+                    mViewModel.itemClicks().call(holder.mItem.getId());
                 }
             });
         }

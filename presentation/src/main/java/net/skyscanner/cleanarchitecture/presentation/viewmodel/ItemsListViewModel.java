@@ -1,10 +1,9 @@
-package net.skyscanner.cleanarchitecture.presentation.presenter;
+package net.skyscanner.cleanarchitecture.presentation.viewmodel;
 
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItems;
 import net.skyscanner.cleanarchitecture.entities.Item;
 import net.skyscanner.cleanarchitecture.presentation.mapper.ItemModelsMapper;
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
-import net.skyscanner.cleanarchitecture.presentation.model.ItemsListViewModel;
 import net.skyscanner.cleanarchitecture.presentation.navigator.Navigator;
 
 import java.util.List;
@@ -13,23 +12,37 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.internal.util.SubscriptionList;
+import rx.subjects.PublishSubject;
 
-public class ItemsListPresenter extends AbstractPresenter<ItemsListViewModel> {
+public class ItemsListViewModel extends AbstractViewModel {
 
     private GetItems mGetItems;
     private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
+    private PublishSubject<List<ItemModel>> mItemModelsSubject = PublishSubject.create();
+    private Action1<Void> mAddItemClicks = new Action1<Void>() {
+        @Override
+        public void call(Void aVoid) {
+            mNavigator.navigateToAddItem();
+        }
+    };
+    private Action1<String> mItemClicks = new Action1<String>() {
+        @Override
+        public void call(String id) {
+            mNavigator.navigateToItem(id);
+        }
+    };
     private Subscription mGetItemsSubscription;
 
-    public ItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
+    public ItemsListViewModel(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
         mGetItems = getItems;
         mItemModelsMapper = itemModelsMapper;
         mNavigator = navigator;
     }
 
     @Override
-    protected void onSubscribe() {
+    public void onStart() {
+        super.onStart();
         mGetItemsSubscription = mGetItems.execute(new Subscriber<List<Item>>() {
             @Override
             public void onCompleted() {
@@ -43,27 +56,27 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListViewModel> {
 
             @Override
             public void onNext(List<Item> items) {
-                notifyOnChange(new ItemsListViewModel(mItemModelsMapper.map(items)));
+                mItemModelsSubject.onNext(mItemModelsMapper.map(items));
             }
         });
     }
 
     @Override
-    protected void onUnSubscribe() {
+    public void onStop() {
+        super.onStop();
         mGetItemsSubscription.unsubscribe();
     }
 
-    public interface View {
-        void showItems(List<ItemModel> itemModel);
-        Observable<Void> addItemClicks();
-        Observable<String> itemClicks();
+    public Observable<List<ItemModel>> itemModels() {
+        return mItemModelsSubject;
     }
 
-    public void onItemClicked(String id) {
-        mNavigator.navigateToItem(id);
+    public Action1<Void> addItemClicks() {
+        return mAddItemClicks;
     }
 
-    public void onAddItemClicked() {
-        mNavigator.navigateToAddItem();
+    public Action1<String> itemClicks() {
+        return mItemClicks;
     }
+
 }
