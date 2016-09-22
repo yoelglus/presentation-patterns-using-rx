@@ -11,9 +11,8 @@ import android.widget.TextView;
 
 import com.memoizrlabs.Shank;
 
-import net.skyscanner.cleanarchitecture.presentation.model.ItemDetailViewModel;
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
-import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresenter;
+import net.skyscanner.cleanarchitecture.presentation.viewmodel.ItemDetailViewModel;
 
 import rx.Subscription;
 import rx.functions.Action1;
@@ -26,7 +25,7 @@ import rx.functions.Action1;
  */
 public class ItemDetailFragment extends Fragment {
 
-    private ItemDetailsPresenter mPresenter;
+    private ItemDetailViewModel mViewModel;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -34,7 +33,7 @@ public class ItemDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
     private TextView mItemDetail;
-    private Subscription mPresenterSubscription;
+    private Subscription mItemModelSubscription;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -48,7 +47,13 @@ public class ItemDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mPresenter = Shank.provideNew(ItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
+            mViewModel = Shank.provideNew(ItemDetailViewModel.class, getArguments().getString(ARG_ITEM_ID));
+            mItemModelSubscription = mViewModel.itemModel().doOnNext(new Action1<ItemModel>() {
+                @Override
+                public void call(ItemModel itemModel) {
+                    showItem(itemModel);
+                }
+            }).subscribe();
         }
     }
 
@@ -62,12 +67,7 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenterSubscription = mPresenter.subscribe(new Action1<ItemDetailViewModel>() {
-            @Override
-            public void call(ItemDetailViewModel itemDetailViewModel) {
-                showItem(itemDetailViewModel.getItemModel());
-            }
-        });
+        mViewModel.onStart();
     }
 
 
@@ -82,6 +82,7 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenterSubscription.unsubscribe();
+        mViewModel.onStop();
+        mItemModelSubscription.unsubscribe();
     }
 }

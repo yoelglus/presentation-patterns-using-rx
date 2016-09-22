@@ -16,8 +16,8 @@ import net.skyscanner.cleanarchitecture.inject.RepositoryFactory;
 import net.skyscanner.cleanarchitecture.navigator.AppCompatActivityNavigator;
 import net.skyscanner.cleanarchitecture.presentation.mapper.ItemModelsMapper;
 import net.skyscanner.cleanarchitecture.presentation.navigator.Navigator;
-import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresenter;
 import net.skyscanner.cleanarchitecture.presentation.viewmodel.AddItemViewModel;
+import net.skyscanner.cleanarchitecture.presentation.viewmodel.ItemDetailViewModel;
 import net.skyscanner.cleanarchitecture.presentation.viewmodel.ItemsListViewModel;
 
 import rx.Scheduler;
@@ -84,10 +84,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(ItemDetailsPresenter.class, new Func1<String, ItemDetailsPresenter>() {
+        Shank.registerFactory(ItemDetailViewModel.class, new Func1<String, ItemDetailViewModel>() {
             @Override
-            public ItemDetailsPresenter call(String id) {
-                return new ItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
+            public ItemDetailViewModel call(String id) {
+                return new ItemDetailViewModel(Shank.provideNew(GetItem.class, id));
             }
         });
 

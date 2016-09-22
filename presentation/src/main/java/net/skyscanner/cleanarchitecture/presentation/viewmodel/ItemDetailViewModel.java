@@ -1,25 +1,27 @@
-package net.skyscanner.cleanarchitecture.presentation.presenter;
+package net.skyscanner.cleanarchitecture.presentation.viewmodel;
 
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItem;
 import net.skyscanner.cleanarchitecture.entities.Item;
-import net.skyscanner.cleanarchitecture.presentation.model.ItemDetailViewModel;
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.subjects.PublishSubject;
 
-public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailViewModel> {
+public class ItemDetailViewModel extends AbstractViewModel {
 
     private GetItem mGetItem;
+    private PublishSubject<ItemModel> mItemModelSubject = PublishSubject.create();
     private Subscription mGetItemSubscription;
 
-    public ItemDetailsPresenter(GetItem getItem) {
+    public ItemDetailViewModel(GetItem getItem) {
         mGetItem = getItem;
     }
 
     @Override
-    protected void onSubscribe() {
-        super.onSubscribe();
+    public void onStart() {
+        super.onStart();
         mGetItemSubscription = mGetItem.execute(new Subscriber<Item>() {
             @Override
             public void onCompleted() {
@@ -33,18 +35,18 @@ public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailViewModel>
 
             @Override
             public void onNext(Item item) {
-                notifyOnChange(new ItemDetailViewModel(ItemModel.from(item)));
+                mItemModelSubject.onNext(ItemModel.from(item));
             }
         });
     }
 
     @Override
-    protected void onUnSubscribe() {
-        super.onUnSubscribe();
+    public void onStop() {
+        super.onStop();
         mGetItemSubscription.unsubscribe();
     }
 
-    public interface View {
-        void showItem(ItemModel itemModel);
+    public Observable<ItemModel> itemModel() {
+        return mItemModelSubject;
     }
 }
