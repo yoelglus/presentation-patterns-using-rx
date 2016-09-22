@@ -1,98 +1,78 @@
 package net.skyscanner.cleanarchitecture;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
 import android.widget.EditText;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 import com.memoizrlabs.Shank;
 
-import net.skyscanner.cleanarchitecture.presentation.model.AddItemViewModel;
-import net.skyscanner.cleanarchitecture.presentation.presenter.AddItemPresenter;
+import net.skyscanner.cleanarchitecture.presentation.viewmodel.AddItemViewModel;
 
-import rx.Subscription;
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.internal.util.SubscriptionList;
 
 public class AddItemActivity extends AppCompatActivity {
 
-    private AddItemPresenter mPresenter;
-    private View mAddButton;
-    private Subscription mPresenterSubscription;
+    private AddItemViewModel mAddItemViewModel;
+    private SubscriptionList mSubscriptionList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = Shank.provideSingleton(AddItemPresenter.class);
         setContentView(R.layout.activity_add_item);
-        mAddButton = findViewById(R.id.add_button);
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+
+        mAddItemViewModel = Shank.provideNew(AddItemViewModel.class);
+
+        bindViewModel();
+
+        mAddItemViewModel.onStart();
+    }
+
+    private void bindViewModel() {
+        mSubscriptionList = new SubscriptionList();
+        mSubscriptionList.add(RxView.clicks(findViewById(R.id.add_button))
+                .doOnNext(mAddItemViewModel.addItemClicks())
+                .subscribe());
+        mSubscriptionList.add(RxView.clicks(findViewById(R.id.cancel_button))
+                .doOnNext(mAddItemViewModel.cancelClicks())
+                .subscribe());
+        mSubscriptionList.add(getTextChangeObservable(R.id.content).doOnNext(mAddItemViewModel.contentTextChanged())
+                .subscribe());
+        mSubscriptionList.add(getTextChangeObservable(R.id.detail).doOnNext(mAddItemViewModel.detailTextChanged())
+                .subscribe());
+        mSubscriptionList.add(mAddItemViewModel.dismiss().doOnNext(new Action1<Void>() {
             @Override
-            public void onClick(View v) {
-                mPresenter.onAddButtonClicked();
+            public void call(Void aVoid) {
+                finish();
             }
-        });
-        findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.onCancelButtonClicked();
-            }
-        });
-        mPresenterSubscription = mPresenter.subscribe(new Action1<AddItemViewModel>() {
-            @Override
-            public void call(AddItemViewModel addItemViewModel) {
-                if (addItemViewModel.shouldDismiss()) {
-                    finish();
-                } else {
-                    mAddButton.setEnabled(addItemViewModel.isAddButtonEnabled());
-                }
-            }
-        });
+        }).subscribe());
+        mSubscriptionList.add(mAddItemViewModel.addButtonEnabled()
+                .doOnNext(RxView.enabled(findViewById(R.id.add_button)))
+                .subscribe());
+    }
 
-        EditText contentEditText = (EditText) findViewById(R.id.content);
-        contentEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mPresenter.onContentTextChanged(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        EditText detailEditText = (EditText) findViewById(R.id.detail);
-        detailEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mPresenter.onDetailTextChanged(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+    @NonNull
+    private Observable<String> getTextChangeObservable(int viewId) {
+        return RxTextView.textChangeEvents((EditText) findViewById(viewId))
+                .map(new Func1<TextViewTextChangeEvent, String>() {
+                    @Override
+                    public String call(TextViewTextChangeEvent textViewTextChangeEvent) {
+                        return textViewTextChangeEvent.text().toString();
+                    }
+                });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (isFinishing()) {
-            mPresenterSubscription.unsubscribe();
-        }
+        mAddItemViewModel.onStop();
+        mSubscriptionList.unsubscribe();
     }
 }

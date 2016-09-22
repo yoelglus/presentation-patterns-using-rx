@@ -8,7 +8,6 @@ import com.memoizrlabs.functions.Func0;
 import com.memoizrlabs.functions.Func1;
 import com.memoizrlabs.functions.Func2;
 
-import net.skyscanner.cleanarchitecture.data.DummyItemsRepository;
 import net.skyscanner.cleanarchitecture.domain.interfaces.ItemsRepository;
 import net.skyscanner.cleanarchitecture.domain.usecases.AddItem;
 import net.skyscanner.cleanarchitecture.domain.usecases.GetItem;
@@ -17,9 +16,9 @@ import net.skyscanner.cleanarchitecture.inject.RepositoryFactory;
 import net.skyscanner.cleanarchitecture.navigator.AppCompatActivityNavigator;
 import net.skyscanner.cleanarchitecture.presentation.mapper.ItemModelsMapper;
 import net.skyscanner.cleanarchitecture.presentation.navigator.Navigator;
-import net.skyscanner.cleanarchitecture.presentation.presenter.AddItemPresenter;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresenter;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresenter;
+import net.skyscanner.cleanarchitecture.presentation.viewmodel.AddItemViewModel;
 
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
@@ -101,10 +100,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(AddItemPresenter.class, new Func0<AddItemPresenter>() {
+        Shank.registerFactory(AddItemViewModel.class, new Func0<AddItemViewModel>() {
             @Override
-            public AddItemPresenter call() {
-                return new AddItemPresenter(Shank.provideNew(AddItem.class));
+            public AddItemViewModel call() {
+                return new AddItemViewModel(Shank.provideNew(AddItem.class));
             }
         });
     }
