@@ -50,7 +50,7 @@ public class AddItemViewModel extends AbstractViewModel {
                 public void onNext(String s) {
                     mDismissSubject.onNext(null);
                 }
-            });
+            }, mContentText, mDetailText);
         }
     };
     private Action1<Void> mCancelClicks = new Action1<Void>() {

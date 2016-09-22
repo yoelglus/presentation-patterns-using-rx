@@ -62,6 +62,11 @@ public class ItemListActivity extends AppCompatActivity {
             }
         }).subscribe());
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         mViewModel.onStart();
     }
 
@@ -69,6 +74,11 @@ public class ItemListActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mViewModel.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         mSubscriptionList.unsubscribe();
     }
 
