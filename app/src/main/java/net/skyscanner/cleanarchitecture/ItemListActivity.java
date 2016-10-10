@@ -18,9 +18,6 @@ import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresente
 
 import java.util.List;
 
-import rx.Observable;
-import rx.subjects.PublishSubject;
-
 import static java.util.Collections.emptyList;
 
 /**
@@ -35,8 +32,6 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
 
     private SimpleItemRecyclerViewAdapter mAdapter;
     private ItemsListPresenter mPresenter;
-    private PublishSubject<Void> mAddItemClicks = PublishSubject.create();
-    private PublishSubject<String> mItemClicks = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +49,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAddItemClicks.onNext(null);
+                mPresenter.onAddItemClicked();
             }
         });
 
@@ -81,16 +76,6 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public Observable<Void> addItemClicks() {
-        return mAddItemClicks;
-    }
-
-    @Override
-    public Observable<String> itemClicks() {
-        return mItemClicks;
-    }
-
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         mAdapter = new SimpleItemRecyclerViewAdapter();
         recyclerView.setAdapter(mAdapter);
@@ -115,11 +100,10 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
-
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mItemClicks.onNext(holder.mItem.getId());
+                    mPresenter.onItemClicked(holder.mItem.getId());
                 }
             });
         }
