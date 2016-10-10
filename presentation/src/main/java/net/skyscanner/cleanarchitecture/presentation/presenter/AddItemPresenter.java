@@ -2,67 +2,50 @@ package net.skyscanner.cleanarchitecture.presentation.presenter;
 
 import net.skyscanner.cleanarchitecture.domain.usecases.AddItem;
 
-import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
 public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
 
     private AddItem mAddItem;
-    private String mContentText;
-    private String mDetailText;
-    private SubscriptionList mSubscriptionList = new SubscriptionList();
+    private String mContentText = "";
+    private String mDetailText = "";
 
     public AddItemPresenter(AddItem addItem) {
         mAddItem = addItem;
     }
 
-    @Override
-    void onTakeView() {
-        mSubscriptionList.add(mView.contentTextChanged().subscribe(new Action1<String>() {
+    public void onAddButtonClicked() {
+        mAddItem.execute(new Subscriber<String>() {
             @Override
-            public void call(String contentText) {
-                mContentText = contentText;
-                setAddButtonEnableState();
+            public void onCompleted() {
+
             }
-        }));
-        mSubscriptionList.add(mView.detailTextChanged().subscribe(new Action1<String>() {
+
             @Override
-            public void call(String detailText) {
-                mDetailText = detailText;
-                setAddButtonEnableState();
+            public void onError(Throwable e) {
+
             }
-        }));
 
-        mSubscriptionList.add(mView.addButtonClicks().subscribe(new Action1<Void>() {
             @Override
-            public void call(Void aVoid) {
-                mAddItem.execute(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(String id) {
-                        mView.dismissView();
-                    }
-                }, mContentText, mDetailText);
-            }
-        }));
-
-        mSubscriptionList.add(mView.cancelButtonClicks().subscribe(new Action1<Void>() {
-            @Override
-            public void call(Void aVoid) {
+            public void onNext(String id) {
                 mView.dismissView();
             }
-        }));
+        }, mContentText, mDetailText);
+    }
+
+    public void onDismissButtonClicked() {
+        mView.dismissView();
+    }
+
+    public void onContentTextChanged(String contentText) {
+        mContentText = contentText;
+        setAddButtonEnableState();
+    }
+
+    public void onDetailTextChanged(String detailText) {
+        mDetailText = detailText;
+        setAddButtonEnableState();
     }
 
     private void setAddButtonEnableState() {
@@ -70,21 +53,16 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
     }
 
     @Override
+    void onTakeView() {
+        setAddButtonEnableState();
+    }
+
+    @Override
     void onDropView() {
-        mSubscriptionList.unsubscribe();
     }
 
     public interface View {
-        Observable<String> contentTextChanged();
-
-        Observable<String> detailTextChanged();
-
-        Observable<Void> addButtonClicks();
-
-        Observable<Void> cancelButtonClicks();
-
         void setAddButtonEnabled(boolean enabled);
-
         void dismissView();
     }
 }
