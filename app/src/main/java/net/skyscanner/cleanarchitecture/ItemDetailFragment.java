@@ -14,6 +14,8 @@ import com.memoizrlabs.Shank;
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
 import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresenter;
 
+import rx.functions.Action1;
+
 /**
  * A fragment representing a single Item detail screen.
  * This fragment is either contained in a {@link ItemListActivity}
@@ -22,13 +24,12 @@ import net.skyscanner.cleanarchitecture.presentation.presenter.ItemDetailsPresen
  */
 public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter.View {
 
-    private ItemDetailsPresenter mPresenter;
-
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    private ItemDetailsPresenter mPresenter;
     private TextView mItemDetail;
 
     /**
@@ -61,17 +62,22 @@ public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter
     }
 
     @Override
-    public void showItem(ItemModel itemModel) {
-        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-        if (appBarLayout != null) {
-            appBarLayout.setTitle(itemModel.getContent());
-        }
-        mItemDetail.setText(itemModel.getDetail());
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.dropView(this);
+    }
+
+    @Override
+    public Action1<ItemModel> showItem() {
+        return new Action1<ItemModel>() {
+            @Override
+            public void call(ItemModel itemModel) {
+                CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle(itemModel.getContent());
+                }
+                mItemDetail.setText(itemModel.getDetail());
+            }
+        };
     }
 }

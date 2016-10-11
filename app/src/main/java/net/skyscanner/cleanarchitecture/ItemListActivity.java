@@ -19,6 +19,7 @@ import net.skyscanner.cleanarchitecture.presentation.presenter.ItemsListPresente
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 import static java.util.Collections.emptyList;
@@ -76,9 +77,14 @@ public class ItemListActivity extends AppCompatActivity implements ItemsListPres
     }
 
     @Override
-    public void showItems(List<ItemModel> itemModels) {
-        mAdapter.setValues(itemModels);
-        mAdapter.notifyDataSetChanged();
+    public Action1<List<ItemModel>> showItems() {
+        return new Action1<List<ItemModel>>() {
+            @Override
+            public void call(List<ItemModel> itemModels) {
+                mAdapter.setValues(itemModels);
+                mAdapter.notifyDataSetChanged();
+            }
+        };
     }
 
     @Override

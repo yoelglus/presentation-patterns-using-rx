@@ -2,8 +2,6 @@ package net.skyscanner.cleanarchitecture.domain.usecases;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.Subscriber;
-import rx.Subscription;
 
 public abstract class AbstractUseCase<T> {
 
@@ -15,9 +13,9 @@ public abstract class AbstractUseCase<T> {
         mMainScheduler = mainScheduler;
     }
 
-    public Subscription execute(Subscriber<T> subscriber) {
-        return getObservable().subscribeOn(mIoScheduler).observeOn(mMainScheduler).subscribe(subscriber);
-    }
-
     public abstract Observable<T> getObservable();
+
+    public Observable<T> execute() {
+        return getObservable().subscribeOn(mIoScheduler).observeOn(mMainScheduler);
+    }
 }

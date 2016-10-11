@@ -4,8 +4,9 @@ import net.skyscanner.cleanarchitecture.domain.usecases.GetItem;
 import net.skyscanner.cleanarchitecture.entities.Item;
 import net.skyscanner.cleanarchitecture.presentation.model.ItemModel;
 
-import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter.View> {
 
@@ -19,22 +20,12 @@ public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter
 
     @Override
     void onTakeView() {
-        mGetItemSubscription = mGetItem.execute(new Subscriber<Item>() {
+        mGetItemSubscription = mGetItem.execute().map(new Func1<Item, ItemModel>() {
             @Override
-            public void onCompleted() {
-
+            public ItemModel call(Item item) {
+                return ItemModel.from(item);
             }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Item item) {
-                mView.showItem(ItemModel.from(item));
-            }
-        });
+        }).subscribe(mView.showItem());
     }
 
     @Override
@@ -43,6 +34,6 @@ public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter
     }
 
     public interface View {
-        void showItem(ItemModel itemModel);
+        Action1<ItemModel> showItem();
     }
 }

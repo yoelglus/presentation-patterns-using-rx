@@ -9,8 +9,8 @@ import net.skyscanner.cleanarchitecture.presentation.navigator.Navigator;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.internal.util.SubscriptionList;
 
 public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.View> {
@@ -43,22 +43,12 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
             }
         }));
 
-        mSubscriptionList.add(mGetItems.execute(new Subscriber<List<Item>>() {
+        mSubscriptionList.add(mGetItems.execute().map(new Func1<List<Item>, List<ItemModel>>() {
             @Override
-            public void onCompleted() {
-
+            public List<ItemModel> call(List<Item> items) {
+                return mItemModelsMapper.map(items);
             }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(List<Item> items) {
-                mView.showItems(mItemModelsMapper.map(items));
-            }
-        }));
+        }).subscribe(mView.showItems()));
     }
 
     @Override
@@ -68,8 +58,10 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
     }
 
     public interface View {
-        void showItems(List<ItemModel> itemModel);
+        Action1<List<ItemModel>> showItems();
+
         Observable<Void> addItemClicks();
+
         Observable<String> itemClicks();
     }
 }

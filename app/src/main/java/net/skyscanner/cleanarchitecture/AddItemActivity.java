@@ -1,12 +1,9 @@
 package net.skyscanner.cleanarchitecture;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,6 +16,7 @@ import com.memoizrlabs.Shank;
 import net.skyscanner.cleanarchitecture.presentation.presenter.AddItemPresenter;
 
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 public class AddItemActivity extends AppCompatActivity implements AddItemPresenter.View {
@@ -51,16 +49,6 @@ public class AddItemActivity extends AppCompatActivity implements AddItemPresent
         return getObservableForTextView(R.id.content);
     }
 
-    @NonNull
-    private Observable<String> getObservableForTextView(int viewId) {
-        return RxTextView.textChangeEvents((TextView) findViewById(viewId)).map(new Func1<TextViewTextChangeEvent, String>() {
-            @Override
-            public String call(TextViewTextChangeEvent textViewTextChangeEvent) {
-                return textViewTextChangeEvent.text().toString();
-            }
-        });
-    }
-
     @Override
     public Observable<String> detailTextChanged() {
         return getObservableForTextView(R.id.detail);
@@ -77,12 +65,29 @@ public class AddItemActivity extends AppCompatActivity implements AddItemPresent
     }
 
     @Override
-    public void setAddButtonEnabled(boolean enabled) {
-        mAddButton.setEnabled(enabled);
+    public Action1<Boolean> setAddButtonEnabled() {
+        //noinspection unchecked
+        return (Action1<Boolean>) RxView.enabled(mAddButton);
     }
 
     @Override
-    public void dismissView() {
-        finish();
+    public Action1<Void> dismissView() {
+        return new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+                finish();
+            }
+        };
+    }
+
+    @NonNull
+    private Observable<String> getObservableForTextView(int viewId) {
+        return RxTextView.textChangeEvents((TextView) findViewById(viewId))
+                .map(new Func1<TextViewTextChangeEvent, String>() {
+                    @Override
+                    public String call(TextViewTextChangeEvent textViewTextChangeEvent) {
+                        return textViewTextChangeEvent.text().toString();
+                    }
+                });
     }
 }
