@@ -33,6 +33,12 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/mvp_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mvp_button_text"/>
+
+            <Button
                 android:id="@+id/mvp_passive_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

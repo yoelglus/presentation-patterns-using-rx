@@ -74,6 +74,32 @@
                 android:value=".mvppassiverx.MvpPassiveRxItemListActivity"/>
         </activity>
 
+        <!-- MVP -->
+        <activity
+            android:name=".mvp.MvpItemListActivity"
+            android:label="@string/title_items_list"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".mvp.MvpItemDetailActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".mvp.MvpItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mvp.MvpItemListActivity"/>
+        </activity>
+        <activity
+            android:name=".mvp.MvpAddItemActivity"
+            android:label="Add Item"
+            android:parentActivityName=".mvp.MvpItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mvp.MvpItemListActivity"/>
+        </activity>
+
     </application>
 
 </manifest>
