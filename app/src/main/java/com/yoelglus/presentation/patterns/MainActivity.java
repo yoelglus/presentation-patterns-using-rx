@@ -9,6 +9,7 @@ import android.view.View;
 import com.yoelglus.presentation.patterns.mvp.MvpItemListActivity;
 import com.yoelglus.presentation.patterns.mvppassive.MvpPassiveItemListActivity;
 import com.yoelglus.presentation.patterns.mvppassiverx.MvpPassiveRxItemListActivity;
+import com.yoelglus.presentation.patterns.mvpvm.MvpVmItemListActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, MvpPassiveRxItemListActivity.class));
+            }
+        });
+        findViewById(R.id.mvp_vm_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MvpVmItemListActivity.class));
             }
         });
     }

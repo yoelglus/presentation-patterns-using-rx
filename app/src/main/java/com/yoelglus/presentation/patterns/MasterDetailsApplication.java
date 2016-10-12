@@ -22,6 +22,9 @@ import com.yoelglus.presentation.patterns.mvppassive.MvpPassiveItemsListPresente
 import com.yoelglus.presentation.patterns.mvppassiverx.MvpPassiveRxAddItemPresenter;
 import com.yoelglus.presentation.patterns.mvppassiverx.MvpPassiveRxItemDetailsPresenter;
 import com.yoelglus.presentation.patterns.mvppassiverx.MvpPassiveRxItemsListPresenter;
+import com.yoelglus.presentation.patterns.mvpvm.MvpVmAddItemPresenter;
+import com.yoelglus.presentation.patterns.mvpvm.MvpVmItemDetailsPresenter;
+import com.yoelglus.presentation.patterns.mvpvm.MvpVmItemsListPresenter;
 import com.yoelglus.presentation.patterns.navigator.AppCompatActivityNavigator;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
 
@@ -167,6 +170,32 @@ public class MasterDetailsApplication extends Application {
             @Override
             public MvpAddItemPresenter call() {
                 return new MvpAddItemPresenter(Shank.provideNew(AddItem.class));
+            }
+        });
+
+        // MVPVM
+
+        Shank.registerFactory(MvpVmItemsListPresenter.class,
+                new Func2<AppCompatActivity, Boolean, MvpVmItemsListPresenter>() {
+                    @Override
+                    public MvpVmItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
+                        return new MvpVmItemsListPresenter(Shank.provideNew(GetItems.class),
+                                new ItemModelsMapper(),
+                                Shank.provideNew(Navigator.class, activity, twoPane));
+                    }
+                });
+
+        Shank.registerFactory(MvpVmItemDetailsPresenter.class, new Func1<String, MvpVmItemDetailsPresenter>() {
+            @Override
+            public MvpVmItemDetailsPresenter call(String id) {
+                return new MvpVmItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
+            }
+        });
+
+        Shank.registerFactory(MvpVmAddItemPresenter.class, new Func0<MvpVmAddItemPresenter>() {
+            @Override
+            public MvpVmAddItemPresenter call() {
+                return new MvpVmAddItemPresenter(Shank.provideNew(AddItem.class));
             }
         });
 

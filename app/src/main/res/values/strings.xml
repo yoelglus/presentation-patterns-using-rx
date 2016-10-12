@@ -5,4 +5,5 @@
     <string name="mvp_passive_button_text">MVP Passive</string>
     <string name="mvp_passive_rx_button_text">MVP Passive Rx</string>
     <string name="mvp_button_text">MVP</string>
+    <string name="mvp_vm_button_text">MVP + ViewModel</string>
 </resources>
