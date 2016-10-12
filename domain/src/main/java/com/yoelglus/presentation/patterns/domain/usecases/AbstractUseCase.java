@@ -2,15 +2,13 @@ package com.yoelglus.presentation.patterns.domain.usecases;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.Subscriber;
-import rx.Subscription;
 
 public abstract class AbstractUseCase<T> {
 
-    protected Scheduler mIoScheduler;
-    protected Scheduler mMainScheduler;
+    private Scheduler mIoScheduler;
+    private Scheduler mMainScheduler;
 
-    public AbstractUseCase(Scheduler ioScheduler, Scheduler mainScheduler) {
+    AbstractUseCase(Scheduler ioScheduler, Scheduler mainScheduler) {
         mIoScheduler = ioScheduler;
         mMainScheduler = mainScheduler;
     }
