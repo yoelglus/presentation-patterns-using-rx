@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "net.skyscanner.cleanarchitecture"
+        applicationId "com.yoelglus.presentation.patterns"
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
@@ -20,10 +20,10 @@ android {
 
     productFlavors {
         dummy {
-            applicationId 'net.skyscanner.cleanarchitecture.dummy'
+            applicationId 'com.yoelglus.presentation.patterns.dummy'
         }
         empty {
-            applicationId 'net.skyscanner.cleanarchitecture.empty'
+            applicationId 'com.yoelglus.presentation.patterns.empty'
         }
     }
 }

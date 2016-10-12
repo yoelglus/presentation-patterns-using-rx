@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="net.skyscanner.cleanarchitecture"
+<manifest package="com.yoelglus.presentation.patterns"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -26,7 +26,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.skyscanner.cleanarchitecture.ItemListActivity"/>
+                android:value=".ItemListActivity"/>
         </activity>
         <activity
             android:name=".AddItemActivity"
@@ -35,7 +35,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.skyscanner.cleanarchitecture.ItemListActivity"/>
+                android:value=".ItemListActivity"/>
         </activity>
     </application>
 
