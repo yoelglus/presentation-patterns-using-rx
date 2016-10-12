@@ -9,7 +9,6 @@ import com.yoelglus.presentation.patterns.presentation.navigator.Navigator;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
@@ -43,19 +42,9 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
             }
         }));
 
-        mSubscriptionList.add(mGetItems.execute(new Subscriber<List<Item>>() {
+        mSubscriptionList.add(mGetItems.execute().subscribe(new Action1<List<Item>>() {
             @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(List<Item> items) {
+            public void call(List<Item> items) {
                 mView.showItems(mItemModelsMapper.map(items));
             }
         }));
@@ -69,7 +58,9 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
 
     public interface View {
         void showItems(List<ItemModel> itemModel);
+
         Observable<Void> addItemClicks();
+
         Observable<String> itemClicks();
     }
 }

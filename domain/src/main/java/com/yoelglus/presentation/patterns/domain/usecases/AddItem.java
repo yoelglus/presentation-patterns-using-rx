@@ -20,10 +20,10 @@ public class AddItem extends AbstractUseCase<String> {
         mItemsRepository = itemsRepository;
     }
 
-    public Subscription execute(Subscriber<String> subscriber, String content, String detail) {
+    public Observable<String> execute(String content, String detail) {
         mContent = content;
         mDetail = detail;
-        return execute(subscriber);
+        return execute();
     }
 
     @Override

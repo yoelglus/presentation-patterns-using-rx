@@ -3,7 +3,6 @@ package com.yoelglus.presentation.patterns.presentation.presenter;
 import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
@@ -16,6 +15,10 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
 
     public AddItemPresenter(AddItem addItem) {
         mAddItem = addItem;
+    }
+
+    private void setAddButtonEnableState() {
+        mView.setAddButtonEnabled(mContentText.length() > 0 && mDetailText.length() > 0);
     }
 
     @Override
@@ -38,22 +41,12 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
         mSubscriptionList.add(mView.addButtonClicks().subscribe(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
-                mAddItem.execute(new Subscriber<String>() {
+                mAddItem.execute(mContentText, mDetailText).subscribe(new Action1<String>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(String id) {
+                    public void call(String s) {
                         mView.dismissView();
                     }
-                }, mContentText, mDetailText);
+                });
             }
         }));
 
@@ -65,16 +58,14 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
         }));
     }
 
-    private void setAddButtonEnableState() {
-        mView.setAddButtonEnabled(mContentText.length() > 0 && mDetailText.length() > 0);
-    }
-
     @Override
     void onDropView() {
         mSubscriptionList.unsubscribe();
     }
 
     public interface View {
+        void setAddButtonEnabled(boolean enabled);
+
         Observable<String> contentTextChanged();
 
         Observable<String> detailTextChanged();
@@ -82,8 +73,6 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
         Observable<Void> addButtonClicks();
 
         Observable<Void> cancelButtonClicks();
-
-        void setAddButtonEnabled(boolean enabled);
 
         void dismissView();
     }

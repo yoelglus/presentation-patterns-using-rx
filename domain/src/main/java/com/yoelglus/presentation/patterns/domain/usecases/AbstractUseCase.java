@@ -15,8 +15,8 @@ public abstract class AbstractUseCase<T> {
         mMainScheduler = mainScheduler;
     }
 
-    public Subscription execute(Subscriber<T> subscriber) {
-        return getObservable().subscribeOn(mIoScheduler).observeOn(mMainScheduler).subscribe(subscriber);
+    public Observable<T> execute() {
+        return getObservable().subscribeOn(mIoScheduler).observeOn(mMainScheduler);
     }
 
     public abstract Observable<T> getObservable();

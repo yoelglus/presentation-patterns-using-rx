@@ -4,8 +4,8 @@ import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
 import com.yoelglus.presentation.patterns.entities.Item;
 import com.yoelglus.presentation.patterns.presentation.model.ItemModel;
 
-import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
 
 public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter.View> {
 
@@ -19,19 +19,9 @@ public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter
 
     @Override
     void onTakeView() {
-        mGetItemSubscription = mGetItem.execute(new Subscriber<Item>() {
+        mGetItemSubscription = mGetItem.execute().subscribe(new Action1<Item>() {
             @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Item item) {
+            public void call(Item item) {
                 mView.showItem(ItemModel.from(item));
             }
         });
