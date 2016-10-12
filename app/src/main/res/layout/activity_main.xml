@@ -56,6 +56,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/mvp_vm_button_text"/>
 
+            <Button
+                android:id="@+id/mvvm_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mvvm_button_text"/>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

@@ -10,6 +10,7 @@ import com.yoelglus.presentation.patterns.mvp.MvpItemListActivity;
 import com.yoelglus.presentation.patterns.mvppassive.MvpPassiveItemListActivity;
 import com.yoelglus.presentation.patterns.mvppassiverx.MvpPassiveRxItemListActivity;
 import com.yoelglus.presentation.patterns.mvpvm.MvpVmItemListActivity;
+import com.yoelglus.presentation.patterns.mvvm.MvvmItemListActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, MvpVmItemListActivity.class));
+            }
+        });
+        findViewById(R.id.mvvm_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MvvmItemListActivity.class));
             }
         });
     }

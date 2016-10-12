@@ -27,6 +27,9 @@ import com.yoelglus.presentation.patterns.mvpvm.MvpVmItemDetailsPresenter;
 import com.yoelglus.presentation.patterns.mvpvm.MvpVmItemsListPresenter;
 import com.yoelglus.presentation.patterns.navigator.AppCompatActivityNavigator;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
+import com.yoelglus.presentation.patterns.viewmodel.AddItemViewModel;
+import com.yoelglus.presentation.patterns.viewmodel.ItemDetailViewModel;
+import com.yoelglus.presentation.patterns.viewmodel.ItemsListViewModel;
 
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
@@ -196,6 +199,32 @@ public class MasterDetailsApplication extends Application {
             @Override
             public MvpVmAddItemPresenter call() {
                 return new MvpVmAddItemPresenter(Shank.provideNew(AddItem.class));
+            }
+        });
+
+        // MVPVM
+
+        Shank.registerFactory(ItemsListViewModel.class,
+                new Func2<AppCompatActivity, Boolean, ItemsListViewModel>() {
+                    @Override
+                    public ItemsListViewModel call(AppCompatActivity activity, Boolean twoPane) {
+                        return new ItemsListViewModel(Shank.provideNew(GetItems.class),
+                                new ItemModelsMapper(),
+                                Shank.provideNew(Navigator.class, activity, twoPane));
+                    }
+                });
+
+        Shank.registerFactory(ItemDetailViewModel.class, new Func1<String, ItemDetailViewModel>() {
+            @Override
+            public ItemDetailViewModel call(String id) {
+                return new ItemDetailViewModel(Shank.provideNew(GetItem.class, id));
+            }
+        });
+
+        Shank.registerFactory(AddItemViewModel.class, new Func0<AddItemViewModel>() {
+            @Override
+            public AddItemViewModel call() {
+                return new AddItemViewModel(Shank.provideNew(AddItem.class));
             }
         });
 

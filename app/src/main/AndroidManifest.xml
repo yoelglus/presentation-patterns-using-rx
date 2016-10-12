@@ -126,6 +126,33 @@
                 android:value=".mvpvm.MvpVmItemListActivity"/>
         </activity>
 
+        <!-- MVVM -->
+
+        <activity
+            android:name=".mvvm.MvvmItemListActivity"
+            android:label="@string/title_items_list"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".mvvm.MvvmItemDetailActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".mvvm.MvvmItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mvvm.MvvmItemListActivity"/>
+        </activity>
+        <activity
+            android:name=".mvvm.MvvmAddItemActivity"
+            android:label="Add Item"
+            android:parentActivityName=".mvvm.MvvmItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mvvm.MvvmItemListActivity"/>
+        </activity>
+
     </application>
 
 </manifest>
