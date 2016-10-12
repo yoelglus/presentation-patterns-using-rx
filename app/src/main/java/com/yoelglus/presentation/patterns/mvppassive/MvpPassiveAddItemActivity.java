@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.mvp;
+package com.yoelglus.presentation.patterns.mvppassive;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,17 +18,17 @@ import com.yoelglus.presentation.patterns.R;
 import rx.Observable;
 import rx.functions.Func1;
 
-public class MvpAddItemActivity extends AppCompatActivity implements MvpAddItemPresenter.View {
+public class MvpPassiveAddItemActivity extends AppCompatActivity implements MvpPassiveAddItemPresenter.View {
 
     private Scope mScope;
-    private MvpAddItemPresenter mPresenter;
+    private MvpPassiveAddItemPresenter mPresenter;
     private View mAddButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mScope = Scope.scope(MvpAddItemActivity.class);
-        mPresenter = Shank.with(mScope).provideSingleton(MvpAddItemPresenter.class);
+        mScope = Scope.scope(MvpPassiveAddItemActivity.class);
+        mPresenter = Shank.with(mScope).provideSingleton(MvpPassiveAddItemPresenter.class);
         setContentView(R.layout.activity_add_item);
         mAddButton = findViewById(R.id.add_button);
         mPresenter.takeView(this);

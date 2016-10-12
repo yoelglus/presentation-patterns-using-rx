@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.mvp;
+package com.yoelglus.presentation.patterns.mvppassive;
 
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
 import com.yoelglus.presentation.patterns.entities.Item;
@@ -13,14 +13,14 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
-public class MvpItemsListPresenter extends AbstractPresenter<MvpItemsListPresenter.View> {
+public class MvpPassiveItemsListPresenter extends AbstractPresenter<MvpPassiveItemsListPresenter.View> {
 
     private GetItems mGetItems;
     private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
     private SubscriptionList mSubscriptionList;
 
-    public MvpItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
+    public MvpPassiveItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
         mGetItems = getItems;
         mItemModelsMapper = itemModelsMapper;
         mNavigator = navigator;

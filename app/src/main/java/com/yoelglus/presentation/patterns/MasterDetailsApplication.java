@@ -13,9 +13,9 @@ import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
 import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
 import com.yoelglus.presentation.patterns.inject.RepositoryFactory;
-import com.yoelglus.presentation.patterns.mvp.MvpAddItemPresenter;
-import com.yoelglus.presentation.patterns.mvp.MvpItemDetailsPresenter;
-import com.yoelglus.presentation.patterns.mvp.MvpItemsListPresenter;
+import com.yoelglus.presentation.patterns.mvppassive.MvpPassiveAddItemPresenter;
+import com.yoelglus.presentation.patterns.mvppassive.MvpPassiveItemDetailsPresenter;
+import com.yoelglus.presentation.patterns.mvppassive.MvpPassiveItemsListPresenter;
 import com.yoelglus.presentation.patterns.navigator.AppCompatActivityNavigator;
 import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
@@ -65,10 +65,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(MvpItemsListPresenter.class, new Func2<AppCompatActivity, Boolean, MvpItemsListPresenter>() {
+        Shank.registerFactory(MvpPassiveItemsListPresenter.class, new Func2<AppCompatActivity, Boolean, MvpPassiveItemsListPresenter>() {
             @Override
-            public MvpItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
-                return new MvpItemsListPresenter(Shank.provideNew(GetItems.class),
+            public MvpPassiveItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
+                return new MvpPassiveItemsListPresenter(Shank.provideNew(GetItems.class),
                         new ItemModelsMapper(),
                         Shank.provideNew(Navigator.class, activity, twoPane));
             }
@@ -84,10 +84,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(MvpItemDetailsPresenter.class, new Func1<String, MvpItemDetailsPresenter>() {
+        Shank.registerFactory(MvpPassiveItemDetailsPresenter.class, new Func1<String, MvpPassiveItemDetailsPresenter>() {
             @Override
-            public MvpItemDetailsPresenter call(String id) {
-                return new MvpItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
+            public MvpPassiveItemDetailsPresenter call(String id) {
+                return new MvpPassiveItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
             }
         });
 
@@ -100,10 +100,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(MvpAddItemPresenter.class, new Func0<MvpAddItemPresenter>() {
+        Shank.registerFactory(MvpPassiveAddItemPresenter.class, new Func0<MvpPassiveAddItemPresenter>() {
             @Override
-            public MvpAddItemPresenter call() {
-                return new MvpAddItemPresenter(Shank.provideNew(AddItem.class));
+            public MvpPassiveAddItemPresenter call() {
+                return new MvpPassiveAddItemPresenter(Shank.provideNew(AddItem.class));
             }
         });
     }

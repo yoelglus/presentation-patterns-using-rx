@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.yoelglus.presentation.patterns.mvp.MvpItemListActivity;
+import com.yoelglus.presentation.patterns.mvppassive.MvpPassiveItemListActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.mvp_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MvpItemListActivity.class));
+                startActivity(new Intent(MainActivity.this, MvpPassiveItemListActivity.class));
             }
         });
     }

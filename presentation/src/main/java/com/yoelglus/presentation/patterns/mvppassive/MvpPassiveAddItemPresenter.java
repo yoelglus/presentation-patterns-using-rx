@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.mvp;
+package com.yoelglus.presentation.patterns.mvppassive;
 
 import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
 import com.yoelglus.presentation.patterns.presenter.AbstractPresenter;
@@ -7,14 +7,14 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
-public class MvpAddItemPresenter extends AbstractPresenter<MvpAddItemPresenter.View> {
+public class MvpPassiveAddItemPresenter extends AbstractPresenter<MvpPassiveAddItemPresenter.View> {
 
     private AddItem mAddItem;
     private String mContentText;
     private String mDetailText;
     private SubscriptionList mSubscriptionList = new SubscriptionList();
 
-    public MvpAddItemPresenter(AddItem addItem) {
+    public MvpPassiveAddItemPresenter(AddItem addItem) {
         mAddItem = addItem;
     }
 

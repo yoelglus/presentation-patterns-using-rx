@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.mvp;
+package com.yoelglus.presentation.patterns.mvppassive;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +13,9 @@ import com.yoelglus.presentation.patterns.R;
  * An activity representing a single Item detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link MvpItemListActivity}.
+ * in a {@link MvpPassiveItemListActivity}.
  */
-public class MvpItemDetailActivity extends AppCompatActivity {
+public class MvpPassiveItemDetailActivity extends AppCompatActivity {
 
 // region Lifecycle callbacks
     @Override
@@ -44,9 +44,9 @@ public class MvpItemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(MvpItemDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(MvpItemDetailFragment.ARG_ITEM_ID));
-            MvpItemDetailFragment fragment = new MvpItemDetailFragment();
+            arguments.putString(MvpPassiveItemDetailFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(MvpPassiveItemDetailFragment.ARG_ITEM_ID));
+            MvpPassiveItemDetailFragment fragment = new MvpPassiveItemDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().add(R.id.item_detail_container, fragment).commit();
         }
@@ -62,7 +62,7 @@ public class MvpItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, MvpItemListActivity.class));
+            navigateUpTo(new Intent(this, MvpPassiveItemListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

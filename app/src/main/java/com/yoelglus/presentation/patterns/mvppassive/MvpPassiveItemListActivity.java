@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.mvp;
+package com.yoelglus.presentation.patterns.mvppassive;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,14 +27,14 @@ import static java.util.Collections.emptyList;
  * An activity representing a list of Items. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link MvpItemDetailActivity} representing
+ * lead to a {@link MvpPassiveItemDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class MvpItemListActivity extends AppCompatActivity implements MvpItemsListPresenter.View {
+public class MvpPassiveItemListActivity extends AppCompatActivity implements MvpPassiveItemsListPresenter.View {
 
     private SimpleItemRecyclerViewAdapter mAdapter;
-    private MvpItemsListPresenter mPresenter;
+    private MvpPassiveItemsListPresenter mPresenter;
     private PublishSubject<Void> mAddItemClicks = PublishSubject.create();
     private PublishSubject<String> mItemClicks = PublishSubject.create();
 
@@ -45,7 +45,7 @@ public class MvpItemListActivity extends AppCompatActivity implements MvpItemsLi
         setContentView(R.layout.activity_item_list);
 
         boolean twoPane = findViewById(R.id.item_detail_container) != null;
-        mPresenter = Shank.provideNew(MvpItemsListPresenter.class, this, twoPane);
+        mPresenter = Shank.provideNew(MvpPassiveItemsListPresenter.class, this, twoPane);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

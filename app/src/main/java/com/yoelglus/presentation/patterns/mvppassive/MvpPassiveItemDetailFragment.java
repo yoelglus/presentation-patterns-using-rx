@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.mvp;
+package com.yoelglus.presentation.patterns.mvppassive;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,13 +16,13 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
 
 /**
  * A fragment representing a single Item detail screen.
- * This fragment is either contained in a {@link MvpItemListActivity}
- * in two-pane mode (on tablets) or a {@link MvpItemDetailActivity}
+ * This fragment is either contained in a {@link MvpPassiveItemListActivity}
+ * in two-pane mode (on tablets) or a {@link MvpPassiveItemDetailActivity}
  * on handsets.
  */
-public class MvpItemDetailFragment extends Fragment implements MvpItemDetailsPresenter.View {
+public class MvpPassiveItemDetailFragment extends Fragment implements MvpPassiveItemDetailsPresenter.View {
 
-    private MvpItemDetailsPresenter mPresenter;
+    private MvpPassiveItemDetailsPresenter mPresenter;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -35,7 +35,7 @@ public class MvpItemDetailFragment extends Fragment implements MvpItemDetailsPre
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MvpItemDetailFragment() {
+    public MvpPassiveItemDetailFragment() {
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MvpItemDetailFragment extends Fragment implements MvpItemDetailsPre
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mPresenter = Shank.provideNew(MvpItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
+            mPresenter = Shank.provideNew(MvpPassiveItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
         }
     }
 
