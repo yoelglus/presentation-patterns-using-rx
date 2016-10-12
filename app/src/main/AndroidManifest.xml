@@ -21,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- MVP Passive -->
         <activity
             android:name=".mvppassive.MvpPassiveItemListActivity"
             android:label="@string/title_items_list"
@@ -45,6 +47,33 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".mvppassive.MvpPassiveItemListActivity"/>
         </activity>
+
+        <!-- MVP Passive Rx -->
+        <activity
+            android:name=".mvppassiverx.MvpPassiveRxItemListActivity"
+            android:label="@string/title_items_list"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".mvppassiverx.MvpPassiveRxItemDetailActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".mvppassiverx.MvpPassiveRxItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mvppassiverx.MvpPassiveRxItemListActivity"/>
+        </activity>
+        <activity
+            android:name=".mvppassiverx.MvpPassiveRxAddItemActivity"
+            android:label="Add Item"
+            android:parentActivityName=".mvppassiverx.MvpPassiveRxItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mvppassiverx.MvpPassiveRxItemListActivity"/>
+        </activity>
+
     </application>
 
 </manifest>
