@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.presentation.model;
+package com.yoelglus.presentation.patterns.model;
 
 import com.yoelglus.presentation.patterns.entities.Item;
 
@@ -7,7 +7,7 @@ public class ItemModel {
     private final String mContent;
     private final String mDetail;
 
-    public ItemModel(String id, String content, String detail) {
+    private ItemModel(String id, String content, String detail) {
         mId = id;
         mContent = content;
         mDetail = detail;

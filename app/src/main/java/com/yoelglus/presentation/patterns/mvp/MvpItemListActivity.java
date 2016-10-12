@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns;
+package com.yoelglus.presentation.patterns.mvp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.memoizrlabs.Shank;
 
-import com.yoelglus.presentation.patterns.presentation.model.ItemModel;
-import com.yoelglus.presentation.patterns.presentation.presenter.ItemsListPresenter;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import java.util.List;
 
@@ -27,24 +27,25 @@ import static java.util.Collections.emptyList;
  * An activity representing a list of Items. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link ItemDetailActivity} representing
+ * lead to a {@link MvpItemDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ItemListActivity extends AppCompatActivity implements ItemsListPresenter.View {
+public class MvpItemListActivity extends AppCompatActivity implements MvpItemsListPresenter.View {
 
     private SimpleItemRecyclerViewAdapter mAdapter;
-    private ItemsListPresenter mPresenter;
+    private MvpItemsListPresenter mPresenter;
     private PublishSubject<Void> mAddItemClicks = PublishSubject.create();
     private PublishSubject<String> mItemClicks = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean twoPane = findViewById(R.id.item_detail_container) != null;
-        mPresenter = Shank.provideNew(ItemsListPresenter.class, this, twoPane);
 
         setContentView(R.layout.activity_item_list);
+
+        boolean twoPane = findViewById(R.id.item_detail_container) != null;
+        mPresenter = Shank.provideNew(MvpItemsListPresenter.class, this, twoPane);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

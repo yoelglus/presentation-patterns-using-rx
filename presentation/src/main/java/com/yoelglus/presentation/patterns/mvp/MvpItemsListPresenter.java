@@ -1,10 +1,11 @@
-package com.yoelglus.presentation.patterns.presentation.presenter;
+package com.yoelglus.presentation.patterns.mvp;
 
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
 import com.yoelglus.presentation.patterns.entities.Item;
-import com.yoelglus.presentation.patterns.presentation.mapper.ItemModelsMapper;
-import com.yoelglus.presentation.patterns.presentation.model.ItemModel;
-import com.yoelglus.presentation.patterns.presentation.navigator.Navigator;
+import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+import com.yoelglus.presentation.patterns.navigator.Navigator;
+import com.yoelglus.presentation.patterns.presenter.AbstractPresenter;
 
 import java.util.List;
 
@@ -12,21 +13,21 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
-public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.View> {
+public class MvpItemsListPresenter extends AbstractPresenter<MvpItemsListPresenter.View> {
 
     private GetItems mGetItems;
     private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
     private SubscriptionList mSubscriptionList;
 
-    public ItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
+    public MvpItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
         mGetItems = getItems;
         mItemModelsMapper = itemModelsMapper;
         mNavigator = navigator;
     }
 
     @Override
-    void onTakeView() {
+    public void onTakeView() {
         mSubscriptionList = new SubscriptionList();
         mSubscriptionList.add(mView.addItemClicks().subscribe(new Action1<Void>() {
             @Override
@@ -51,7 +52,7 @@ public class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.Vie
     }
 
     @Override
-    void onDropView() {
+    public void onDropView() {
         mSubscriptionList.unsubscribe();
         mSubscriptionList = null;
     }

@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns;
+package com.yoelglus.presentation.patterns.mvp;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,18 +11,18 @@ import android.widget.TextView;
 
 import com.memoizrlabs.Shank;
 
-import com.yoelglus.presentation.patterns.presentation.model.ItemModel;
-import com.yoelglus.presentation.patterns.presentation.presenter.ItemDetailsPresenter;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
 
 /**
  * A fragment representing a single Item detail screen.
- * This fragment is either contained in a {@link ItemListActivity}
- * in two-pane mode (on tablets) or a {@link ItemDetailActivity}
+ * This fragment is either contained in a {@link MvpItemListActivity}
+ * in two-pane mode (on tablets) or a {@link MvpItemDetailActivity}
  * on handsets.
  */
-public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter.View {
+public class MvpItemDetailFragment extends Fragment implements MvpItemDetailsPresenter.View {
 
-    private ItemDetailsPresenter mPresenter;
+    private MvpItemDetailsPresenter mPresenter;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -35,7 +35,7 @@ public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItemDetailFragment() {
+    public MvpItemDetailFragment() {
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ItemDetailFragment extends Fragment implements ItemDetailsPresenter
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mPresenter = Shank.provideNew(ItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
+            mPresenter = Shank.provideNew(MvpItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
         }
     }
 

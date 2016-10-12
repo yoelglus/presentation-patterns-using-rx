@@ -1,24 +1,25 @@
-package com.yoelglus.presentation.patterns.presentation.presenter;
+package com.yoelglus.presentation.patterns.mvp;
 
 import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
 import com.yoelglus.presentation.patterns.entities.Item;
-import com.yoelglus.presentation.patterns.presentation.model.ItemModel;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+import com.yoelglus.presentation.patterns.presenter.AbstractPresenter;
 
 import rx.Subscription;
 import rx.functions.Action1;
 
-public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter.View> {
+public class MvpItemDetailsPresenter extends AbstractPresenter<MvpItemDetailsPresenter.View> {
 
     private GetItem mGetItem;
     private Subscription mGetItemSubscription;
 
-    public ItemDetailsPresenter(GetItem getItem) {
+    public MvpItemDetailsPresenter(GetItem getItem) {
         mGetItem = getItem;
     }
 
 
     @Override
-    void onTakeView() {
+    public void onTakeView() {
         mGetItemSubscription = mGetItem.execute().subscribe(new Action1<Item>() {
             @Override
             public void call(Item item) {
@@ -28,7 +29,7 @@ public class ItemDetailsPresenter extends AbstractPresenter<ItemDetailsPresenter
     }
 
     @Override
-    void onDropView() {
+    public void onDropView() {
         mGetItemSubscription.unsubscribe();
     }
 

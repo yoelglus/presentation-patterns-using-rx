@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.presentation.presenter;
+package com.yoelglus.presentation.patterns.presenter;
 
 public abstract class AbstractPresenter<T> {
 
@@ -16,7 +16,7 @@ public abstract class AbstractPresenter<T> {
         }
     }
 
-    abstract void onTakeView();
+    public abstract void onTakeView();
 
-    abstract void onDropView();
+    public abstract void onDropView();
 }

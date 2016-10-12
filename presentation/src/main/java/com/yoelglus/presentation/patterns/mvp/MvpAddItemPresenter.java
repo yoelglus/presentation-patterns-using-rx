@@ -1,19 +1,20 @@
-package com.yoelglus.presentation.patterns.presentation.presenter;
+package com.yoelglus.presentation.patterns.mvp;
 
 import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
+import com.yoelglus.presentation.patterns.presenter.AbstractPresenter;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
-public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
+public class MvpAddItemPresenter extends AbstractPresenter<MvpAddItemPresenter.View> {
 
     private AddItem mAddItem;
     private String mContentText;
     private String mDetailText;
     private SubscriptionList mSubscriptionList = new SubscriptionList();
 
-    public AddItemPresenter(AddItem addItem) {
+    public MvpAddItemPresenter(AddItem addItem) {
         mAddItem = addItem;
     }
 
@@ -22,7 +23,7 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
     }
 
     @Override
-    void onTakeView() {
+    public void onTakeView() {
         mSubscriptionList.add(mView.contentTextChanged().subscribe(new Action1<String>() {
             @Override
             public void call(String contentText) {
@@ -59,7 +60,7 @@ public class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
     }
 
     @Override
-    void onDropView() {
+    public void onDropView() {
         mSubscriptionList.unsubscribe();
     }
 

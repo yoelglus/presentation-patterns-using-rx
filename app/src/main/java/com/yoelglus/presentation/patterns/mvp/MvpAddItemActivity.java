@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns;
+package com.yoelglus.presentation.patterns.mvp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,22 +13,22 @@ import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 import com.memoizrlabs.Scope;
 import com.memoizrlabs.Shank;
 
-import com.yoelglus.presentation.patterns.presentation.presenter.AddItemPresenter;
+import com.yoelglus.presentation.patterns.R;
 
 import rx.Observable;
 import rx.functions.Func1;
 
-public class AddItemActivity extends AppCompatActivity implements AddItemPresenter.View {
+public class MvpAddItemActivity extends AppCompatActivity implements MvpAddItemPresenter.View {
 
     private Scope mScope;
-    private AddItemPresenter mPresenter;
+    private MvpAddItemPresenter mPresenter;
     private View mAddButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mScope = Scope.scope(AddItemActivity.class);
-        mPresenter = Shank.with(mScope).provideSingleton(AddItemPresenter.class);
+        mScope = Scope.scope(MvpAddItemActivity.class);
+        mPresenter = Shank.with(mScope).provideSingleton(MvpAddItemPresenter.class);
         setContentView(R.layout.activity_add_item);
         mAddButton = findViewById(R.id.add_button);
         mPresenter.takeView(this);

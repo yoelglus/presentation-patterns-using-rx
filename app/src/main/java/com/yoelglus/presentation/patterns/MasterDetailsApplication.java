@@ -13,12 +13,12 @@ import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
 import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
 import com.yoelglus.presentation.patterns.inject.RepositoryFactory;
+import com.yoelglus.presentation.patterns.mvp.MvpAddItemPresenter;
+import com.yoelglus.presentation.patterns.mvp.MvpItemDetailsPresenter;
+import com.yoelglus.presentation.patterns.mvp.MvpItemsListPresenter;
 import com.yoelglus.presentation.patterns.navigator.AppCompatActivityNavigator;
-import com.yoelglus.presentation.patterns.presentation.mapper.ItemModelsMapper;
-import com.yoelglus.presentation.patterns.presentation.navigator.Navigator;
-import com.yoelglus.presentation.patterns.presentation.presenter.AddItemPresenter;
-import com.yoelglus.presentation.patterns.presentation.presenter.ItemDetailsPresenter;
-import com.yoelglus.presentation.patterns.presentation.presenter.ItemsListPresenter;
+import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
+import com.yoelglus.presentation.patterns.navigator.Navigator;
 
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
@@ -65,10 +65,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(ItemsListPresenter.class, new Func2<AppCompatActivity, Boolean, ItemsListPresenter>() {
+        Shank.registerFactory(MvpItemsListPresenter.class, new Func2<AppCompatActivity, Boolean, MvpItemsListPresenter>() {
             @Override
-            public ItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
-                return new ItemsListPresenter(Shank.provideNew(GetItems.class),
+            public MvpItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
+                return new MvpItemsListPresenter(Shank.provideNew(GetItems.class),
                         new ItemModelsMapper(),
                         Shank.provideNew(Navigator.class, activity, twoPane));
             }
@@ -84,10 +84,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(ItemDetailsPresenter.class, new Func1<String, ItemDetailsPresenter>() {
+        Shank.registerFactory(MvpItemDetailsPresenter.class, new Func1<String, MvpItemDetailsPresenter>() {
             @Override
-            public ItemDetailsPresenter call(String id) {
-                return new ItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
+            public MvpItemDetailsPresenter call(String id) {
+                return new MvpItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
             }
         });
 
@@ -100,10 +100,10 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(AddItemPresenter.class, new Func0<AddItemPresenter>() {
+        Shank.registerFactory(MvpAddItemPresenter.class, new Func0<MvpAddItemPresenter>() {
             @Override
-            public AddItemPresenter call() {
-                return new AddItemPresenter(Shank.provideNew(AddItem.class));
+            public MvpAddItemPresenter call() {
+                return new MvpAddItemPresenter(Shank.provideNew(AddItem.class));
             }
         });
     }

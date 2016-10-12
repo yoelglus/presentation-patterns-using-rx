@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.yoelglus.presentation.patterns"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+          package="com.yoelglus.presentation.patterns"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
+        android:name=".MasterDetailsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".MasterDetailsApplication">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".ItemListActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -20,22 +22,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ItemDetailActivity"
-            android:label="@string/title_item_detail"
-            android:parentActivityName=".ItemListActivity"
+            android:name=".mvp.MvpItemListActivity"
+            android:label="@string/title_items_list"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ItemListActivity"/>
         </activity>
         <activity
-            android:name=".AddItemActivity"
-            android:label="Add Item"
-            android:parentActivityName=".ItemListActivity"
+            android:name=".mvp.MvpItemDetailActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".mvp.MvpItemListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ItemListActivity"/>
+                android:value=".mvp.MvpItemListActivity"/>
+        </activity>
+        <activity
+            android:name=".mvp.MvpAddItemActivity"
+            android:label="Add Item"
+            android:parentActivityName=".mvp.MvpItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mvp.MvpItemListActivity"/>
         </activity>
     </application>
 

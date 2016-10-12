@@ -1,7 +1,7 @@
-package com.yoelglus.presentation.patterns.presentation.mapper;
+package com.yoelglus.presentation.patterns.mapper;
 
 import com.yoelglus.presentation.patterns.entities.Item;
-import com.yoelglus.presentation.patterns.presentation.model.ItemModel;
+import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import java.util.ArrayList;
 import java.util.List;

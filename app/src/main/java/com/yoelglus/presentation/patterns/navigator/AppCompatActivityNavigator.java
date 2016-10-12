@@ -4,11 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.yoelglus.presentation.patterns.AddItemActivity;
-import com.yoelglus.presentation.patterns.ItemDetailActivity;
-import com.yoelglus.presentation.patterns.ItemDetailFragment;
+import com.yoelglus.presentation.patterns.mvp.MvpAddItemActivity;
+import com.yoelglus.presentation.patterns.mvp.MvpItemDetailActivity;
+import com.yoelglus.presentation.patterns.mvp.MvpItemDetailFragment;
 import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.presentation.navigator.Navigator;
 
 
 public class AppCompatActivityNavigator implements Navigator {
@@ -23,22 +22,22 @@ public class AppCompatActivityNavigator implements Navigator {
 
     @Override
     public void navigateToAddItem() {
-        mActivity.startActivity(new Intent(mActivity, AddItemActivity.class));
+        mActivity.startActivity(new Intent(mActivity, MvpAddItemActivity.class));
     }
 
     @Override
     public void navigateToItem(String id) {
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putString(ItemDetailFragment.ARG_ITEM_ID, id);
-            ItemDetailFragment fragment = new ItemDetailFragment();
+            arguments.putString(MvpItemDetailFragment.ARG_ITEM_ID, id);
+            MvpItemDetailFragment fragment = new MvpItemDetailFragment();
             fragment.setArguments(arguments);
             mActivity.getSupportFragmentManager().beginTransaction()
                     .replace(R.id.item_detail_container, fragment)
                     .commit();
         } else {
-            Intent intent = new Intent(mActivity, ItemDetailActivity.class);
-            intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, id);
+            Intent intent = new Intent(mActivity, MvpItemDetailActivity.class);
+            intent.putExtra(MvpItemDetailFragment.ARG_ITEM_ID, id);
             mActivity.startActivity(intent);
         }
 
