@@ -16,38 +16,21 @@ public class AddItemViewModel extends AbstractViewModel {
     private String mDetailText = "";
     private AddItem mAddItem;
 
-    private Action1<String> mContentChangedAction = new Action1<String>() {
-        @Override
-        public void call(String contentText) {
-            mContentText = contentText;
-            updateAddButtonState();
-        }
+    private Action1<String> mContentChangedAction = contentText -> {
+        mContentText = contentText;
+        updateAddButtonState();
     };
 
-    private Action1<String> mDetailChangedAction = new Action1<String>() {
-        @Override
-        public void call(String detailText) {
-            mDetailText = detailText;
-            updateAddButtonState();
-        }
+    private Action1<String> mDetailChangedAction = detailText -> {
+        mDetailText = detailText;
+        updateAddButtonState();
     };
-    private Action1<Void> mAddItemClicks = new Action1<Void>() {
-        @Override
-        public void call(Void aVoid) {
-            mAddItemSubscription = mAddItem.execute(mContentText, mDetailText).subscribe(new Action1<String>() {
-                @Override
-                public void call(String s) {
-                    mDismissSubject.onNext(null);
-                }
+
+    private Action1<Void> mAddItemClicks = aVoid ->
+            mAddItemSubscription = mAddItem.execute(mContentText, mDetailText).subscribe(s -> {
+                mDismissSubject.onNext(null);
             });
-        }
-    };
-    private Action1<Void> mCancelClicks = new Action1<Void>() {
-        @Override
-        public void call(Void aVoid) {
-            mDismissSubject.onNext(null);
-        }
-    };
+    private Action1<Void> mCancelClicks = aVoid -> mDismissSubject.onNext(null);
 
     public AddItemViewModel(AddItem addItem) {
         mAddItem = addItem;

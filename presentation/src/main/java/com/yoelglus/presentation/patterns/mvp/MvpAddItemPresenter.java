@@ -3,8 +3,6 @@ package com.yoelglus.presentation.patterns.mvp;
 import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
 import com.yoelglus.presentation.patterns.presenter.AbstractPresenter;
 
-import rx.functions.Action1;
-
 public class MvpAddItemPresenter extends AbstractPresenter<MvpAddItemPresenter.View> {
 
     private AddItem mAddItem;
@@ -16,11 +14,8 @@ public class MvpAddItemPresenter extends AbstractPresenter<MvpAddItemPresenter.V
     }
 
     void onAddButtonClicked() {
-        mAddItem.execute(mContentText, mDetailText).subscribe(new Action1<String>() {
-            @Override
-            public void call(String s) {
-                mView.dismissView();
-            }
+        mAddItem.execute(mContentText, mDetailText).subscribe(s -> {
+            mView.dismissView();
         });
     }
 

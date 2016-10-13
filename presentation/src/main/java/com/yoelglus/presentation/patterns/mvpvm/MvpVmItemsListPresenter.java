@@ -1,15 +1,11 @@
 package com.yoelglus.presentation.patterns.mvpvm;
 
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
-import com.yoelglus.presentation.patterns.entities.Item;
 import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
 import com.yoelglus.presentation.patterns.model.ItemsListViewModel;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
 
-import java.util.List;
-
 import rx.Subscription;
-import rx.functions.Action1;
 
 public class MvpVmItemsListPresenter extends MvpVmAbstractPresenter<ItemsListViewModel> {
 
@@ -26,11 +22,8 @@ public class MvpVmItemsListPresenter extends MvpVmAbstractPresenter<ItemsListVie
 
     @Override
     protected void onSubscribe() {
-        mGetItemsSubscription = mGetItems.execute().subscribe(new Action1<List<Item>>() {
-            @Override
-            public void call(List<Item> items) {
-                notifyOnChange(new ItemsListViewModel(mItemModelsMapper.map(items)));
-            }
+        mGetItemsSubscription = mGetItems.execute().subscribe(items -> {
+            notifyOnChange(new ItemsListViewModel(mItemModelsMapper.map(items)));
         });
     }
 

@@ -4,8 +4,6 @@ package com.yoelglus.presentation.patterns.mvpvm;
 import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
 import com.yoelglus.presentation.patterns.model.AddItemViewModel;
 
-import rx.functions.Action1;
-
 public class MvpVmAddItemPresenter extends MvpVmAbstractPresenter<AddItemViewModel> {
 
     private AddItem mAddItem;
@@ -27,11 +25,8 @@ public class MvpVmAddItemPresenter extends MvpVmAbstractPresenter<AddItemViewMod
     }
 
     void onAddButtonClicked() {
-        mAddItem.execute(mContentText, mDetailText).subscribe(new Action1<String>() {
-            @Override
-            public void call(String s) {
-                notifyOnChange(new AddItemViewModel(true, true));
-            }
+        mAddItem.execute(mContentText, mDetailText).subscribe(s -> {
+            notifyOnChange(new AddItemViewModel(true, true));
         });
     }
 

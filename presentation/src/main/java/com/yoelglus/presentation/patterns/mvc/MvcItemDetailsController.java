@@ -1,9 +1,6 @@
 package com.yoelglus.presentation.patterns.mvc;
 
 import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
-import com.yoelglus.presentation.patterns.entities.Item;
-
-import rx.functions.Action1;
 
 public class MvcItemDetailsController {
 
@@ -16,11 +13,8 @@ public class MvcItemDetailsController {
     }
 
     void loadItemDetails() {
-        mGetItem.execute().subscribe(new Action1<Item>() {
-            @Override
-            public void call(Item item) {
-                mMvcItemDetailsModel.setItem(item);
-            }
+        mGetItem.execute().subscribe(item -> {
+            mMvcItemDetailsModel.setItem(item);
         });
     }
 }
