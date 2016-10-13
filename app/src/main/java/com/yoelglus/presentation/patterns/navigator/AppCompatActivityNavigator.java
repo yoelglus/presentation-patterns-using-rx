@@ -42,4 +42,9 @@ public class AppCompatActivityNavigator implements Navigator {
         }
 
     }
+
+    @Override
+    public void closeCurrentScreen() {
+        mActivity.finish();
+    }
 }

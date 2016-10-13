@@ -13,6 +13,12 @@ import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
 import com.yoelglus.presentation.patterns.inject.RepositoryFactory;
 import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
+import com.yoelglus.presentation.patterns.mvc.MvcAddItemController;
+import com.yoelglus.presentation.patterns.mvc.MvcAddItemModel;
+import com.yoelglus.presentation.patterns.mvc.MvcItemDetailsController;
+import com.yoelglus.presentation.patterns.mvc.MvcItemDetailsModel;
+import com.yoelglus.presentation.patterns.mvc.MvcItemsListController;
+import com.yoelglus.presentation.patterns.mvc.MvcItemsListModel;
 import com.yoelglus.presentation.patterns.mvp.MvpAddItemPresenter;
 import com.yoelglus.presentation.patterns.mvp.MvpItemDetailsPresenter;
 import com.yoelglus.presentation.patterns.mvp.MvpItemsListPresenter;
@@ -204,15 +210,14 @@ public class MasterDetailsApplication extends Application {
 
         // MVPVM
 
-        Shank.registerFactory(ItemsListViewModel.class,
-                new Func2<AppCompatActivity, Boolean, ItemsListViewModel>() {
-                    @Override
-                    public ItemsListViewModel call(AppCompatActivity activity, Boolean twoPane) {
-                        return new ItemsListViewModel(Shank.provideNew(GetItems.class),
-                                new ItemModelsMapper(),
-                                Shank.provideNew(Navigator.class, activity, twoPane));
-                    }
-                });
+        Shank.registerFactory(ItemsListViewModel.class, new Func2<AppCompatActivity, Boolean, ItemsListViewModel>() {
+            @Override
+            public ItemsListViewModel call(AppCompatActivity activity, Boolean twoPane) {
+                return new ItemsListViewModel(Shank.provideNew(GetItems.class),
+                        new ItemModelsMapper(),
+                        Shank.provideNew(Navigator.class, activity, twoPane));
+            }
+        });
 
         Shank.registerFactory(ItemDetailViewModel.class, new Func1<String, ItemDetailViewModel>() {
             @Override
@@ -228,5 +233,55 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
+        // MVC
+        Shank.registerFactory(MvcItemsListModel.class, new Func0<MvcItemsListModel>() {
+            @Override
+            public MvcItemsListModel call() {
+                return new MvcItemsListModel();
+            }
+        });
+
+        Shank.registerFactory(MvcItemsListController.class,
+                new Func2<AppCompatActivity, Boolean, MvcItemsListController>() {
+                    @Override
+                    public MvcItemsListController call(AppCompatActivity activity, Boolean twoPane) {
+                        return new MvcItemsListController(Shank.provideNew(GetItems.class),
+                                Shank.provideNew(Navigator.class, activity, twoPane),
+                                Shank.provideSingleton(MvcItemsListModel.class));
+                    }
+                });
+
+        Shank.registerFactory(MvcItemDetailsModel.class, new Func0<MvcItemDetailsModel>() {
+            @Override
+            public MvcItemDetailsModel call() {
+                return new MvcItemDetailsModel();
+            }
+        });
+
+        Shank.registerFactory(MvcItemDetailsController.class, new Func1<String, MvcItemDetailsController>() {
+            @Override
+            public MvcItemDetailsController call(String id) {
+                return new MvcItemDetailsController(Shank.provideNew(GetItem.class, id),
+                        Shank.provideSingleton(MvcItemDetailsModel.class));
+            }
+        });
+
+        Shank.registerFactory(MvcAddItemModel.class, new Func0<MvcAddItemModel>() {
+            @Override
+            public MvcAddItemModel call() {
+                return new MvcAddItemModel();
+            }
+        });
+
+        Shank.registerFactory(MvcAddItemController.class,
+                new Func2<AppCompatActivity, Boolean, MvcAddItemController>() {
+                    @Override
+                    public MvcAddItemController call(AppCompatActivity activity, Boolean twoPane) {
+                        return new MvcAddItemController(Shank.provideNew(AddItem.class),
+                                Shank.provideNew(Navigator.class, activity, twoPane),
+                                Shank.provideSingleton(MvcAddItemModel.class));
+                    }
+                });
     }
+
 }
