@@ -1,5 +1,11 @@
 package com.yoelglus.presentation.patterns.mvppassive;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.memoizrlabs.Scope;
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,16 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
-import com.memoizrlabs.Scope;
-import com.memoizrlabs.Shank;
-
-import com.yoelglus.presentation.patterns.R;
-
 import rx.Observable;
-import rx.functions.Func1;
 
 public class MvpPassiveAddItemActivity extends AppCompatActivity implements MvpPassiveAddItemPresenter.View {
 
@@ -50,12 +47,8 @@ public class MvpPassiveAddItemActivity extends AppCompatActivity implements MvpP
 
     @NonNull
     private Observable<String> getObservableForTextView(int viewId) {
-        return RxTextView.textChangeEvents((TextView) findViewById(viewId)).map(new Func1<TextViewTextChangeEvent, String>() {
-            @Override
-            public String call(TextViewTextChangeEvent textViewTextChangeEvent) {
-                return textViewTextChangeEvent.text().toString();
-            }
-        });
+        return RxTextView.textChangeEvents((TextView) findViewById(viewId)).map(
+                textViewTextChangeEvent -> textViewTextChangeEvent.text().toString());
     }
 
     @Override

@@ -1,5 +1,9 @@
 package com.yoelglus.presentation.patterns.mvppassiverx;
 
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -10,10 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import java.util.List;
 
@@ -51,12 +51,7 @@ public class MvpPassiveRxItemListActivity extends AppCompatActivity implements M
         toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAddItemClicks.onNext(null);
-            }
-        });
+        fab.setOnClickListener(view -> mAddItemClicks.onNext(null));
 
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
@@ -77,12 +72,9 @@ public class MvpPassiveRxItemListActivity extends AppCompatActivity implements M
 
     @Override
     public Action1<List<ItemModel>> showItems() {
-        return new Action1<List<ItemModel>>() {
-            @Override
-            public void call(List<ItemModel> itemModels) {
-                mAdapter.setValues(itemModels);
-                mAdapter.notifyDataSetChanged();
-            }
+        return itemModels -> {
+            mAdapter.setValues(itemModels);
+            mAdapter.notifyDataSetChanged();
         };
     }
 
@@ -121,12 +113,7 @@ public class MvpPassiveRxItemListActivity extends AppCompatActivity implements M
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mItemClicks.onNext(holder.mItem.getId());
-                }
-            });
+            holder.mView.setOnClickListener(v -> mItemClicks.onNext(holder.mItem.getId()));
         }
 
         @Override

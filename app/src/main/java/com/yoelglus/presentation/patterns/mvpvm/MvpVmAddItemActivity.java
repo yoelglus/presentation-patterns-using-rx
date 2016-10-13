@@ -27,26 +27,13 @@ public class MvpVmAddItemActivity extends AppCompatActivity {
         mPresenter = Shank.provideSingleton(MvpVmAddItemPresenter.class);
         setContentView(R.layout.activity_add_item);
         mAddButton = findViewById(R.id.add_button);
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.onAddButtonClicked();
-            }
-        });
-        findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.onCancelButtonClicked();
-            }
-        });
-        mPresenterSubscription = mPresenter.getViewModelObservable().subscribe(new Action1<AddItemViewModel>() {
-            @Override
-            public void call(AddItemViewModel addItemViewModel) {
-                if (addItemViewModel.shouldDismiss()) {
-                    finish();
-                } else {
-                    mAddButton.setEnabled(addItemViewModel.isAddButtonEnabled());
-                }
+        mAddButton.setOnClickListener(v -> mPresenter.onAddButtonClicked());
+        findViewById(R.id.cancel_button).setOnClickListener(v -> mPresenter.onCancelButtonClicked());
+        mPresenterSubscription = mPresenter.getViewModelObservable().subscribe(addItemViewModel -> {
+            if (addItemViewModel.shouldDismiss()) {
+                finish();
+            } else {
+                mAddButton.setEnabled(addItemViewModel.isAddButtonEnabled());
             }
         });
 

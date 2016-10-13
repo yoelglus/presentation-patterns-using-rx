@@ -1,5 +1,9 @@
 package com.yoelglus.presentation.patterns.mvc;
 
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,13 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.entities.Item;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import rx.Subscription;
-import rx.functions.Action1;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -62,12 +60,7 @@ public class MvcItemDetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mModelSubscription = mModel.itemDetails().subscribe(new Action1<Item>() {
-            @Override
-            public void call(Item item) {
-                showItem(ItemModel.from(item));
-            }
-        });
+        mModelSubscription = mModel.itemDetails().subscribe(item ->showItem(ItemModel.from(item)));
         mController.loadItemDetails();
     }
 
