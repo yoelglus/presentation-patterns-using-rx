@@ -1,12 +1,7 @@
 package com.yoelglus.presentation.patterns.mvp;
 
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+
 import java.util.List;
+
+import rx.functions.Action1;
 
 import static java.util.Collections.emptyList;
 
@@ -44,8 +46,7 @@ public class MvpItemListActivity extends AppCompatActivity implements MvpItemsLi
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> mPresenter.onAddItemClicked());
+        RxView.clicks(findViewById(R.id.fab)).subscribe(mPresenter.onAddItemClicked());
 
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
@@ -65,9 +66,11 @@ public class MvpItemListActivity extends AppCompatActivity implements MvpItemsLi
     }
 
     @Override
-    public void showItems(List<ItemModel> itemModels) {
-        mAdapter.setValues(itemModels);
-        mAdapter.notifyDataSetChanged();
+    public Action1<List<ItemModel>> showItems() {
+        return itemModels -> {
+            mAdapter.setValues(itemModels);
+            mAdapter.notifyDataSetChanged();
+        };
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -94,7 +97,7 @@ public class MvpItemListActivity extends AppCompatActivity implements MvpItemsLi
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
-            holder.mView.setOnClickListener(v -> mPresenter.onItemClicked(holder.mItem.getId()));
+            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(mPresenter.onItemClicked());
         }
 
         @Override
