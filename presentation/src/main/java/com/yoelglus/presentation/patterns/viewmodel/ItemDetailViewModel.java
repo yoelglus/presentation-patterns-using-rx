@@ -1,12 +1,10 @@
 package com.yoelglus.presentation.patterns.viewmodel;
 
 import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
-import com.yoelglus.presentation.patterns.entities.Item;
 import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import rx.Observable;
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class ItemDetailViewModel extends AbstractViewModel {
@@ -22,11 +20,8 @@ public class ItemDetailViewModel extends AbstractViewModel {
     @Override
     public void onStart() {
         super.onStart();
-        mGetItemSubscription = mGetItem.execute().subscribe(new Action1<Item>() {
-            @Override
-            public void call(Item item) {
-                mItemModelSubject.onNext(ItemModel.from(item));
-            }
+        mGetItemSubscription = mGetItem.execute().subscribe(item -> {
+            mItemModelSubject.onNext(ItemModel.from(item));
         });
     }
 

@@ -1,7 +1,6 @@
 package com.yoelglus.presentation.patterns.mvppassive;
 
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
-import com.yoelglus.presentation.patterns.entities.Item;
 import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
 import com.yoelglus.presentation.patterns.model.ItemModel;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
@@ -10,7 +9,6 @@ import com.yoelglus.presentation.patterns.presenter.AbstractPresenter;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
 public class MvpPassiveItemsListPresenter extends AbstractPresenter<MvpPassiveItemsListPresenter.View> {
@@ -29,25 +27,16 @@ public class MvpPassiveItemsListPresenter extends AbstractPresenter<MvpPassiveIt
     @Override
     public void onTakeView() {
         mSubscriptionList = new SubscriptionList();
-        mSubscriptionList.add(mView.addItemClicks().subscribe(new Action1<Void>() {
-            @Override
-            public void call(Void aVoid) {
-                mNavigator.navigateToAddItem();
-            }
+        mSubscriptionList.add(mView.addItemClicks().subscribe(aVoid -> {
+            mNavigator.navigateToAddItem();
         }));
 
-        mSubscriptionList.add(mView.itemClicks().subscribe(new Action1<String>() {
-            @Override
-            public void call(String id) {
-                mNavigator.navigateToItem(id);
-            }
+        mSubscriptionList.add(mView.itemClicks().subscribe(id -> {
+            mNavigator.navigateToItem(id);
         }));
 
-        mSubscriptionList.add(mGetItems.execute().subscribe(new Action1<List<Item>>() {
-            @Override
-            public void call(List<Item> items) {
-                mView.showItems(mItemModelsMapper.map(items));
-            }
+        mSubscriptionList.add(mGetItems.execute().subscribe(items -> {
+            mView.showItems(mItemModelsMapper.map(items));
         }));
     }
 

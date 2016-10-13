@@ -1,7 +1,6 @@
 package com.yoelglus.presentation.patterns.viewmodel;
 
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
-import com.yoelglus.presentation.patterns.entities.Item;
 import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
 import com.yoelglus.presentation.patterns.model.ItemModel;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
@@ -19,18 +18,8 @@ public class ItemsListViewModel extends AbstractViewModel {
     private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
     private PublishSubject<List<ItemModel>> mItemModelsSubject = PublishSubject.create();
-    private Action1<Void> mAddItemClicks = new Action1<Void>() {
-        @Override
-        public void call(Void aVoid) {
-            mNavigator.navigateToAddItem();
-        }
-    };
-    private Action1<String> mItemClicks = new Action1<String>() {
-        @Override
-        public void call(String id) {
-            mNavigator.navigateToItem(id);
-        }
-    };
+    private Action1<Void> mAddItemClicks = aVoid -> mNavigator.navigateToAddItem();
+    private Action1<String> mItemClicks = id -> mNavigator.navigateToItem(id);
     private Subscription mGetItemsSubscription;
 
     public ItemsListViewModel(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
@@ -42,11 +31,8 @@ public class ItemsListViewModel extends AbstractViewModel {
     @Override
     public void onStart() {
         super.onStart();
-        mGetItemsSubscription = mGetItems.execute().subscribe(new Action1<List<Item>>() {
-            @Override
-            public void call(List<Item> items) {
-                mItemModelsSubject.onNext(mItemModelsMapper.map(items));
-            }
+        mGetItemsSubscription = mGetItems.execute().subscribe(items -> {
+            mItemModelsSubject.onNext(mItemModelsMapper.map(items));
         });
     }
 

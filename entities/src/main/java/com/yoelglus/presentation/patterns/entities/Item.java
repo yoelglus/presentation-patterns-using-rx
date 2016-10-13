@@ -5,7 +5,6 @@ public class Item {
     private String content;
     private String detail;
 
-
     public Item(String id, String content, String detail) {
         this.id = id;
         this.content = content;
