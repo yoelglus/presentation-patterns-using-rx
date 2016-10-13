@@ -1,5 +1,9 @@
 package com.yoelglus.presentation.patterns.mvppassiverx;
 
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -8,11 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 
 import rx.functions.Action1;
 
@@ -69,15 +68,12 @@ public class MvpPassiveRxItemDetailFragment extends Fragment implements MvpPassi
 
     @Override
     public Action1<ItemModel> showItem() {
-        return new Action1<ItemModel>() {
-            @Override
-            public void call(ItemModel itemModel) {
-                CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-                if (appBarLayout != null) {
-                    appBarLayout.setTitle(itemModel.getContent());
-                }
-                mItemDetail.setText(itemModel.getDetail());
+        return itemModel -> {
+            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+            if (appBarLayout != null) {
+                appBarLayout.setTitle(itemModel.getContent());
             }
+            mItemDetail.setText(itemModel.getDetail());
         };
     }
 }

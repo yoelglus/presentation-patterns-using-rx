@@ -50,12 +50,7 @@ public class MvpVmItemListActivity extends AppCompatActivity {
         toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.onAddItemClicked();
-            }
-        });
+        fab.setOnClickListener(view -> mPresenter.onAddItemClicked());
 
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
@@ -65,11 +60,8 @@ public class MvpVmItemListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenterSubscription = mPresenter.getViewModelObservable().subscribe(new Action1<ItemsListViewModel>() {
-            @Override
-            public void call(ItemsListViewModel itemsListViewModel) {
-                showItems(itemsListViewModel.getItemModels());
-            }
+        mPresenterSubscription = mPresenter.getViewModelObservable().subscribe(itemsListViewModel -> {
+            showItems(itemsListViewModel.getItemModels());
         });
     }
 
@@ -109,12 +101,7 @@ public class MvpVmItemListActivity extends AppCompatActivity {
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mPresenter.onItemClicked(holder.mItem.getId());
-                }
-            });
+            holder.mView.setOnClickListener(v -> mPresenter.onItemClicked(holder.mItem.getId()));
         }
 
         @Override

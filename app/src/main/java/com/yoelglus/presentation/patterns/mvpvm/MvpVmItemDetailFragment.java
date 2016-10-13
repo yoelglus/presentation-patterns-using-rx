@@ -61,11 +61,8 @@ public class MvpVmItemDetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenterSubscription = mPresenter.getViewModelObservable().subscribe(new Action1<ItemDetailViewModel>() {
-            @Override
-            public void call(ItemDetailViewModel itemDetailViewModel) {
-                showItem(itemDetailViewModel.getItemModel());
-            }
+        mPresenterSubscription = mPresenter.getViewModelObservable().subscribe(itemDetailViewModel -> {
+            showItem(itemDetailViewModel.getItemModel());
         });
     }
 

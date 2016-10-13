@@ -1,5 +1,9 @@
 package com.yoelglus.presentation.patterns.mvp;
 
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -10,10 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import java.util.List;
 
@@ -45,12 +45,7 @@ public class MvpItemListActivity extends AppCompatActivity implements MvpItemsLi
         toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPresenter.onAddItemClicked();
-            }
-        });
+        fab.setOnClickListener(view -> mPresenter.onAddItemClicked());
 
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
@@ -99,12 +94,7 @@ public class MvpItemListActivity extends AppCompatActivity implements MvpItemsLi
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mPresenter.onItemClicked(holder.mItem.getId());
-                }
-            });
+            holder.mView.setOnClickListener(v -> mPresenter.onItemClicked(holder.mItem.getId()));
         }
 
         @Override

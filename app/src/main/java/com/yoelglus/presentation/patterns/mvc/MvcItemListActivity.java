@@ -1,5 +1,11 @@
 package com.yoelglus.presentation.patterns.mvc;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,18 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.entities.Item;
-import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import java.util.List;
 
 import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 import static java.util.Collections.emptyList;
 
@@ -63,12 +60,7 @@ public class MvcItemListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mModelSubscription = mModel.itemsList().subscribe(new Action1<List<Item>>() {
-            @Override
-            public void call(List<Item> itemsList) {
-                showItems(mItemModelsMapper.map(itemsList));
-            }
-        });
+        mModelSubscription = mModel.itemsList().subscribe(itemsList -> showItems(mItemModelsMapper.map(itemsList)));
         mController.loadItemsList();
     }
 
@@ -107,12 +99,7 @@ public class MvcItemListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
-            RxView.clicks(holder.mView).map(new Func1<Void, String>() {
-                @Override
-                public String call(Void aVoid) {
-                    return holder.mItem.getId();
-                }
-            }).subscribe(mController.itemClicked());
+            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(mController.itemClicked());
         }
 
         @Override
@@ -121,6 +108,7 @@ public class MvcItemListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
+
             private final View mView;
             private final TextView mIdView;
             private final TextView mContentView;

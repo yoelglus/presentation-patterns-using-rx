@@ -1,5 +1,11 @@
 package com.yoelglus.presentation.patterns.mvvm;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+import com.yoelglus.presentation.patterns.viewmodel.ItemsListViewModel;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,15 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-import com.yoelglus.presentation.patterns.viewmodel.ItemsListViewModel;
-
 import java.util.List;
 
-import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
 import static java.util.Collections.emptyList;
@@ -55,12 +54,7 @@ public class MvvmItemListActivity extends AppCompatActivity {
         mSubscriptionList = new SubscriptionList();
         mSubscriptionList.add(RxView.clicks(findViewById(R.id.fab)).doOnNext(mViewModel.addItemClicks()).subscribe());
 
-        mSubscriptionList.add(mViewModel.itemModels().doOnNext(new Action1<List<ItemModel>>() {
-            @Override
-            public void call(List<ItemModel> itemModels) {
-                showItems(itemModels);
-            }
-        }).subscribe());
+        mSubscriptionList.add(mViewModel.itemModels().doOnNext(this::showItems).subscribe());
 
     }
 
@@ -112,12 +106,7 @@ public class MvvmItemListActivity extends AppCompatActivity {
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mViewModel.itemClicks().call(holder.mItem.getId());
-                }
-            });
+            holder.mView.setOnClickListener(v -> mViewModel.itemClicks().call(holder.mItem.getId()));
         }
 
         @Override

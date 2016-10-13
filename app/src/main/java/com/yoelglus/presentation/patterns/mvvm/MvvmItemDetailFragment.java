@@ -48,12 +48,7 @@ public class MvvmItemDetailFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mViewModel = Shank.provideNew(ItemDetailViewModel.class, getArguments().getString(ARG_ITEM_ID));
-            mItemModelSubscription = mViewModel.itemModel().doOnNext(new Action1<ItemModel>() {
-                @Override
-                public void call(ItemModel itemModel) {
-                    showItem(itemModel);
-                }
-            }).subscribe();
+            mItemModelSubscription = mViewModel.itemModel().doOnNext(this::showItem).subscribe();
         }
     }
 

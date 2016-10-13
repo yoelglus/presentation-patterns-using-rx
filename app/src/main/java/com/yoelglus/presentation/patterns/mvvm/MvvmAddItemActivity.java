@@ -1,21 +1,18 @@
 package com.yoelglus.presentation.patterns.mvvm;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.viewmodel.AddItemViewModel;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.viewmodel.AddItemViewModel;
-
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.internal.util.SubscriptionList;
 
 public class MvvmAddItemActivity extends AppCompatActivity {
@@ -47,12 +44,7 @@ public class MvvmAddItemActivity extends AppCompatActivity {
                 .subscribe());
         mSubscriptionList.add(getTextChangeObservable(R.id.detail).doOnNext(mAddItemViewModel.detailTextChanged())
                 .subscribe());
-        mSubscriptionList.add(mAddItemViewModel.dismiss().doOnNext(new Action1<Void>() {
-            @Override
-            public void call(Void aVoid) {
-                finish();
-            }
-        }).subscribe());
+        mSubscriptionList.add(mAddItemViewModel.dismiss().doOnNext(aVoid -> finish()).subscribe());
         mSubscriptionList.add(mAddItemViewModel.addButtonEnabled()
                 .doOnNext(RxView.enabled(findViewById(R.id.add_button)))
                 .subscribe());
@@ -61,12 +53,7 @@ public class MvvmAddItemActivity extends AppCompatActivity {
     @NonNull
     private Observable<String> getTextChangeObservable(int viewId) {
         return RxTextView.textChangeEvents((EditText) findViewById(viewId))
-                .map(new Func1<TextViewTextChangeEvent, String>() {
-                    @Override
-                    public String call(TextViewTextChangeEvent textViewTextChangeEvent) {
-                        return textViewTextChangeEvent.text().toString();
-                    }
-                });
+                .map(textViewTextChangeEvent -> textViewTextChangeEvent.text().toString());
     }
 
     @Override
