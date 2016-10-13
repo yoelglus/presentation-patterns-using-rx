@@ -13,6 +13,8 @@ import com.memoizrlabs.Shank;
 import com.yoelglus.presentation.patterns.R;
 import com.yoelglus.presentation.patterns.model.ItemModel;
 
+import rx.functions.Action1;
+
 /**
  * A fragment representing a single Item detail screen.
  * This fragment is either contained in a {@link MvpItemListActivity}
@@ -21,13 +23,12 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
  */
 public class MvpItemDetailFragment extends Fragment implements MvpItemDetailsPresenter.View {
 
-    private MvpItemDetailsPresenter mPresenter;
-
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    private MvpItemDetailsPresenter mPresenter;
     private TextView mItemDetail;
 
     /**
@@ -60,17 +61,19 @@ public class MvpItemDetailFragment extends Fragment implements MvpItemDetailsPre
     }
 
     @Override
-    public void showItem(ItemModel itemModel) {
-        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-        if (appBarLayout != null) {
-            appBarLayout.setTitle(itemModel.getContent());
-        }
-        mItemDetail.setText(itemModel.getDetail());
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.dropView(this);
+    }
+
+    @Override
+    public Action1<ItemModel> showItem() {
+        return itemModel -> {
+            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+            if (appBarLayout != null) {
+                appBarLayout.setTitle(itemModel.getContent());
+            }
+            mItemDetail.setText(itemModel.getDetail());
+        };
     }
 }

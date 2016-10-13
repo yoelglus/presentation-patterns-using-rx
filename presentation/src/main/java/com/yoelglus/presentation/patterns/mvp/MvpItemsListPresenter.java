@@ -9,6 +9,7 @@ import com.yoelglus.presentation.patterns.presenter.AbstractPresenter;
 import java.util.List;
 
 import rx.Subscription;
+import rx.functions.Action1;
 
 public class MvpItemsListPresenter extends AbstractPresenter<MvpItemsListPresenter.View> {
 
@@ -23,19 +24,9 @@ public class MvpItemsListPresenter extends AbstractPresenter<MvpItemsListPresent
         mNavigator = navigator;
     }
 
-    void onAddItemClicked() {
-        mNavigator.navigateToAddItem();
-    }
-
-    void onItemClicked(String id) {
-        mNavigator.navigateToItem(id);
-    }
-
     @Override
     public void onTakeView() {
-        mGetItemsSubscription = mGetItems.execute().subscribe(items -> {
-            mView.showItems(mItemModelsMapper.map(items));
-        });
+        mGetItemsSubscription = mGetItems.execute().map(mItemModelsMapper::map).subscribe(mView.showItems());
     }
 
     @Override
@@ -43,7 +34,15 @@ public class MvpItemsListPresenter extends AbstractPresenter<MvpItemsListPresent
         mGetItemsSubscription.unsubscribe();
     }
 
+    Action1<Void> onAddItemClicked() {
+        return aVoid -> mNavigator.navigateToAddItem();
+    }
+
+    Action1<String> onItemClicked() {
+        return mNavigator::navigateToItem;
+    }
+
     public interface View {
-        void showItems(List<ItemModel> itemModel);
+        Action1<List<ItemModel>> showItems();
     }
 }

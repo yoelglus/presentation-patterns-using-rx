@@ -6,6 +6,7 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
 import com.yoelglus.presentation.patterns.presenter.AbstractPresenter;
 
 import rx.Subscription;
+import rx.functions.Action1;
 
 public class MvpItemDetailsPresenter extends AbstractPresenter<MvpItemDetailsPresenter.View> {
 
@@ -19,9 +20,7 @@ public class MvpItemDetailsPresenter extends AbstractPresenter<MvpItemDetailsPre
 
     @Override
     public void onTakeView() {
-        mGetItemSubscription = mGetItem.execute().subscribe(item -> {
-            mView.showItem(ItemModel.from(item));
-        });
+        mGetItemSubscription = mGetItem.execute().map(ItemModel::from).subscribe(mView.showItem());
     }
 
     @Override
@@ -30,6 +29,6 @@ public class MvpItemDetailsPresenter extends AbstractPresenter<MvpItemDetailsPre
     }
 
     public interface View {
-        void showItem(ItemModel itemModel);
+        Action1<ItemModel> showItem();
     }
 }
