@@ -14,7 +14,7 @@ public class MvcAddItemModel {
     }
 
     Observable<Boolean> addItemEnabled() {
-        return mAddItemEnabledSubject;
+        return mAddItemEnabledSubject.asObservable();
     }
 
 }

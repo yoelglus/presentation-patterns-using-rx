@@ -23,11 +23,11 @@ public class MvcAddItemActivity extends AppCompatActivity {
         MvcAddItemController controller = Shank.provideSingleton(MvcAddItemController.class, this, false);
         MvcAddItemModel model = Shank.provideSingleton(MvcAddItemModel.class);
         setContentView(R.layout.activity_add_item);
-        RxView.clicks(findViewById(R.id.cancel_button)).subscribe(controller.dismissButtonClicked());
-        RxTextView.textChanges((EditText) findViewById(R.id.content)).subscribe(controller.contentTextChanged());
-        RxTextView.textChanges((EditText) findViewById(R.id.detail)).subscribe(controller.detailTextChanged());
+        RxView.clicks(findViewById(R.id.cancel_button)).subscribe(aVoid -> controller.dismissButtonClicked());
+        RxTextView.textChanges((EditText) findViewById(R.id.content)).subscribe(controller::contentTextChanged);
+        RxTextView.textChanges((EditText) findViewById(R.id.detail)).subscribe(controller::detailTextChanged);
         View addButton = findViewById(R.id.add_button);
-        RxView.clicks(addButton).subscribe(controller.addButtonClicked());
+        RxView.clicks(addButton).subscribe(aVoid -> controller.addButtonClicked());
 
         mModelSubscription = model.addItemEnabled().subscribe(RxView.enabled(addButton));
     }
