@@ -3,6 +3,7 @@ package com.yoelglus.presentation.patterns.viewmodel;
 import com.yoelglus.presentation.patterns.data.ItemsRepository;
 
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
@@ -15,6 +16,8 @@ public class AddItemViewModel extends AbstractViewModel {
     private Subscription mAddItemSubscription;
     private String mDetailText = "";
     private ItemsRepository mItemsRepository;
+    private Scheduler mIoScheduler;
+    private Scheduler mMainScheduler;
 
     private Action1<String> mContentChangedAction = contentText -> {
         mContentText = contentText;
@@ -27,13 +30,15 @@ public class AddItemViewModel extends AbstractViewModel {
     };
 
     private Action1<Void> mAddItemClicks = aVoid -> mAddItemSubscription = mItemsRepository.addItem(mContentText,
-            mDetailText).subscribe(s -> {
+            mDetailText).subscribeOn(mIoScheduler).observeOn(mMainScheduler).subscribe(s -> {
         mDismissSubject.onNext(null);
     });
     private Action1<Void> mCancelClicks = aVoid -> mDismissSubject.onNext(null);
 
-    public AddItemViewModel(ItemsRepository itemsRepository) {
+    public AddItemViewModel(ItemsRepository itemsRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
         mItemsRepository = itemsRepository;
+        mIoScheduler = ioScheduler;
+        mMainScheduler = mainScheduler;
     }
 
     @Override

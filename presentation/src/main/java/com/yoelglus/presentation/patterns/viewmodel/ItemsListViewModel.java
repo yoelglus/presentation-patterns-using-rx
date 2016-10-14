@@ -8,6 +8,7 @@ import com.yoelglus.presentation.patterns.navigator.Navigator;
 import java.util.List;
 
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
@@ -20,16 +21,27 @@ public class ItemsListViewModel extends AbstractViewModel {
     private Action1<Void> mAddItemClicks = aVoid -> mNavigator.navigateToAddItem();
     private Action1<String> mItemClicks = id -> mNavigator.navigateToItem(id);
     private Subscription mGetItemsSubscription;
+    private Scheduler mIoScheduler;
+    private Scheduler mMainScheduler;
 
-    public ItemsListViewModel(ItemsRepository itemsRepository, Navigator navigator) {
+    public ItemsListViewModel(ItemsRepository itemsRepository,
+                              Navigator navigator,
+                              Scheduler ioScheduler,
+                              Scheduler mainScheduler) {
         mItemsRepository = itemsRepository;
         mNavigator = navigator;
+        mIoScheduler = ioScheduler;
+        mMainScheduler = mainScheduler;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mGetItemsSubscription = mItemsRepository.getItems().map(ItemModelsMapper::map).subscribe(mItemModelsSubject);
+        mGetItemsSubscription = mItemsRepository.getItems()
+                .subscribeOn(mIoScheduler)
+                .observeOn(mMainScheduler)
+                .map(ItemModelsMapper::map)
+                .subscribe(mItemModelsSubject);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.yoelglus.presentation.patterns.navigator.Navigator;
 import java.util.List;
 
 import rx.Observable;
+import rx.Scheduler;
 import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
@@ -16,10 +17,17 @@ public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPrese
     private ItemsRepository mItemsRepository;
     private Navigator mNavigator;
     private SubscriptionList mSubscriptionList;
+    private Scheduler mIoScheduler;
+    private Scheduler mMainScheduler;
 
-    public RmvpItemsListPresenter(ItemsRepository itemsRepository, Navigator navigator) {
+    public RmvpItemsListPresenter(ItemsRepository itemsRepository,
+                                  Navigator navigator,
+                                  Scheduler ioScheduler,
+                                  Scheduler mainScheduler) {
         mItemsRepository = itemsRepository;
         mNavigator = navigator;
+        mIoScheduler = ioScheduler;
+        mMainScheduler = mainScheduler;
     }
 
     @Override
@@ -33,7 +41,11 @@ public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPrese
             mNavigator.navigateToItem(id);
         }));
 
-        mSubscriptionList.add(mItemsRepository.getItems().map(ItemModelsMapper::map).subscribe(mView.showItems()));
+        mSubscriptionList.add(mItemsRepository.getItems()
+                .subscribeOn(mIoScheduler)
+                .observeOn(mMainScheduler)
+                .map(ItemModelsMapper::map)
+                .subscribe(mView.showItems()));
     }
 
     @Override

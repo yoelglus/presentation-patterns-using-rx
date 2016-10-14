@@ -7,12 +7,12 @@ import com.memoizrlabs.Shank;
 import com.memoizrlabs.functions.Func0;
 import com.memoizrlabs.functions.Func1;
 import com.yoelglus.presentation.patterns.data.ItemsRepository;
-import com.yoelglus.presentation.patterns.rmvp.RmvpAddItemPresenter;
-import com.yoelglus.presentation.patterns.rmvp.RmvpItemDetailsPresenter;
-import com.yoelglus.presentation.patterns.rmvp.RmvpItemsListPresenter;
 import com.yoelglus.presentation.patterns.navigator.MvvmAppCompatActivityNavigator;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
 import com.yoelglus.presentation.patterns.navigator.ReactiveMvpAppCompatActivityNavigator;
+import com.yoelglus.presentation.patterns.rmvp.RmvpAddItemPresenter;
+import com.yoelglus.presentation.patterns.rmvp.RmvpItemDetailsPresenter;
+import com.yoelglus.presentation.patterns.rmvp.RmvpItemsListPresenter;
 import com.yoelglus.presentation.patterns.viewmodel.AddItemViewModel;
 import com.yoelglus.presentation.patterns.viewmodel.ItemDetailViewModel;
 import com.yoelglus.presentation.patterns.viewmodel.ItemsListViewModel;
@@ -47,26 +47,30 @@ public class MasterDetailsApplication extends Application {
 
         // MVP Passive Rx
 
-        Shank.registerFactory(RmvpItemsListPresenter.class,
-                new Func1<AppCompatActivity, RmvpItemsListPresenter>() {
-                    @Override
-                    public RmvpItemsListPresenter call(AppCompatActivity activity) {
-                        return new RmvpItemsListPresenter(Shank.provideNew(ItemsRepository.class),
-                                Shank.named("rmvp").provideNew(Navigator.class, activity));
-                    }
-                });
+        Shank.registerFactory(RmvpItemsListPresenter.class, new Func1<AppCompatActivity, RmvpItemsListPresenter>() {
+            @Override
+            public RmvpItemsListPresenter call(AppCompatActivity activity) {
+                return new RmvpItemsListPresenter(Shank.provideNew(ItemsRepository.class),
+                        Shank.named("rmvp").provideNew(Navigator.class, activity),
+                        Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class));
+            }
+        });
 
-        Shank.registerFactory(RmvpItemDetailsPresenter.class,
-                new Func1<String, RmvpItemDetailsPresenter>() {
-                    @Override
-                    public RmvpItemDetailsPresenter call(String id) {
-                        return new RmvpItemDetailsPresenter(Shank.provideNew(ItemsRepository.class), id);
-                    }
-                });
+        Shank.registerFactory(RmvpItemDetailsPresenter.class, new Func1<String, RmvpItemDetailsPresenter>() {
+            @Override
+            public RmvpItemDetailsPresenter call(String id) {
+                return new RmvpItemDetailsPresenter(Shank.provideNew(ItemsRepository.class),
+                        id,
+                        Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class));
+            }
+        });
 
         Shank.registerFactory(RmvpAddItemPresenter.class,
-                (Func0<RmvpAddItemPresenter>) () -> new RmvpAddItemPresenter(Shank.provideNew(
-                        ItemsRepository.class)));
+                (Func0<RmvpAddItemPresenter>) () -> new RmvpAddItemPresenter(Shank.provideNew(ItemsRepository.class),
+                        Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class)));
 
         // MVVM
 
@@ -74,19 +78,26 @@ public class MasterDetailsApplication extends Application {
             @Override
             public ItemsListViewModel call(AppCompatActivity activity) {
                 return new ItemsListViewModel(Shank.provideNew(ItemsRepository.class),
-                        Shank.named("mvvm").provideNew(Navigator.class, activity));
+                        Shank.named("mvvm").provideNew(Navigator.class, activity),
+                        Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class));
             }
         });
 
         Shank.registerFactory(ItemDetailViewModel.class, new Func1<String, ItemDetailViewModel>() {
             @Override
             public ItemDetailViewModel call(String id) {
-                return new ItemDetailViewModel(Shank.provideNew(ItemsRepository.class), id);
+                return new ItemDetailViewModel(Shank.provideNew(ItemsRepository.class),
+                        id,
+                        Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class));
             }
         });
 
         Shank.registerFactory(AddItemViewModel.class,
-                (Func0<AddItemViewModel>) () -> new AddItemViewModel(Shank.provideNew(ItemsRepository.class)));
+                (Func0<AddItemViewModel>) () -> new AddItemViewModel(Shank.provideNew(ItemsRepository.class),
+                        Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class)));
 
     }
 
