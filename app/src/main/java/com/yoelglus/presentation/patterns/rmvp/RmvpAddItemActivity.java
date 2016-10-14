@@ -1,11 +1,5 @@
 package com.yoelglus.presentation.patterns.rmvp;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.memoizrlabs.Scope;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,8 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.memoizrlabs.Scope;
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+
 import rx.Observable;
-import rx.functions.Action1;
 
 public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddItemPresenter.View {
 
@@ -42,6 +41,11 @@ public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddIte
     }
 
     @Override
+    public void setAddButtonEnabled(boolean enabled) {
+        RxView.enabled(mAddButton).call(enabled);
+    }
+
+    @Override
     public Observable<String> contentTextChanged() {
         return getObservableForTextView(R.id.content);
     }
@@ -62,14 +66,8 @@ public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddIte
     }
 
     @Override
-    public Action1<Boolean> setAddButtonEnabled() {
-        //noinspection unchecked
-        return (Action1<Boolean>) RxView.enabled(mAddButton);
-    }
-
-    @Override
-    public Action1<Void> dismissView() {
-        return aVoid -> finish();
+    public void dismissView() {
+        finish();
     }
 
     @NonNull

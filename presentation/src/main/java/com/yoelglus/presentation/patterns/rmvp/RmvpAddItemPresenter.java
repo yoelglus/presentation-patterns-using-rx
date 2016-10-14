@@ -5,7 +5,6 @@ import com.yoelglus.presentation.patterns.data.ItemsRepository;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
 public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter.View> {
@@ -13,8 +12,6 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
     private ItemsRepository mItemsRepository;
     private Scheduler mIoScheduler;
     private Scheduler mMainScheduler;
-    private String mContentText;
-    private String mDetailText;
     private SubscriptionList mSubscriptionList = new SubscriptionList();
 
     public RmvpAddItemPresenter(ItemsRepository itemsRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
@@ -25,20 +22,16 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
 
     @Override
     public void onTakeView() {
-        mSubscriptionList.add(mView.contentTextChanged()
-                .doOnNext(contentText -> mContentText = contentText)
-                .zipWith(mView.detailTextChanged().doOnNext(detailText -> mDetailText = detailText),
-                        (content, detail) -> content.length() > 0 && detail.length() > 0)
-                .subscribe(mView.setAddButtonEnabled()));
+
+        Observable<ItemToAdd> addEnabled = Observable.combineLatest(mView.contentTextChanged(),
+                mView.detailTextChanged(),
+                ItemToAdd::new).doOnNext(itemToAdd -> mView.setAddButtonEnabled(itemToAdd.valid()));
 
         mSubscriptionList.add(mView.addButtonClicks()
-                .flatMap(aVoid -> mItemsRepository.addItem(mContentText, mDetailText)
-                        .subscribeOn(mIoScheduler)
-                        .observeOn(mMainScheduler)
-                        .map(s -> (Void) null))
-                .subscribe(mView.dismissView()));
+                .withLatestFrom(addEnabled, (aVoid, itemToAdd) -> itemToAdd)
+                .subscribe(this::addItem));
 
-        mSubscriptionList.add(mView.cancelButtonClicks().subscribe(mView.dismissView()));
+        mSubscriptionList.add(mView.cancelButtonClicks().subscribe(aVoid -> mView.dismissView()));
     }
 
     @Override
@@ -46,7 +39,30 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
         mSubscriptionList.unsubscribe();
     }
 
+    private void addItem(ItemToAdd itemToAdd) {
+        mItemsRepository.addItem(itemToAdd.content, itemToAdd.details)
+                .subscribeOn(mIoScheduler)
+                .observeOn(mMainScheduler)
+                .subscribe(s -> mView.dismissView());
+    }
+
+    private static class ItemToAdd {
+        private String content;
+        private String details;
+
+        private ItemToAdd(String content, String details) {
+            this.content = content;
+            this.details = details;
+        }
+
+        private boolean valid() {
+            return content.length() > 0 && details.length() > 0;
+        }
+    }
+
     public interface View {
+        void setAddButtonEnabled(boolean enabled);
+
         Observable<String> contentTextChanged();
 
         Observable<String> detailTextChanged();
@@ -55,8 +71,6 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
 
         Observable<Void> cancelButtonClicks();
 
-        Action1<Boolean> setAddButtonEnabled();
-
-        Action1<Void> dismissView();
+        void dismissView();
     }
 }
