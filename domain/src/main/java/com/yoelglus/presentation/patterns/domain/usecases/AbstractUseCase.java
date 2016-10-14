@@ -5,8 +5,8 @@ import rx.Scheduler;
 
 abstract class AbstractUseCase<T> {
 
-    private Scheduler mIoScheduler;
-    private Scheduler mMainScheduler;
+    private final Scheduler mIoScheduler;
+    private final Scheduler mMainScheduler;
 
     AbstractUseCase(Scheduler ioScheduler, Scheduler mainScheduler) {
         mIoScheduler = ioScheduler;
@@ -17,5 +17,5 @@ abstract class AbstractUseCase<T> {
         return getObservable().subscribeOn(mIoScheduler).observeOn(mMainScheduler);
     }
 
-    public abstract Observable<T> getObservable();
+    protected abstract Observable<T> getObservable();
 }

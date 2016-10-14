@@ -17,7 +17,7 @@ public class GetItem extends AbstractUseCase<Item> {
     }
 
     @Override
-    public Observable<Item> getObservable() {
+    protected Observable<Item> getObservable() {
         return mItemsRepository.getItem(mItemId);
     }
 }

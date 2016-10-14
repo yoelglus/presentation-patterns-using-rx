@@ -27,7 +27,7 @@ public class AddItem extends AbstractUseCase<String> {
     }
 
     @Override
-    public Observable<String> getObservable() {
+    protected Observable<String> getObservable() {
         return mItemsRepository.addItem(mContent, mDetail);
     }
 }
