@@ -9,7 +9,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
 
 public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPresenter.View> {
@@ -45,7 +44,7 @@ public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPrese
                 .subscribeOn(mIoScheduler)
                 .observeOn(mMainScheduler)
                 .map(ItemModelsMapper::map)
-                .subscribe(mView.showItems()));
+                .subscribe(mView::showItems));
     }
 
     @Override
@@ -55,7 +54,7 @@ public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPrese
     }
 
     public interface View {
-        Action1<List<ItemModel>> showItems();
+        void showItems(List<ItemModel> itemModels);
 
         Observable<Void> addItemClicks();
 

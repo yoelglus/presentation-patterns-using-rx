@@ -5,7 +5,6 @@ import com.yoelglus.presentation.patterns.data.ItemsRepository;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class AddItemViewModel extends AbstractViewModel {
@@ -18,22 +17,6 @@ public class AddItemViewModel extends AbstractViewModel {
     private ItemsRepository mItemsRepository;
     private Scheduler mIoScheduler;
     private Scheduler mMainScheduler;
-
-    private Action1<String> mContentChangedAction = contentText -> {
-        mContentText = contentText;
-        updateAddButtonState();
-    };
-
-    private Action1<String> mDetailChangedAction = detailText -> {
-        mDetailText = detailText;
-        updateAddButtonState();
-    };
-
-    private Action1<Void> mAddItemClicks = aVoid -> mAddItemSubscription = mItemsRepository.addItem(mContentText,
-            mDetailText).subscribeOn(mIoScheduler).observeOn(mMainScheduler).subscribe(s -> {
-        mDismissSubject.onNext(null);
-    });
-    private Action1<Void> mCancelClicks = aVoid -> mDismissSubject.onNext(null);
 
     public AddItemViewModel(ItemsRepository itemsRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
         mItemsRepository = itemsRepository;
@@ -64,20 +47,25 @@ public class AddItemViewModel extends AbstractViewModel {
         return mDismissSubject;
     }
 
-    public Action1<String> contentTextChanged() {
-        return mContentChangedAction;
+    public void contentTextChanged(String contentText) {
+        mContentText = contentText;
+        updateAddButtonState();
     }
 
-    public Action1<String> detailTextChanged() {
-        return mDetailChangedAction;
+    public void detailTextChanged(String detailText) {
+        mDetailText = detailText;
+        updateAddButtonState();
     }
 
-    public Action1<Void> addItemClicks() {
-        return mAddItemClicks;
+    public void addItemClicked() {
+        mAddItemSubscription = mItemsRepository.addItem(mContentText, mDetailText)
+                .subscribeOn(mIoScheduler)
+                .observeOn(mMainScheduler)
+                .subscribe(s -> mDismissSubject.onNext(null));
     }
 
-    public Action1<Void> cancelClicks() {
-        return mCancelClicks;
+    public void cancelClicked() {
+        mDismissSubject.onNext(null);
     }
 
     private void updateAddButtonState() {

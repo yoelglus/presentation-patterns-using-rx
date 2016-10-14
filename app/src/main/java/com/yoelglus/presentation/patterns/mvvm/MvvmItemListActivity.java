@@ -51,9 +51,9 @@ public class MvvmItemListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
 
         mSubscriptionList = new SubscriptionList();
-        mSubscriptionList.add(RxView.clicks(findViewById(R.id.fab)).doOnNext(mViewModel.addItemClicks()).subscribe());
+        mSubscriptionList.add(RxView.clicks(findViewById(R.id.fab)).subscribe(aVoid -> mViewModel.addItemClicked()));
 
-        mSubscriptionList.add(mViewModel.itemModels().doOnNext(this::showItems).subscribe());
+        mSubscriptionList.add(mViewModel.itemModels().subscribe(this::showItems));
 
     }
 
@@ -104,8 +104,7 @@ public class MvvmItemListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
-
-            holder.mView.setOnClickListener(v -> mViewModel.itemClicks().call(holder.mItem.getId()));
+            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(mViewModel::itemClicked);
         }
 
         @Override

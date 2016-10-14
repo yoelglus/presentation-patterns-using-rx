@@ -15,7 +15,6 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
 import com.yoelglus.presentation.patterns.viewmodel.ItemDetailViewModel;
 
 import rx.Subscription;
-import rx.functions.Action1;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -25,13 +24,12 @@ import rx.functions.Action1;
  */
 public class MvvmItemDetailFragment extends Fragment {
 
-    private ItemDetailViewModel mViewModel;
-
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    private ItemDetailViewModel mViewModel;
     private TextView mItemDetail;
     private Subscription mItemModelSubscription;
 
@@ -48,7 +46,7 @@ public class MvvmItemDetailFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mViewModel = Shank.provideNew(ItemDetailViewModel.class, getArguments().getString(ARG_ITEM_ID));
-            mItemModelSubscription = mViewModel.itemModel().doOnNext(this::showItem).subscribe();
+            mItemModelSubscription = mViewModel.itemModel().subscribe(this::showItem);
         }
     }
 
@@ -65,6 +63,12 @@ public class MvvmItemDetailFragment extends Fragment {
         mViewModel.onStart();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.onStop();
+        mItemModelSubscription.unsubscribe();
+    }
 
     private void showItem(ItemModel itemModel) {
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
@@ -72,12 +76,5 @@ public class MvvmItemDetailFragment extends Fragment {
             appBarLayout.setTitle(itemModel.getContent());
         }
         mItemDetail.setText(itemModel.getDetail());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mViewModel.onStop();
-        mItemModelSubscription.unsubscribe();
     }
 }

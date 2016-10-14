@@ -1,9 +1,5 @@
 package com.yoelglus.presentation.patterns.rmvp;
 
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import rx.functions.Action1;
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -67,13 +65,11 @@ public class RmvpItemDetailFragment extends Fragment implements RmvpItemDetailsP
     }
 
     @Override
-    public Action1<ItemModel> showItem() {
-        return itemModel -> {
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(itemModel.getContent());
-            }
-            mItemDetail.setText(itemModel.getDetail());
-        };
+    public void showItem(ItemModel itemModel) {
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(itemModel.getContent());
+        }
+        mItemDetail.setText(itemModel.getDetail());
     }
 }

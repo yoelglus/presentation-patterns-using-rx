@@ -10,7 +10,6 @@ import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class ItemsListViewModel extends AbstractViewModel {
@@ -18,8 +17,6 @@ public class ItemsListViewModel extends AbstractViewModel {
     private ItemsRepository mItemsRepository;
     private Navigator mNavigator;
     private PublishSubject<List<ItemModel>> mItemModelsSubject = PublishSubject.create();
-    private Action1<Void> mAddItemClicks = aVoid -> mNavigator.navigateToAddItem();
-    private Action1<String> mItemClicks = id -> mNavigator.navigateToItem(id);
     private Subscription mGetItemsSubscription;
     private Scheduler mIoScheduler;
     private Scheduler mMainScheduler;
@@ -54,12 +51,12 @@ public class ItemsListViewModel extends AbstractViewModel {
         return mItemModelsSubject;
     }
 
-    public Action1<Void> addItemClicks() {
-        return mAddItemClicks;
+    public void addItemClicked() {
+        mNavigator.navigateToAddItem();
     }
 
-    public Action1<String> itemClicks() {
-        return mItemClicks;
+    public void itemClicked(String itemId) {
+        mNavigator.navigateToItem(itemId);
     }
 
 }

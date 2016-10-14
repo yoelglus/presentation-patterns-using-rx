@@ -5,7 +5,6 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import rx.Scheduler;
 import rx.Subscription;
-import rx.functions.Action1;
 
 public class RmvpItemDetailsPresenter extends AbstractPresenter<RmvpItemDetailsPresenter.View> {
 
@@ -32,7 +31,7 @@ public class RmvpItemDetailsPresenter extends AbstractPresenter<RmvpItemDetailsP
                 .subscribeOn(mIoScheduler)
                 .observeOn(mMainScheduler)
                 .map(ItemModel::from)
-                .subscribe(mView.showItem());
+                .subscribe(mView::showItem);
     }
 
     @Override
@@ -41,6 +40,6 @@ public class RmvpItemDetailsPresenter extends AbstractPresenter<RmvpItemDetailsP
     }
 
     public interface View {
-        Action1<ItemModel> showItem();
+        void showItem(ItemModel itemModel);
     }
 }
