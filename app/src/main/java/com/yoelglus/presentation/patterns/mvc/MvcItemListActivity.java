@@ -1,11 +1,5 @@
 package com.yoelglus.presentation.patterns.mvc;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.jakewharton.rxbinding.view.RxView;
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
+import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ public class MvcItemListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mModelSubscription = mModel.itemsList().subscribe(itemsList -> showItems(mItemModelsMapper.map(itemsList)));
+        mModelSubscription = mModel.itemsList().map(mItemModelsMapper::map).subscribe(this::showItems);
         mController.loadItemsList();
     }
 
