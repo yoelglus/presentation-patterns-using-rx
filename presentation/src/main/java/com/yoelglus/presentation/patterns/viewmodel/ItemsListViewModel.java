@@ -1,6 +1,6 @@
 package com.yoelglus.presentation.patterns.viewmodel;
 
-import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
+import com.yoelglus.presentation.patterns.data.ItemsRepository;
 import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
 import com.yoelglus.presentation.patterns.model.ItemModel;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
@@ -14,22 +14,22 @@ import rx.subjects.PublishSubject;
 
 public class ItemsListViewModel extends AbstractViewModel {
 
-    private GetItems mGetItems;
+    private ItemsRepository mItemsRepository;
     private Navigator mNavigator;
     private PublishSubject<List<ItemModel>> mItemModelsSubject = PublishSubject.create();
     private Action1<Void> mAddItemClicks = aVoid -> mNavigator.navigateToAddItem();
     private Action1<String> mItemClicks = id -> mNavigator.navigateToItem(id);
     private Subscription mGetItemsSubscription;
 
-    public ItemsListViewModel(GetItems getItems, Navigator navigator) {
-        mGetItems = getItems;
+    public ItemsListViewModel(ItemsRepository itemsRepository, Navigator navigator) {
+        mItemsRepository = itemsRepository;
         mNavigator = navigator;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mGetItemsSubscription = mGetItems.execute().map(ItemModelsMapper::map).subscribe(mItemModelsSubject);
+        mGetItemsSubscription = mItemsRepository.getItems().map(ItemModelsMapper::map).subscribe(mItemModelsSubject);
     }
 
     @Override

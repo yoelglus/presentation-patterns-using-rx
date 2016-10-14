@@ -1,6 +1,6 @@
 package com.yoelglus.presentation.patterns.viewmodel;
 
-import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
+import com.yoelglus.presentation.patterns.data.ItemsRepository;
 
 import rx.Observable;
 import rx.Subscription;
@@ -14,7 +14,7 @@ public class AddItemViewModel extends AbstractViewModel {
     private String mContentText = "";
     private Subscription mAddItemSubscription;
     private String mDetailText = "";
-    private AddItem mAddItem;
+    private ItemsRepository mItemsRepository;
 
     private Action1<String> mContentChangedAction = contentText -> {
         mContentText = contentText;
@@ -26,14 +26,14 @@ public class AddItemViewModel extends AbstractViewModel {
         updateAddButtonState();
     };
 
-    private Action1<Void> mAddItemClicks = aVoid ->
-            mAddItemSubscription = mAddItem.execute(mContentText, mDetailText).subscribe(s -> {
-                mDismissSubject.onNext(null);
-            });
+    private Action1<Void> mAddItemClicks = aVoid -> mAddItemSubscription = mItemsRepository.addItem(mContentText,
+            mDetailText).subscribe(s -> {
+        mDismissSubject.onNext(null);
+    });
     private Action1<Void> mCancelClicks = aVoid -> mDismissSubject.onNext(null);
 
-    public AddItemViewModel(AddItem addItem) {
-        mAddItem = addItem;
+    public AddItemViewModel(ItemsRepository itemsRepository) {
+        mItemsRepository = itemsRepository;
     }
 
     @Override

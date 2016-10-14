@@ -1,6 +1,6 @@
 package com.yoelglus.presentation.patterns.viewmodel;
 
-import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
+import com.yoelglus.presentation.patterns.data.ItemsRepository;
 import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import rx.Observable;
@@ -9,18 +9,20 @@ import rx.subjects.PublishSubject;
 
 public class ItemDetailViewModel extends AbstractViewModel {
 
-    private GetItem mGetItem;
+    private ItemsRepository mItemsRepository;
+    private String mItemId;
     private PublishSubject<ItemModel> mItemModelSubject = PublishSubject.create();
     private Subscription mGetItemSubscription;
 
-    public ItemDetailViewModel(GetItem getItem) {
-        mGetItem = getItem;
+    public ItemDetailViewModel(ItemsRepository itemsRepository, String itemId) {
+        mItemsRepository = itemsRepository;
+        mItemId = itemId;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mGetItemSubscription = mGetItem.execute().subscribe(item -> {
+        mGetItemSubscription = mItemsRepository.getItem(mItemId).subscribe(item -> {
             mItemModelSubject.onNext(ItemModel.from(item));
         });
     }
