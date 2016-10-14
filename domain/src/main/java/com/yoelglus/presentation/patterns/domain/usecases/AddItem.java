@@ -4,14 +4,10 @@ import com.yoelglus.presentation.patterns.domain.interfaces.ItemsRepository;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.Subscriber;
-import rx.Subscription;
 
-public class AddItem extends AbstractUseCase<String> {
+public class AddItem extends AbstractUseCase<String, AddItem.AddItemParam> {
 
     private final ItemsRepository mItemsRepository;
-    private String mContent;
-    private String mDetail;
 
     public AddItem(Scheduler ioScheduler,
                    Scheduler mainScheduler,
@@ -20,14 +16,18 @@ public class AddItem extends AbstractUseCase<String> {
         mItemsRepository = itemsRepository;
     }
 
-    public Observable<String> execute(String content, String detail) {
-        mContent = content;
-        mDetail = detail;
-        return execute();
-    }
-
     @Override
     public Observable<String> getObservable() {
-        return mItemsRepository.addItem(mContent, mDetail);
+        return mItemsRepository.addItem(mParam.mContent, mParam.mDetail);
+    }
+
+    public static class AddItemParam {
+        private String mContent;
+        private String mDetail;
+
+        public AddItemParam(String content, String detail) {
+            mContent = content;
+            mDetail = detail;
+        }
     }
 }

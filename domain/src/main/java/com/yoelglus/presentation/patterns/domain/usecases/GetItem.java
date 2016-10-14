@@ -6,18 +6,16 @@ import com.yoelglus.presentation.patterns.entities.Item;
 import rx.Observable;
 import rx.Scheduler;
 
-public class GetItem extends AbstractUseCase<Item> {
+public class GetItem extends AbstractUseCase<Item, String> {
     private final ItemsRepository mItemsRepository;
-    private final String mItemId;
 
-    public GetItem(Scheduler ioScheduler, Scheduler mainScheduler, ItemsRepository itemsRepository, String itemId) {
+    public GetItem(Scheduler ioScheduler, Scheduler mainScheduler, ItemsRepository itemsRepository) {
         super(ioScheduler, mainScheduler);
-        mItemId = itemId;
         mItemsRepository = itemsRepository;
     }
 
     @Override
     public Observable<Item> getObservable() {
-        return mItemsRepository.getItem(mItemId);
+        return mItemsRepository.getItem(mParam);
     }
 }

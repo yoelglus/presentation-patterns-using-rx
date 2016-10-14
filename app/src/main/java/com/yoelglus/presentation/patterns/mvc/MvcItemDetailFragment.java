@@ -1,9 +1,5 @@
 package com.yoelglus.presentation.patterns.mvc;
 
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -12,6 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import rx.Subscription;
 
@@ -43,11 +43,8 @@ public class MvcItemDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mController = Shank.provideNew(MvcItemDetailsController.class, getArguments().getString(ARG_ITEM_ID));
-            mModel = Shank.provideSingleton(MvcItemDetailsModel.class);
-        }
+        mController = Shank.provideNew(MvcItemDetailsController.class);
+        mModel = Shank.provideSingleton(MvcItemDetailsModel.class);
     }
 
     @Override
@@ -60,8 +57,10 @@ public class MvcItemDetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mModelSubscription = mModel.itemDetails().subscribe(item ->showItem(ItemModel.from(item)));
-        mController.loadItemDetails();
+        mModelSubscription = mModel.itemDetails().subscribe(item -> showItem(ItemModel.from(item)));
+        if (getArguments().containsKey(ARG_ITEM_ID)) {
+            mController.loadItemDetails(getArguments().getString(ARG_ITEM_ID));
+        }
     }
 
     @Override

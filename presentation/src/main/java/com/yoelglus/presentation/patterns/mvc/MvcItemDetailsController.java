@@ -12,9 +12,7 @@ public class MvcItemDetailsController {
         mMvcItemDetailsModel = mvcItemDetailsModel;
     }
 
-    void loadItemDetails() {
-        mGetItem.execute().subscribe(item -> {
-            mMvcItemDetailsModel.setItem(item);
-        });
+    void loadItemDetails(String id) {
+        mGetItem.execute(id).subscribe(mMvcItemDetailsModel::setItem);
     }
 }

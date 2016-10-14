@@ -41,10 +41,7 @@ public class MvpItemDetailFragment extends Fragment implements MvpItemDetailsPre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mPresenter = Shank.provideNew(MvpItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
-        }
+        mPresenter = Shank.provideNew(MvpItemDetailsPresenter.class);
     }
 
     @Override
@@ -58,6 +55,7 @@ public class MvpItemDetailFragment extends Fragment implements MvpItemDetailsPre
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.takeView(this);
+        mPresenter.loadItem().call(getArguments().getString(ARG_ITEM_ID));
     }
 
     @Override

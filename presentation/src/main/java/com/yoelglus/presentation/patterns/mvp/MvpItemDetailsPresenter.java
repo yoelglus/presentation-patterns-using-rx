@@ -20,12 +20,17 @@ public class MvpItemDetailsPresenter extends AbstractPresenter<MvpItemDetailsPre
 
     @Override
     public void onTakeView() {
-        mGetItemSubscription = mGetItem.execute().map(ItemModel::from).subscribe(mView.showItem());
     }
 
     @Override
     public void onDropView() {
         mGetItemSubscription.unsubscribe();
+    }
+
+    Action1<String> loadItem() {
+        return itemId -> mGetItemSubscription = mGetItem.execute(itemId)
+                .map(ItemModel::from)
+                .subscribe(mView.showItem());
     }
 
     public interface View {

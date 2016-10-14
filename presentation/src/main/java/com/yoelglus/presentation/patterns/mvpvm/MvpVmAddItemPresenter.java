@@ -14,6 +14,10 @@ public class MvpVmAddItemPresenter extends MvpVmAbstractPresenter<AddItemViewMod
         mAddItem = addItem;
     }
 
+    private void setAddButtonEnableState() {
+        notifyOnChange(new AddItemViewModel(mContentText.length() > 0 && mDetailText.length() > 0, false));
+    }
+
     void onContentTextChanged(String contentText) {
         mContentText = contentText;
         setAddButtonEnableState();
@@ -25,17 +29,13 @@ public class MvpVmAddItemPresenter extends MvpVmAbstractPresenter<AddItemViewMod
     }
 
     void onAddButtonClicked() {
-        mAddItem.execute(mContentText, mDetailText).subscribe(s -> {
-            notifyOnChange(new AddItemViewModel(true, true));
-        });
+        mAddItem.execute(new AddItem.AddItemParam(mContentText, mDetailText))
+                .map(s -> new AddItemViewModel(true, true))
+                .subscribe(this::notifyOnChange);
     }
 
     void onCancelButtonClicked() {
         notifyOnChange(new AddItemViewModel(true, true));
-    }
-
-    private void setAddButtonEnableState() {
-        notifyOnChange(new AddItemViewModel(mContentText.length() > 0 && mDetailText.length() > 0, false));
     }
 
     @Override

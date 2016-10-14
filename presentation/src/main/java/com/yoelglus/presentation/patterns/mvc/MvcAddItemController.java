@@ -19,6 +19,10 @@ public class MvcAddItemController {
         mMvcAddItemModel = mvcAddItemModel;
     }
 
+    private void updateModel() {
+        mMvcAddItemModel.setAddItemEnabled(mContent.length() > 0 && mDetail.length() > 0);
+    }
+
     Action1<CharSequence> contentTextChanged() {
         return content -> {
             mContent = content;
@@ -34,17 +38,14 @@ public class MvcAddItemController {
     }
 
     Action1<Void> addButtonClicked() {
-        return aVoid -> mAddItem.execute(mContent.toString(), mDetail.toString()).subscribe(s -> {
-            mNavigator.closeCurrentScreen();
-        });
+        return aVoid -> mAddItem.execute(new AddItem.AddItemParam(mContent.toString(), mDetail.toString()))
+                .subscribe(s -> {
+                    mNavigator.closeCurrentScreen();
+                });
     }
 
     Action1<Void> dismissButtonClicked() {
         return aVoid -> mNavigator.closeCurrentScreen();
 
-    }
-
-    private void updateModel() {
-        mMvcAddItemModel.setAddItemEnabled(mContent.length() > 0 && mDetail.length() > 0);
     }
 }

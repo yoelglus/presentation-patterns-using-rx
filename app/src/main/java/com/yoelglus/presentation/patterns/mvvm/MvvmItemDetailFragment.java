@@ -15,7 +15,6 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
 import com.yoelglus.presentation.patterns.viewmodel.ItemDetailViewModel;
 
 import rx.Subscription;
-import rx.functions.Action1;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -25,13 +24,12 @@ import rx.functions.Action1;
  */
 public class MvvmItemDetailFragment extends Fragment {
 
-    private ItemDetailViewModel mViewModel;
-
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    private ItemDetailViewModel mViewModel;
     private TextView mItemDetail;
     private Subscription mItemModelSubscription;
 
@@ -46,10 +44,8 @@ public class MvvmItemDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mViewModel = Shank.provideNew(ItemDetailViewModel.class, getArguments().getString(ARG_ITEM_ID));
-            mItemModelSubscription = mViewModel.itemModel().doOnNext(this::showItem).subscribe();
-        }
+        mViewModel = Shank.provideNew(ItemDetailViewModel.class);
+        mItemModelSubscription = mViewModel.itemModel().doOnNext(this::showItem).subscribe();
     }
 
     @Override
@@ -63,15 +59,7 @@ public class MvvmItemDetailFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel.onStart();
-    }
-
-
-    private void showItem(ItemModel itemModel) {
-        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-        if (appBarLayout != null) {
-            appBarLayout.setTitle(itemModel.getContent());
-        }
-        mItemDetail.setText(itemModel.getDetail());
+        mViewModel.loadItem().call(getArguments().getString(ARG_ITEM_ID));
     }
 
     @Override
@@ -79,5 +67,13 @@ public class MvvmItemDetailFragment extends Fragment {
         super.onDestroy();
         mViewModel.onStop();
         mItemModelSubscription.unsubscribe();
+    }
+
+    private void showItem(ItemModel itemModel) {
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(itemModel.getContent());
+        }
+        mItemDetail.setText(itemModel.getDetail());
     }
 }

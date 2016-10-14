@@ -11,11 +11,9 @@ import android.widget.TextView;
 
 import com.memoizrlabs.Shank;
 import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemDetailViewModel;
 import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import rx.Subscription;
-import rx.functions.Action1;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -25,13 +23,12 @@ import rx.functions.Action1;
  */
 public class MvpVmItemDetailFragment extends Fragment {
 
-    private MvpVmItemDetailsPresenter mPresenter;
-
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    private MvpVmItemDetailsPresenter mPresenter;
     private TextView mItemDetail;
     private Subscription mPresenterSubscription;
 
@@ -45,10 +42,7 @@ public class MvpVmItemDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mPresenter = Shank.provideNew(MvpVmItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
-        }
+        mPresenter = Shank.provideNew(MvpVmItemDetailsPresenter.class);
     }
 
     @Override
@@ -64,8 +58,14 @@ public class MvpVmItemDetailFragment extends Fragment {
         mPresenterSubscription = mPresenter.getViewModelObservable().subscribe(itemDetailViewModel -> {
             showItem(itemDetailViewModel.getItemModel());
         });
+        mPresenter.loadItem(getArguments().getString(ARG_ITEM_ID));
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenterSubscription.unsubscribe();
+    }
 
     private void showItem(ItemModel itemModel) {
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
@@ -73,11 +73,5 @@ public class MvpVmItemDetailFragment extends Fragment {
             appBarLayout.setTitle(itemModel.getContent());
         }
         mItemDetail.setText(itemModel.getDetail());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPresenterSubscription.unsubscribe();
     }
 }

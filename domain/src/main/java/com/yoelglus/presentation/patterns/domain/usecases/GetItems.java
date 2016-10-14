@@ -8,7 +8,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 
-public class GetItems extends AbstractUseCase<List<Item>> {
+public class GetItems extends AbstractUseCase<List<Item>, Void> {
 
     private ItemsRepository mItemsRepository;
 
