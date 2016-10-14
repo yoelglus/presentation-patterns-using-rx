@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemModelsMapper {
-    public List<ItemModel> map(List<Item> items) {
+    public static List<ItemModel> map(List<Item> items) {
         List<ItemModel> itemModels = new ArrayList<>(items.size());
         for (Item item : items) {
             itemModels.add(ItemModel.from(item));

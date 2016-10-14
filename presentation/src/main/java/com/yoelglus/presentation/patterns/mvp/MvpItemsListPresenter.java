@@ -14,19 +14,17 @@ import rx.functions.Action1;
 public class MvpItemsListPresenter extends AbstractPresenter<MvpItemsListPresenter.View> {
 
     private GetItems mGetItems;
-    private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
     private Subscription mGetItemsSubscription;
 
-    public MvpItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
+    public MvpItemsListPresenter(GetItems getItems, Navigator navigator) {
         mGetItems = getItems;
-        mItemModelsMapper = itemModelsMapper;
         mNavigator = navigator;
     }
 
     @Override
     public void onTakeView() {
-        mGetItemsSubscription = mGetItems.execute().map(mItemModelsMapper::map).subscribe(mView.showItems());
+        mGetItemsSubscription = mGetItems.execute().map(ItemModelsMapper::map).subscribe(mView.showItems());
     }
 
     @Override

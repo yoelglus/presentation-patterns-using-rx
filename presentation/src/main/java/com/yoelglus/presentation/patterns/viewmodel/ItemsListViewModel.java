@@ -15,23 +15,21 @@ import rx.subjects.PublishSubject;
 public class ItemsListViewModel extends AbstractViewModel {
 
     private GetItems mGetItems;
-    private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
     private PublishSubject<List<ItemModel>> mItemModelsSubject = PublishSubject.create();
     private Action1<Void> mAddItemClicks = aVoid -> mNavigator.navigateToAddItem();
     private Action1<String> mItemClicks = id -> mNavigator.navigateToItem(id);
     private Subscription mGetItemsSubscription;
 
-    public ItemsListViewModel(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
+    public ItemsListViewModel(GetItems getItems, Navigator navigator) {
         mGetItems = getItems;
-        mItemModelsMapper = itemModelsMapper;
         mNavigator = navigator;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mGetItemsSubscription = mGetItems.execute().map(mItemModelsMapper::map).subscribe(mItemModelsSubject);
+        mGetItemsSubscription = mGetItems.execute().map(ItemModelsMapper::map).subscribe(mItemModelsSubject);
     }
 
     @Override

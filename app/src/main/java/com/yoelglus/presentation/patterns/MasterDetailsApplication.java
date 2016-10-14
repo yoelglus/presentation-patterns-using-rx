@@ -9,7 +9,6 @@ import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
 import com.yoelglus.presentation.patterns.domain.usecases.GetItem;
 import com.yoelglus.presentation.patterns.domain.usecases.GetItems;
 import com.yoelglus.presentation.patterns.inject.RepositoryFactory;
-import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
 import com.yoelglus.presentation.patterns.mvc.MvcAddItemController;
 import com.yoelglus.presentation.patterns.mvc.MvcAddItemModel;
 import com.yoelglus.presentation.patterns.mvc.MvcItemDetailsController;
@@ -84,7 +83,6 @@ public class MasterDetailsApplication extends Application {
                     @Override
                     public MvpPassiveItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
                         return new MvpPassiveItemsListPresenter(Shank.provideNew(GetItems.class),
-                                new ItemModelsMapper(),
                                 Shank.provideNew(Navigator.class, activity, twoPane));
                     }
                 });
@@ -106,7 +104,6 @@ public class MasterDetailsApplication extends Application {
                     @Override
                     public MvpPassiveRxItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
                         return new MvpPassiveRxItemsListPresenter(Shank.provideNew(GetItems.class),
-                                new ItemModelsMapper(),
                                 Shank.provideNew(Navigator.class, activity, twoPane));
                     }
                 });
@@ -128,7 +125,6 @@ public class MasterDetailsApplication extends Application {
                     @Override
                     public MvpItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
                         return new MvpItemsListPresenter(Shank.provideNew(GetItems.class),
-                                new ItemModelsMapper(),
                                 Shank.provideNew(Navigator.class, activity, twoPane));
                     }
                 });
@@ -149,7 +145,6 @@ public class MasterDetailsApplication extends Application {
                     @Override
                     public MvpVmItemsListPresenter call(AppCompatActivity activity, Boolean twoPane) {
                         return new MvpVmItemsListPresenter(Shank.provideNew(GetItems.class),
-                                new ItemModelsMapper(),
                                 Shank.provideNew(Navigator.class, activity, twoPane));
                     }
                 });
@@ -169,7 +164,6 @@ public class MasterDetailsApplication extends Application {
             @Override
             public ItemsListViewModel call(AppCompatActivity activity, Boolean twoPane) {
                 return new ItemsListViewModel(Shank.provideNew(GetItems.class),
-                        new ItemModelsMapper(),
                         Shank.provideNew(Navigator.class, activity, twoPane));
             }
         });

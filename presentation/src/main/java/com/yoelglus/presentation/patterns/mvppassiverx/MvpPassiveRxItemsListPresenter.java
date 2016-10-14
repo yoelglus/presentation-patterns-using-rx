@@ -15,13 +15,11 @@ import rx.internal.util.SubscriptionList;
 public class MvpPassiveRxItemsListPresenter extends AbstractPresenter<MvpPassiveRxItemsListPresenter.View> {
 
     private GetItems mGetItems;
-    private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
     private SubscriptionList mSubscriptionList;
 
-    public MvpPassiveRxItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
+    public MvpPassiveRxItemsListPresenter(GetItems getItems, Navigator navigator) {
         mGetItems = getItems;
-        mItemModelsMapper = itemModelsMapper;
         mNavigator = navigator;
     }
 
@@ -36,7 +34,7 @@ public class MvpPassiveRxItemsListPresenter extends AbstractPresenter<MvpPassive
             mNavigator.navigateToItem(id);
         }));
 
-        mSubscriptionList.add(mGetItems.execute().map(mItemModelsMapper::map).subscribe(mView.showItems()));
+        mSubscriptionList.add(mGetItems.execute().map(ItemModelsMapper::map).subscribe(mView.showItems()));
     }
 
     @Override

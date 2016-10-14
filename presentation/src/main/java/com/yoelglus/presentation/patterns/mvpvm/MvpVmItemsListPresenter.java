@@ -10,20 +10,18 @@ import rx.Subscription;
 public class MvpVmItemsListPresenter extends MvpVmAbstractPresenter<ItemsListViewModel> {
 
     private GetItems mGetItems;
-    private ItemModelsMapper mItemModelsMapper;
     private Navigator mNavigator;
     private Subscription mGetItemsSubscription;
 
-    public MvpVmItemsListPresenter(GetItems getItems, ItemModelsMapper itemModelsMapper, Navigator navigator) {
+    public MvpVmItemsListPresenter(GetItems getItems, Navigator navigator) {
         mGetItems = getItems;
-        mItemModelsMapper = itemModelsMapper;
         mNavigator = navigator;
     }
 
     @Override
     protected void onSubscribe() {
         mGetItemsSubscription = mGetItems.execute().subscribe(items -> {
-            notifyOnChange(new ItemsListViewModel(mItemModelsMapper.map(items)));
+            notifyOnChange(new ItemsListViewModel(ItemModelsMapper.map(items)));
         });
     }
 

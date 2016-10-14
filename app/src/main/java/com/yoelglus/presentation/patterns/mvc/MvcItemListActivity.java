@@ -36,7 +36,6 @@ public class MvcItemListActivity extends AppCompatActivity {
     private MvcItemsListController mController;
     private MvcItemsListModel mModel;
     private Subscription mModelSubscription;
-    private ItemModelsMapper mItemModelsMapper = new ItemModelsMapper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class MvcItemListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mModelSubscription = mModel.itemsList().map(mItemModelsMapper::map).subscribe(this::showItems);
+        mModelSubscription = mModel.itemsList().map(ItemModelsMapper::map).subscribe(this::showItems);
         mController.loadItemsList();
     }
 
