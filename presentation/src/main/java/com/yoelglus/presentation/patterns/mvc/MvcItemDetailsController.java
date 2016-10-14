@@ -13,8 +13,6 @@ public class MvcItemDetailsController {
     }
 
     void loadItemDetails() {
-        mGetItem.execute().subscribe(item -> {
-            mMvcItemDetailsModel.setItem(item);
-        });
+        mGetItem.execute().subscribe(mMvcItemDetailsModel::setItem);
     }
 }

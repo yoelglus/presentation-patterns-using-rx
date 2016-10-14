@@ -16,7 +16,7 @@ public class MvcItemDetailsModel {
     }
 
     Observable<Item> itemDetails() {
-        return mItemSubject;
+        return mItemSubject.asObservable();
     }
 
 }
