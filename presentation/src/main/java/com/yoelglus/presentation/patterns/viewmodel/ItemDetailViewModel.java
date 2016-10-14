@@ -44,6 +44,6 @@ public class ItemDetailViewModel extends AbstractViewModel {
     }
 
     public Observable<ItemModel> itemModel() {
-        return mItemModelSubject;
+        return mItemModelSubject.asObservable();
     }
 }

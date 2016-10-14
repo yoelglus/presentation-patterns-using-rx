@@ -48,7 +48,7 @@ public class ItemsListViewModel extends AbstractViewModel {
     }
 
     public Observable<List<ItemModel>> itemModels() {
-        return mItemModelsSubject;
+        return mItemModelsSubject.asObservable();
     }
 
     public void addItemClicked() {

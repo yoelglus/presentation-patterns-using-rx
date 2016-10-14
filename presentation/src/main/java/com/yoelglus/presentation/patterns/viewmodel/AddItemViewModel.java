@@ -40,11 +40,11 @@ public class AddItemViewModel extends AbstractViewModel {
     }
 
     public Observable<Boolean> addButtonEnabled() {
-        return mAddButtonEnabledSubject;
+        return mAddButtonEnabledSubject.asObservable();
     }
 
     public Observable<Void> dismiss() {
-        return mDismissSubject;
+        return mDismissSubject.asObservable();
     }
 
     public void contentTextChanged(String contentText) {
