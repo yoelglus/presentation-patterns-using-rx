@@ -1,8 +1,10 @@
 package com.yoelglus.presentation.patterns;
 
+import android.app.Application;
+import android.support.v7.app.AppCompatActivity;
+
 import com.memoizrlabs.Shank;
 import com.memoizrlabs.functions.Func0;
-import com.memoizrlabs.functions.Func1;
 import com.memoizrlabs.functions.Func2;
 import com.yoelglus.presentation.patterns.domain.interfaces.ItemsRepository;
 import com.yoelglus.presentation.patterns.domain.usecases.AddItem;
@@ -34,9 +36,6 @@ import com.yoelglus.presentation.patterns.viewmodel.AddItemViewModel;
 import com.yoelglus.presentation.patterns.viewmodel.ItemDetailViewModel;
 import com.yoelglus.presentation.patterns.viewmodel.ItemsListViewModel;
 
-import android.app.Application;
-import android.support.v7.app.AppCompatActivity;
-
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -51,9 +50,10 @@ public class MasterDetailsApplication extends Application {
         Shank.registerNamedFactory(Scheduler.class, "io", (Func0<Scheduler>) Schedulers::io);
         Shank.registerNamedFactory(Scheduler.class, "main", (Func0<Scheduler>) AndroidSchedulers::mainThread);
 
-        Shank.registerFactory(GetItems.class, (Func0<GetItems>) () -> new GetItems(Shank.named("io").provideSingleton(Scheduler.class),
-                Shank.named("main").provideSingleton(Scheduler.class),
-                Shank.provideSingleton(ItemsRepository.class)));
+        Shank.registerFactory(GetItems.class,
+                (Func0<GetItems>) () -> new GetItems(Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class),
+                        Shank.provideSingleton(ItemsRepository.class)));
 
         Shank.registerFactory(Navigator.class, new Func2<AppCompatActivity, Boolean, Navigator>() {
             @Override
@@ -63,19 +63,15 @@ public class MasterDetailsApplication extends Application {
         });
 
 
-        Shank.registerFactory(GetItem.class, new Func1<String, GetItem>() {
-            @Override
-            public GetItem call(String id) {
-                return new GetItem(Shank.named("io").provideSingleton(Scheduler.class),
+        Shank.registerFactory(GetItem.class,
+                (Func0<GetItem>) () -> new GetItem(Shank.named("io").provideSingleton(Scheduler.class),
                         Shank.named("main").provideSingleton(Scheduler.class),
-                        Shank.provideSingleton(ItemsRepository.class),
-                        id);
-            }
-        });
+                        Shank.provideSingleton(ItemsRepository.class)));
 
-        Shank.registerFactory(AddItem.class, (Func0<AddItem>) () -> new AddItem(Shank.named("io").provideSingleton(Scheduler.class),
-                Shank.named("main").provideSingleton(Scheduler.class),
-                Shank.provideSingleton(ItemsRepository.class)));
+        Shank.registerFactory(AddItem.class,
+                (Func0<AddItem>) () -> new AddItem(Shank.named("io").provideSingleton(Scheduler.class),
+                        Shank.named("main").provideSingleton(Scheduler.class),
+                        Shank.provideSingleton(ItemsRepository.class)));
 
         // MVP Passive
 
@@ -90,14 +86,11 @@ public class MasterDetailsApplication extends Application {
                 });
 
         Shank.registerFactory(MvpPassiveItemDetailsPresenter.class,
-                new Func1<String, MvpPassiveItemDetailsPresenter>() {
-                    @Override
-                    public MvpPassiveItemDetailsPresenter call(String id) {
-                        return new MvpPassiveItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
-                    }
-                });
+                (Func0<MvpPassiveItemDetailsPresenter>) () -> new MvpPassiveItemDetailsPresenter(Shank.provideNew(
+                        GetItem.class)));
 
-        Shank.registerFactory(MvpPassiveAddItemPresenter.class, (Func0<MvpPassiveAddItemPresenter>) () -> new MvpPassiveAddItemPresenter(Shank.provideNew(AddItem.class)));
+        Shank.registerFactory(MvpPassiveAddItemPresenter.class,
+                (Func0<MvpPassiveAddItemPresenter>) () -> new MvpPassiveAddItemPresenter(Shank.provideNew(AddItem.class)));
 
         // MVP Passive Rx
 
@@ -112,14 +105,11 @@ public class MasterDetailsApplication extends Application {
                 });
 
         Shank.registerFactory(MvpPassiveRxItemDetailsPresenter.class,
-                new Func1<String, MvpPassiveRxItemDetailsPresenter>() {
-                    @Override
-                    public MvpPassiveRxItemDetailsPresenter call(String id) {
-                        return new MvpPassiveRxItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
-                    }
-                });
+                (Func0<MvpPassiveRxItemDetailsPresenter>) () -> new MvpPassiveRxItemDetailsPresenter(Shank.provideNew(
+                        GetItem.class)));
 
-        Shank.registerFactory(MvpPassiveRxAddItemPresenter.class, (Func0<MvpPassiveRxAddItemPresenter>) () -> new MvpPassiveRxAddItemPresenter(Shank.provideNew(AddItem.class)));
+        Shank.registerFactory(MvpPassiveRxAddItemPresenter.class,
+                (Func0<MvpPassiveRxAddItemPresenter>) () -> new MvpPassiveRxAddItemPresenter(Shank.provideNew(AddItem.class)));
 
         // MVP
 
@@ -133,14 +123,11 @@ public class MasterDetailsApplication extends Application {
                     }
                 });
 
-        Shank.registerFactory(MvpItemDetailsPresenter.class, new Func1<String, MvpItemDetailsPresenter>() {
-            @Override
-            public MvpItemDetailsPresenter call(String id) {
-                return new MvpItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
-            }
-        });
+        Shank.registerFactory(MvpItemDetailsPresenter.class,
+                (Func0<MvpItemDetailsPresenter>) () -> new MvpItemDetailsPresenter(Shank.provideNew(GetItem.class)));
 
-        Shank.registerFactory(MvpAddItemPresenter.class, (Func0<MvpAddItemPresenter>) () -> new MvpAddItemPresenter(Shank.provideNew(AddItem.class)));
+        Shank.registerFactory(MvpAddItemPresenter.class,
+                (Func0<MvpAddItemPresenter>) () -> new MvpAddItemPresenter(Shank.provideNew(AddItem.class)));
 
         // MVPVM
 
@@ -154,14 +141,11 @@ public class MasterDetailsApplication extends Application {
                     }
                 });
 
-        Shank.registerFactory(MvpVmItemDetailsPresenter.class, new Func1<String, MvpVmItemDetailsPresenter>() {
-            @Override
-            public MvpVmItemDetailsPresenter call(String id) {
-                return new MvpVmItemDetailsPresenter(Shank.provideNew(GetItem.class, id));
-            }
-        });
+        Shank.registerFactory(MvpVmItemDetailsPresenter.class,
+                (Func0<MvpVmItemDetailsPresenter>) () -> new MvpVmItemDetailsPresenter(Shank.provideNew(GetItem.class)));
 
-        Shank.registerFactory(MvpVmAddItemPresenter.class, (Func0<MvpVmAddItemPresenter>) () -> new MvpVmAddItemPresenter(Shank.provideNew(AddItem.class)));
+        Shank.registerFactory(MvpVmAddItemPresenter.class,
+                (Func0<MvpVmAddItemPresenter>) () -> new MvpVmAddItemPresenter(Shank.provideNew(AddItem.class)));
 
         // MVPVM
 
@@ -174,14 +158,11 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(ItemDetailViewModel.class, new Func1<String, ItemDetailViewModel>() {
-            @Override
-            public ItemDetailViewModel call(String id) {
-                return new ItemDetailViewModel(Shank.provideNew(GetItem.class, id));
-            }
-        });
+        Shank.registerFactory(ItemDetailViewModel.class,
+                (Func0<ItemDetailViewModel>) () -> new ItemDetailViewModel(Shank.provideNew(GetItem.class)));
 
-        Shank.registerFactory(AddItemViewModel.class, (Func0<AddItemViewModel>) () -> new AddItemViewModel(Shank.provideNew(AddItem.class)));
+        Shank.registerFactory(AddItemViewModel.class,
+                (Func0<AddItemViewModel>) () -> new AddItemViewModel(Shank.provideNew(AddItem.class)));
 
         // MVC
         Shank.registerFactory(MvcItemsListModel.class, (Func0<MvcItemsListModel>) MvcItemsListModel::new);
@@ -198,13 +179,9 @@ public class MasterDetailsApplication extends Application {
 
         Shank.registerFactory(MvcItemDetailsModel.class, (Func0<MvcItemDetailsModel>) MvcItemDetailsModel::new);
 
-        Shank.registerFactory(MvcItemDetailsController.class, new Func1<String, MvcItemDetailsController>() {
-            @Override
-            public MvcItemDetailsController call(String id) {
-                return new MvcItemDetailsController(Shank.provideNew(GetItem.class, id),
-                        Shank.provideSingleton(MvcItemDetailsModel.class));
-            }
-        });
+        Shank.registerFactory(MvcItemDetailsController.class,
+                (Func0<MvcItemDetailsController>) () -> new MvcItemDetailsController(Shank.provideNew(GetItem.class),
+                        Shank.provideSingleton(MvcItemDetailsModel.class)));
 
         Shank.registerFactory(MvcAddItemModel.class, (Func0<MvcAddItemModel>) MvcAddItemModel::new);
 

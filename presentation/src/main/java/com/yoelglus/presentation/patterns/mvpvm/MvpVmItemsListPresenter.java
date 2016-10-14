@@ -22,9 +22,10 @@ public class MvpVmItemsListPresenter extends MvpVmAbstractPresenter<ItemsListVie
 
     @Override
     protected void onSubscribe() {
-        mGetItemsSubscription = mGetItems.execute().subscribe(items -> {
-            notifyOnChange(new ItemsListViewModel(mItemModelsMapper.map(items)));
-        });
+        mGetItemsSubscription = mGetItems.execute(null)
+                .map(mItemModelsMapper::map)
+                .map(ItemsListViewModel::new)
+                .subscribe(this::notifyOnChange);
     }
 
     @Override

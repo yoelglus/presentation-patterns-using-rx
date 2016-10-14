@@ -35,9 +35,7 @@ public class MvpPassiveItemsListPresenter extends AbstractPresenter<MvpPassiveIt
             mNavigator.navigateToItem(id);
         }));
 
-        mSubscriptionList.add(mGetItems.execute().subscribe(items -> {
-            mView.showItems(mItemModelsMapper.map(items));
-        }));
+        mSubscriptionList.add(mGetItems.execute(null).map(mItemModelsMapper::map).subscribe(mView::showItems));
     }
 
     @Override

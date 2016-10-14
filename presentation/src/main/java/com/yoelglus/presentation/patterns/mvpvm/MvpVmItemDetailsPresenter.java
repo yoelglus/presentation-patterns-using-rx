@@ -16,19 +16,16 @@ public class MvpVmItemDetailsPresenter extends MvpVmAbstractPresenter<ItemDetail
     }
 
     @Override
-    protected void onSubscribe() {
-        super.onSubscribe();
-        mGetItemSubscription = mGetItem.execute().subscribe(item -> {
-            notifyOnChange(new ItemDetailViewModel(ItemModel.from(item)));
-        });
-    }
-
-    @Override
     protected void onUnSubscribe() {
         super.onUnSubscribe();
         mGetItemSubscription.unsubscribe();
     }
 
-    public interface View {
+    void loadItem(String itemId) {
+        mGetItemSubscription = mGetItem.execute(itemId)
+                .map(ItemModel::from)
+                .map(ItemDetailViewModel::new)
+                .subscribe(this::notifyOnChange);
     }
+
 }

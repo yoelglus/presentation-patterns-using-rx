@@ -17,10 +17,6 @@ public class MvpPassiveAddItemPresenter extends AbstractPresenter<MvpPassiveAddI
         mAddItem = addItem;
     }
 
-    private void setAddButtonEnableState() {
-        mView.setAddButtonEnabled(mContentText.length() > 0 && mDetailText.length() > 0);
-    }
-
     @Override
     public void onTakeView() {
         mSubscriptionList.add(mView.contentTextChanged().subscribe(contentText -> {
@@ -33,7 +29,7 @@ public class MvpPassiveAddItemPresenter extends AbstractPresenter<MvpPassiveAddI
         }));
 
         mSubscriptionList.add(mView.addButtonClicks().subscribe(aVoid -> {
-            mAddItem.execute(mContentText, mDetailText).subscribe(s -> {
+            mAddItem.execute(new AddItem.AddItemParam(mContentText, mDetailText)).subscribe(s -> {
                 mView.dismissView();
             });
         }));
@@ -46,6 +42,10 @@ public class MvpPassiveAddItemPresenter extends AbstractPresenter<MvpPassiveAddI
     @Override
     public void onDropView() {
         mSubscriptionList.unsubscribe();
+    }
+
+    private void setAddButtonEnableState() {
+        mView.setAddButtonEnabled(mContentText.length() > 0 && mDetailText.length() > 0);
     }
 
     public interface View {

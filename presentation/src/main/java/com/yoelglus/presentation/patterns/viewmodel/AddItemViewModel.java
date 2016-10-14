@@ -26,10 +26,11 @@ public class AddItemViewModel extends AbstractViewModel {
         updateAddButtonState();
     };
 
-    private Action1<Void> mAddItemClicks = aVoid ->
-            mAddItemSubscription = mAddItem.execute(mContentText, mDetailText).subscribe(s -> {
-                mDismissSubject.onNext(null);
-            });
+    private Action1<Void> mAddItemClicks = aVoid -> mAddItemSubscription = mAddItem.execute(new AddItem.AddItemParam(
+            mContentText,
+            mDetailText)).subscribe(s -> {
+        mDismissSubject.onNext(null);
+    });
     private Action1<Void> mCancelClicks = aVoid -> mDismissSubject.onNext(null);
 
     public AddItemViewModel(AddItem addItem) {

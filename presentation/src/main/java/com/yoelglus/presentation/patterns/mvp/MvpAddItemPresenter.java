@@ -29,7 +29,7 @@ public class MvpAddItemPresenter extends AbstractPresenter<MvpAddItemPresenter.V
     }
 
     Action1<Void> onAddButtonClicked() {
-        return aVoid -> mAddItem.execute(mContentText.toString(), mDetailText.toString())
+        return aVoid -> mAddItem.execute(new AddItem.AddItemParam(mContentText.toString(), mDetailText.toString()))
                 .map(s -> (Void) null)
                 .subscribe(mView.dismissView());
     }

@@ -26,7 +26,7 @@ public class MvpItemsListPresenter extends AbstractPresenter<MvpItemsListPresent
 
     @Override
     public void onTakeView() {
-        mGetItemsSubscription = mGetItems.execute().map(mItemModelsMapper::map).subscribe(mView.showItems());
+        mGetItemsSubscription = mGetItems.execute(null).map(mItemModelsMapper::map).subscribe(mView.showItems());
     }
 
     @Override

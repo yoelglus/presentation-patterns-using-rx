@@ -5,6 +5,7 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class ItemDetailViewModel extends AbstractViewModel {
@@ -18,17 +19,15 @@ public class ItemDetailViewModel extends AbstractViewModel {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mGetItemSubscription = mGetItem.execute().subscribe(item -> {
-            mItemModelSubject.onNext(ItemModel.from(item));
-        });
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         mGetItemSubscription.unsubscribe();
+    }
+
+    public Action1<String> loadItem() {
+        return itemId -> mGetItemSubscription = mGetItem.execute(itemId)
+                .map(ItemModel::from)
+                .subscribe(mItemModelSubject);
     }
 
     public Observable<ItemModel> itemModel() {

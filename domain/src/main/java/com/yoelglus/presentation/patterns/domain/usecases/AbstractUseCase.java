@@ -3,7 +3,9 @@ package com.yoelglus.presentation.patterns.domain.usecases;
 import rx.Observable;
 import rx.Scheduler;
 
-public abstract class AbstractUseCase<T> {
+abstract class AbstractUseCase<R, P> {
+
+    P mParam;
 
     private Scheduler mIoScheduler;
     private Scheduler mMainScheduler;
@@ -13,9 +15,10 @@ public abstract class AbstractUseCase<T> {
         mMainScheduler = mainScheduler;
     }
 
-    public Observable<T> execute() {
+    public Observable<R> execute(P param) {
+        mParam = param;
         return getObservable().subscribeOn(mIoScheduler).observeOn(mMainScheduler);
     }
 
-    public abstract Observable<T> getObservable();
+    public abstract Observable<R> getObservable();
 }

@@ -11,26 +11,22 @@ public class MvcItemsListController {
     private GetItems mGetItems;
     private Navigator mNavigator;
 
-    public MvcItemsListController(GetItems getItems,
-                                  Navigator navigator,
-                                  MvcItemsListModel mvcItemsListModel) {
+    public MvcItemsListController(GetItems getItems, Navigator navigator, MvcItemsListModel mvcItemsListModel) {
         mMvcItemsListModel = mvcItemsListModel;
         mGetItems = getItems;
         mNavigator = navigator;
     }
 
+    public Action1<Void> addItemClicks() {
+        return aVoid -> mNavigator.navigateToAddItem();
+    }
+
     void loadItemsList() {
-        mGetItems.execute().subscribe(items -> {
-            mMvcItemsListModel.setItems(items);
-        });
+        mGetItems.execute(null).subscribe(mMvcItemsListModel::setItems);
     }
 
     Action1<String> itemClicked() {
         return id -> mNavigator.navigateToItem(id);
-    }
-
-    public Action1<Void> addItemClicks() {
-        return aVoid -> mNavigator.navigateToAddItem();
     }
 
 }

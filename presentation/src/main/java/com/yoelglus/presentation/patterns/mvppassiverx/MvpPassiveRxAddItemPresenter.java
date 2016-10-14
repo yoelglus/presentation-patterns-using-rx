@@ -21,9 +21,16 @@ public class MvpPassiveRxAddItemPresenter extends AbstractPresenter<MvpPassiveRx
 
     @Override
     public void onTakeView() {
-        mSubscriptionList.add(mView.contentTextChanged().doOnNext(contentText -> mContentText = contentText).zipWith(mView.detailTextChanged().doOnNext(detailText -> mDetailText = detailText), (content, detail) -> content.length() > 0 && detail.length() > 0).subscribe(mView.setAddButtonEnabled()));
+        mSubscriptionList.add(mView.contentTextChanged()
+                .doOnNext(contentText -> mContentText = contentText)
+                .zipWith(mView.detailTextChanged().doOnNext(detailText -> mDetailText = detailText),
+                        (content, detail) -> content.length() > 0 && detail.length() > 0)
+                .subscribe(mView.setAddButtonEnabled()));
 
-        mSubscriptionList.add(mView.addButtonClicks().flatMap(aVoid -> mAddItem.execute(mContentText, mDetailText).map(s -> (Void) null)).subscribe(mView.dismissView()));
+        mSubscriptionList.add(mView.addButtonClicks()
+                .flatMap(aVoid -> mAddItem.execute(new AddItem.AddItemParam(mContentText, mDetailText))
+                        .map(s -> (Void) null))
+                .subscribe(mView.dismissView()));
 
         mSubscriptionList.add(mView.cancelButtonClicks().subscribe(mView.dismissView()));
     }
