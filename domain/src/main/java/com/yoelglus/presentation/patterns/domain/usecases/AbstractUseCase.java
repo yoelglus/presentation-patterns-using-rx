@@ -3,7 +3,7 @@ package com.yoelglus.presentation.patterns.domain.usecases;
 import rx.Observable;
 import rx.Scheduler;
 
-public abstract class AbstractUseCase<T> {
+abstract class AbstractUseCase<T> {
 
     private Scheduler mIoScheduler;
     private Scheduler mMainScheduler;
