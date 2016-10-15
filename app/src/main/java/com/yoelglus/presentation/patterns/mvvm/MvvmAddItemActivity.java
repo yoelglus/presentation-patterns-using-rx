@@ -10,7 +10,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.memoizrlabs.Shank;
 import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.viewmodel.AddItemViewModel;
 
 import rx.Observable;
 import rx.internal.util.SubscriptionList;
@@ -25,7 +24,7 @@ public class MvvmAddItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
-        mAddItemViewModel = Shank.provideNew(AddItemViewModel.class);
+        mAddItemViewModel = Shank.provideNew(AddItemViewModel.class, this);
 
         bindViewModel();
 
@@ -47,7 +46,6 @@ public class MvvmAddItemActivity extends AppCompatActivity {
                 .subscribe(aVoid -> mAddItemViewModel.cancelClicked()));
         mSubscriptionList.add(getTextChangeObservable(R.id.content).subscribe(mAddItemViewModel::contentTextChanged));
         mSubscriptionList.add(getTextChangeObservable(R.id.detail).subscribe(mAddItemViewModel::detailTextChanged));
-        mSubscriptionList.add(mAddItemViewModel.dismiss().subscribe(aVoid -> finish()));
         mSubscriptionList.add(mAddItemViewModel.addButtonEnabled()
                 .subscribe(RxView.enabled(findViewById(R.id.add_button))));
     }

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.memoizrlabs.Shank;
 import com.yoelglus.presentation.patterns.R;
 import com.yoelglus.presentation.patterns.model.ItemModel;
-import com.yoelglus.presentation.patterns.viewmodel.ItemDetailViewModel;
 
 import rx.Subscription;
 

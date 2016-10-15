@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.viewmodel;
+package com.yoelglus.presentation.patterns.mvvm;
 
 import com.yoelglus.presentation.patterns.data.ItemsRepository;
 import com.yoelglus.presentation.patterns.mapper.ItemModelsMapper;
@@ -47,15 +47,15 @@ public class ItemsListViewModel extends AbstractViewModel {
         mGetItemsSubscription.unsubscribe();
     }
 
-    public Observable<List<ItemModel>> itemModels() {
+    Observable<List<ItemModel>> itemModels() {
         return mItemModelsSubject.asObservable();
     }
 
-    public void addItemClicked() {
+    void addItemClicked() {
         mNavigator.navigateToAddItem();
     }
 
-    public void itemClicked(String itemId) {
+    void itemClicked(String itemId) {
         mNavigator.navigateToItem(itemId);
     }
 

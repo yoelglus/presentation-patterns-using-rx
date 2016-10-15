@@ -1,6 +1,7 @@
-package com.yoelglus.presentation.patterns.viewmodel;
+package com.yoelglus.presentation.patterns.mvvm;
 
 import com.yoelglus.presentation.patterns.data.ItemsRepository;
+import com.yoelglus.presentation.patterns.navigator.Navigator;
 
 import rx.Observable;
 import rx.Scheduler;
@@ -10,16 +11,20 @@ import rx.subjects.PublishSubject;
 public class AddItemViewModel extends AbstractViewModel {
 
     private PublishSubject<Boolean> mAddButtonEnabledSubject = PublishSubject.create();
-    private PublishSubject<Void> mDismissSubject = PublishSubject.create();
     private String mContentText = "";
     private Subscription mAddItemSubscription;
     private String mDetailText = "";
     private ItemsRepository mItemsRepository;
+    private Navigator mNavigator;
     private Scheduler mIoScheduler;
     private Scheduler mMainScheduler;
 
-    public AddItemViewModel(ItemsRepository itemsRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
+    public AddItemViewModel(ItemsRepository itemsRepository,
+                            Navigator navigator,
+                            Scheduler ioScheduler,
+                            Scheduler mainScheduler) {
         mItemsRepository = itemsRepository;
+        mNavigator = navigator;
         mIoScheduler = ioScheduler;
         mMainScheduler = mainScheduler;
     }
@@ -39,33 +44,29 @@ public class AddItemViewModel extends AbstractViewModel {
         }
     }
 
-    public Observable<Boolean> addButtonEnabled() {
+    Observable<Boolean> addButtonEnabled() {
         return mAddButtonEnabledSubject.asObservable();
     }
 
-    public Observable<Void> dismiss() {
-        return mDismissSubject.asObservable();
-    }
-
-    public void contentTextChanged(String contentText) {
+    void contentTextChanged(String contentText) {
         mContentText = contentText;
         updateAddButtonState();
     }
 
-    public void detailTextChanged(String detailText) {
+    void detailTextChanged(String detailText) {
         mDetailText = detailText;
         updateAddButtonState();
     }
 
-    public void addItemClicked() {
+    void addItemClicked() {
         mAddItemSubscription = mItemsRepository.addItem(mContentText, mDetailText)
                 .subscribeOn(mIoScheduler)
                 .observeOn(mMainScheduler)
-                .subscribe(s -> mDismissSubject.onNext(null));
+                .subscribe(s -> mNavigator.closeCurrentScreen());
     }
 
-    public void cancelClicked() {
-        mDismissSubject.onNext(null);
+    void cancelClicked() {
+        mNavigator.closeCurrentScreen();
     }
 
     private void updateAddButtonState() {

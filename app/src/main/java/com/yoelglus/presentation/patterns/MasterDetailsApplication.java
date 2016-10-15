@@ -13,9 +13,9 @@ import com.yoelglus.presentation.patterns.navigator.ReactiveMvpAppCompatActivity
 import com.yoelglus.presentation.patterns.rmvp.RmvpAddItemPresenter;
 import com.yoelglus.presentation.patterns.rmvp.RmvpItemDetailsPresenter;
 import com.yoelglus.presentation.patterns.rmvp.RmvpItemsListPresenter;
-import com.yoelglus.presentation.patterns.viewmodel.AddItemViewModel;
-import com.yoelglus.presentation.patterns.viewmodel.ItemDetailViewModel;
-import com.yoelglus.presentation.patterns.viewmodel.ItemsListViewModel;
+import com.yoelglus.presentation.patterns.mvvm.AddItemViewModel;
+import com.yoelglus.presentation.patterns.mvvm.ItemDetailViewModel;
+import com.yoelglus.presentation.patterns.mvvm.ItemsListViewModel;
 
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
@@ -67,10 +67,15 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(RmvpAddItemPresenter.class,
-                (Func0<RmvpAddItemPresenter>) () -> new RmvpAddItemPresenter(Shank.provideNew(ItemsRepository.class),
+        Shank.registerFactory(RmvpAddItemPresenter.class, new Func1<AppCompatActivity, RmvpAddItemPresenter>() {
+            @Override
+            public RmvpAddItemPresenter call(AppCompatActivity activity) {
+                return new RmvpAddItemPresenter(Shank.provideNew(ItemsRepository.class),
+                        Shank.named("rmvp").provideNew(Navigator.class, activity),
                         Shank.named("io").provideSingleton(Scheduler.class),
-                        Shank.named("main").provideSingleton(Scheduler.class)));
+                        Shank.named("main").provideSingleton(Scheduler.class));
+            }
+        });
 
         // MVVM
 
@@ -94,10 +99,15 @@ public class MasterDetailsApplication extends Application {
             }
         });
 
-        Shank.registerFactory(AddItemViewModel.class,
-                (Func0<AddItemViewModel>) () -> new AddItemViewModel(Shank.provideNew(ItemsRepository.class),
+        Shank.registerFactory(AddItemViewModel.class, new Func1<AppCompatActivity, AddItemViewModel>() {
+            @Override
+            public AddItemViewModel call(AppCompatActivity activity) {
+                return new AddItemViewModel(Shank.provideNew(ItemsRepository.class),
+                        Shank.named("mvvm").provideNew(Navigator.class, activity),
                         Shank.named("io").provideSingleton(Scheduler.class),
-                        Shank.named("main").provideSingleton(Scheduler.class)));
+                        Shank.named("main").provideSingleton(Scheduler.class));
+            }
+        });
 
     }
 

@@ -2,6 +2,7 @@ package com.yoelglus.presentation.patterns.rmvp;
 
 
 import com.yoelglus.presentation.patterns.data.ItemsRepository;
+import com.yoelglus.presentation.patterns.navigator.Navigator;
 
 import rx.Observable;
 import rx.Scheduler;
@@ -10,12 +11,14 @@ import rx.internal.util.SubscriptionList;
 public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter.View> {
 
     private ItemsRepository mItemsRepository;
+    private Navigator mNavigator;
     private Scheduler mIoScheduler;
     private Scheduler mMainScheduler;
     private SubscriptionList mSubscriptionList = new SubscriptionList();
 
-    public RmvpAddItemPresenter(ItemsRepository itemsRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
+    public RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator, Scheduler ioScheduler, Scheduler mainScheduler) {
         mItemsRepository = itemsRepository;
+        mNavigator = navigator;
         mIoScheduler = ioScheduler;
         mMainScheduler = mainScheduler;
     }
@@ -43,7 +46,7 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
         mItemsRepository.addItem(itemToAdd.content, itemToAdd.details)
                 .subscribeOn(mIoScheduler)
                 .observeOn(mMainScheduler)
-                .subscribe(s -> mView.dismissView());
+                .subscribe(s -> mNavigator.closeCurrentScreen());
     }
 
     private static class ItemToAdd {

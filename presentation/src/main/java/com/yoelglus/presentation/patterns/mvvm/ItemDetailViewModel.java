@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.viewmodel;
+package com.yoelglus.presentation.patterns.mvvm;
 
 import com.yoelglus.presentation.patterns.data.ItemsRepository;
 import com.yoelglus.presentation.patterns.model.ItemModel;
@@ -43,7 +43,7 @@ public class ItemDetailViewModel extends AbstractViewModel {
         mGetItemSubscription.unsubscribe();
     }
 
-    public Observable<ItemModel> itemModel() {
+    Observable<ItemModel> itemModel() {
         return mItemModelSubject.asObservable();
     }
 }

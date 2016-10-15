@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import com.memoizrlabs.Scope;
 import com.memoizrlabs.Shank;
 import com.yoelglus.presentation.patterns.R;
 
@@ -17,15 +16,13 @@ import rx.Observable;
 
 public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddItemPresenter.View {
 
-    private Scope mScope;
     private RmvpAddItemPresenter mPresenter;
     private View mAddButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mScope = Scope.scope(RmvpAddItemActivity.class);
-        mPresenter = Shank.with(mScope).provideSingleton(RmvpAddItemPresenter.class);
+        mPresenter = Shank.provideSingleton(RmvpAddItemPresenter.class, this);
         setContentView(R.layout.activity_add_item);
         mAddButton = findViewById(R.id.add_button);
         mPresenter.takeView(this);
@@ -36,7 +33,6 @@ public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddIte
         super.onDestroy();
         if (isFinishing()) {
             mPresenter.dropView(this);
-            mScope.clear();
         }
     }
 

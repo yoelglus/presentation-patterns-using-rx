@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.viewmodel;
+package com.yoelglus.presentation.patterns.mvvm;
 
 abstract class AbstractViewModel {
 

@@ -14,7 +14,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.memoizrlabs.Shank;
 import com.yoelglus.presentation.patterns.R;
 import com.yoelglus.presentation.patterns.model.ItemModel;
-import com.yoelglus.presentation.patterns.viewmodel.ItemsListViewModel;
 
 import java.util.List;
 
