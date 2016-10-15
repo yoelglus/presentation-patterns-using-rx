@@ -32,13 +32,9 @@ public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPrese
     @Override
     public void onTakeView() {
         mSubscriptionList = new SubscriptionList();
-        mSubscriptionList.add(mView.addItemClicks().subscribe(aVoid -> {
-            mNavigator.navigateToAddItem();
-        }));
+        mSubscriptionList.add(mView.addItemClicks().subscribe(aVoid -> mNavigator.navigateToAddItem()));
 
-        mSubscriptionList.add(mView.itemClicks().subscribe(id -> {
-            mNavigator.navigateToItem(id);
-        }));
+        mSubscriptionList.add(mView.itemClicks().subscribe(mNavigator::navigateToItem));
 
         mSubscriptionList.add(mItemsRepository.getItems()
                 .subscribeOn(mIoScheduler)

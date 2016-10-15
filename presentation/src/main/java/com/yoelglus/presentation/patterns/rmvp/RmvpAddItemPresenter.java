@@ -34,7 +34,7 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
                 .withLatestFrom(addEnabled, (aVoid, itemToAdd) -> itemToAdd)
                 .subscribe(this::addItem));
 
-        mSubscriptionList.add(mView.cancelButtonClicks().subscribe(aVoid -> mView.dismissView()));
+        mSubscriptionList.add(mView.cancelButtonClicks().subscribe(aVoid -> mNavigator.closeCurrentScreen()));
     }
 
     @Override
@@ -73,7 +73,5 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
         Observable<Void> addButtonClicks();
 
         Observable<Void> cancelButtonClicks();
-
-        void dismissView();
     }
 }

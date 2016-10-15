@@ -38,7 +38,7 @@ public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddIte
 
     @Override
     public void setAddButtonEnabled(boolean enabled) {
-        RxView.enabled(mAddButton).call(enabled);
+        mAddButton.setEnabled(enabled);
     }
 
     @Override
@@ -59,11 +59,6 @@ public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddIte
     @Override
     public Observable<Void> cancelButtonClicks() {
         return RxView.clicks(findViewById(R.id.cancel_button));
-    }
-
-    @Override
-    public void dismissView() {
-        finish();
     }
 
     @NonNull
