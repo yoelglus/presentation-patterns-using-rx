@@ -1,18 +1,18 @@
 package com.yoelglus.presentation.patterns.navigator;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import com.yoelglus.presentation.patterns.rmvp.RmvpAddItemActivity;
 import com.yoelglus.presentation.patterns.rmvp.RmvpItemDetailActivity;
 import com.yoelglus.presentation.patterns.rmvp.RmvpItemDetailFragment;
 
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 
-public class ReactiveMvpAppCompatActivityNavigator implements Navigator {
+
+public class RmvpAppCompatActivityNavigator implements Navigator {
 
     private AppCompatActivity activity;
 
-    public ReactiveMvpAppCompatActivityNavigator(AppCompatActivity activity) {
+    public RmvpAppCompatActivityNavigator(AppCompatActivity activity) {
         this.activity = activity;
     }
 
