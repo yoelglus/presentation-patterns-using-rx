@@ -10,40 +10,40 @@ import rx.subjects.PublishSubject;
 
 public class ItemDetailViewModel extends AbstractViewModel {
 
-    private ItemsRepository mItemsRepository;
-    private String mItemId;
-    private PublishSubject<ItemModel> mItemModelSubject = PublishSubject.create();
-    private Subscription mGetItemSubscription;
-    private Scheduler mIoScheduler;
-    private Scheduler mMainScheduler;
+    private ItemsRepository itemsRepository;
+    private String itemId;
+    private PublishSubject<ItemModel> itemModelSubject = PublishSubject.create();
+    private Subscription getItemSubscription;
+    private Scheduler ioScheduler;
+    private Scheduler mainScheduler;
 
     public ItemDetailViewModel(ItemsRepository itemsRepository,
                                String itemId,
                                Scheduler ioScheduler,
                                Scheduler mainScheduler) {
-        mItemsRepository = itemsRepository;
-        mItemId = itemId;
-        mIoScheduler = ioScheduler;
-        mMainScheduler = mainScheduler;
+        this.itemsRepository = itemsRepository;
+        this.itemId = itemId;
+        this.ioScheduler = ioScheduler;
+        this.mainScheduler = mainScheduler;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mGetItemSubscription = mItemsRepository.getItem(mItemId)
-                .subscribeOn(mIoScheduler)
-                .observeOn(mMainScheduler)
+        getItemSubscription = itemsRepository.getItem(itemId)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .map(ItemModel::from)
-                .subscribe(mItemModelSubject);
+                .subscribe(itemModelSubject);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mGetItemSubscription.unsubscribe();
+        getItemSubscription.unsubscribe();
     }
 
     Observable<ItemModel> itemModel() {
-        return mItemModelSubject.asObservable();
+        return itemModelSubject.asObservable();
     }
 }

@@ -26,8 +26,8 @@ public class RmvpItemDetailFragment extends Fragment implements RmvpItemDetailsP
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
-    private RmvpItemDetailsPresenter mPresenter;
-    private TextView mItemDetail;
+    private RmvpItemDetailsPresenter presenter;
+    private TextView itemDetail;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -41,27 +41,27 @@ public class RmvpItemDetailFragment extends Fragment implements RmvpItemDetailsP
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mPresenter = Shank.provideNew(RmvpItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
+            presenter = Shank.provideNew(RmvpItemDetailsPresenter.class, getArguments().getString(ARG_ITEM_ID));
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
-        mItemDetail = (TextView) rootView.findViewById(R.id.item_detail);
+        itemDetail = (TextView) rootView.findViewById(R.id.item_detail);
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.takeView(this);
+        presenter.takeView(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.dropView(this);
+        presenter.dropView(this);
     }
 
     @Override
@@ -70,6 +70,6 @@ public class RmvpItemDetailFragment extends Fragment implements RmvpItemDetailsP
         if (appBarLayout != null) {
             appBarLayout.setTitle(itemModel.getContent());
         }
-        mItemDetail.setText(itemModel.getDetail());
+        itemDetail.setText(itemModel.getDetail());
     }
 }

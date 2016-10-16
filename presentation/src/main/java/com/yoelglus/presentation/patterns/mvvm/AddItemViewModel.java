@@ -10,23 +10,23 @@ import rx.subjects.PublishSubject;
 
 public class AddItemViewModel extends AbstractViewModel {
 
-    private PublishSubject<Boolean> mAddButtonEnabledSubject = PublishSubject.create();
-    private String mContentText = "";
-    private Subscription mAddItemSubscription;
-    private String mDetailText = "";
-    private ItemsRepository mItemsRepository;
-    private Navigator mNavigator;
-    private Scheduler mIoScheduler;
-    private Scheduler mMainScheduler;
+    private PublishSubject<Boolean> addButtonEnabledSubject = PublishSubject.create();
+    private String contentText = "";
+    private Subscription addItemSubscription;
+    private String detailText = "";
+    private ItemsRepository itemsRepository;
+    private Navigator navigator;
+    private Scheduler ioScheduler;
+    private Scheduler mainScheduler;
 
     public AddItemViewModel(ItemsRepository itemsRepository,
                             Navigator navigator,
                             Scheduler ioScheduler,
                             Scheduler mainScheduler) {
-        mItemsRepository = itemsRepository;
-        mNavigator = navigator;
-        mIoScheduler = ioScheduler;
-        mMainScheduler = mainScheduler;
+        this.itemsRepository = itemsRepository;
+        this.navigator = navigator;
+        this.ioScheduler = ioScheduler;
+        this.mainScheduler = mainScheduler;
     }
 
     @Override
@@ -38,39 +38,39 @@ public class AddItemViewModel extends AbstractViewModel {
     @Override
     public void onStop() {
         super.onStop();
-        if (mAddItemSubscription != null) {
-            mAddItemSubscription.unsubscribe();
-            mAddItemSubscription = null;
+        if (addItemSubscription != null) {
+            addItemSubscription.unsubscribe();
+            addItemSubscription = null;
         }
     }
 
     Observable<Boolean> addButtonEnabled() {
-        return mAddButtonEnabledSubject.asObservable();
+        return addButtonEnabledSubject.asObservable();
     }
 
     void contentTextChanged(String contentText) {
-        mContentText = contentText;
+        this.contentText = contentText;
         updateAddButtonState();
     }
 
     void detailTextChanged(String detailText) {
-        mDetailText = detailText;
+        this.detailText = detailText;
         updateAddButtonState();
     }
 
     void addItemClicked() {
-        mAddItemSubscription = mItemsRepository.addItem(mContentText, mDetailText)
-                .subscribeOn(mIoScheduler)
-                .observeOn(mMainScheduler)
-                .subscribe(s -> mNavigator.closeCurrentScreen());
+        addItemSubscription = itemsRepository.addItem(contentText, detailText)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribe(s -> navigator.closeCurrentScreen());
     }
 
     void cancelClicked() {
-        mNavigator.closeCurrentScreen();
+        navigator.closeCurrentScreen();
     }
 
     private void updateAddButtonState() {
-        mAddButtonEnabledSubject.onNext(mContentText.length() > 0 && mDetailText.length() > 0);
+        addButtonEnabledSubject.onNext(contentText.length() > 0 && detailText.length() > 0);
     }
 
 }

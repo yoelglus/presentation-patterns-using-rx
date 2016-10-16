@@ -13,40 +13,40 @@ import rx.internal.util.SubscriptionList;
 
 public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPresenter.View> {
 
-    private ItemsRepository mItemsRepository;
-    private Navigator mNavigator;
-    private SubscriptionList mSubscriptionList;
-    private Scheduler mIoScheduler;
-    private Scheduler mMainScheduler;
+    private ItemsRepository itemsRepository;
+    private Navigator navigator;
+    private SubscriptionList subscriptionList;
+    private Scheduler ioScheduler;
+    private Scheduler mainScheduler;
 
     public RmvpItemsListPresenter(ItemsRepository itemsRepository,
                                   Navigator navigator,
                                   Scheduler ioScheduler,
                                   Scheduler mainScheduler) {
-        mItemsRepository = itemsRepository;
-        mNavigator = navigator;
-        mIoScheduler = ioScheduler;
-        mMainScheduler = mainScheduler;
+        this.itemsRepository = itemsRepository;
+        this.navigator = navigator;
+        this.ioScheduler = ioScheduler;
+        this.mainScheduler = mainScheduler;
     }
 
     @Override
     public void onTakeView() {
-        mSubscriptionList = new SubscriptionList();
-        mSubscriptionList.add(mView.addItemClicks().subscribe(aVoid -> mNavigator.navigateToAddItem()));
+        subscriptionList = new SubscriptionList();
+        subscriptionList.add(view.addItemClicks().subscribe(aVoid -> navigator.navigateToAddItem()));
 
-        mSubscriptionList.add(mView.itemClicks().subscribe(mNavigator::navigateToItem));
+        subscriptionList.add(view.itemClicks().subscribe(navigator::navigateToItem));
 
-        mSubscriptionList.add(mItemsRepository.getItems()
-                .subscribeOn(mIoScheduler)
-                .observeOn(mMainScheduler)
+        subscriptionList.add(itemsRepository.getItems()
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .map(ItemModelsMapper::map)
-                .subscribe(mView::showItems));
+                .subscribe(view::showItems));
     }
 
     @Override
     public void onDropView() {
-        mSubscriptionList.unsubscribe();
-        mSubscriptionList = null;
+        subscriptionList.unsubscribe();
+        subscriptionList = null;
     }
 
     public interface View {

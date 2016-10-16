@@ -10,43 +10,43 @@ import rx.internal.util.SubscriptionList;
 
 public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter.View> {
 
-    private ItemsRepository mItemsRepository;
-    private Navigator mNavigator;
-    private Scheduler mIoScheduler;
-    private Scheduler mMainScheduler;
-    private SubscriptionList mSubscriptionList = new SubscriptionList();
+    private ItemsRepository itemsRepository;
+    private Navigator navigator;
+    private Scheduler ioScheduler;
+    private Scheduler mainScheduler;
+    private SubscriptionList subscriptionList = new SubscriptionList();
 
     public RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator, Scheduler ioScheduler, Scheduler mainScheduler) {
-        mItemsRepository = itemsRepository;
-        mNavigator = navigator;
-        mIoScheduler = ioScheduler;
-        mMainScheduler = mainScheduler;
+        this.itemsRepository = itemsRepository;
+        this.navigator = navigator;
+        this.ioScheduler = ioScheduler;
+        this.mainScheduler = mainScheduler;
     }
 
     @Override
     public void onTakeView() {
 
-        Observable<ItemToAdd> addEnabled = Observable.combineLatest(mView.contentTextChanged(),
-                mView.detailTextChanged(),
-                ItemToAdd::new).doOnNext(itemToAdd -> mView.setAddButtonEnabled(itemToAdd.valid()));
+        Observable<ItemToAdd> addEnabled = Observable.combineLatest(view.contentTextChanged(),
+                view.detailTextChanged(),
+                ItemToAdd::new).doOnNext(itemToAdd -> view.setAddButtonEnabled(itemToAdd.valid()));
 
-        mSubscriptionList.add(mView.addButtonClicks()
+        subscriptionList.add(view.addButtonClicks()
                 .withLatestFrom(addEnabled, (aVoid, itemToAdd) -> itemToAdd)
                 .subscribe(this::addItem));
 
-        mSubscriptionList.add(mView.cancelButtonClicks().subscribe(aVoid -> mNavigator.closeCurrentScreen()));
+        subscriptionList.add(view.cancelButtonClicks().subscribe(aVoid -> navigator.closeCurrentScreen()));
     }
 
     @Override
     public void onDropView() {
-        mSubscriptionList.unsubscribe();
+        subscriptionList.unsubscribe();
     }
 
     private void addItem(ItemToAdd itemToAdd) {
-        mItemsRepository.addItem(itemToAdd.content, itemToAdd.details)
-                .subscribeOn(mIoScheduler)
-                .observeOn(mMainScheduler)
-                .subscribe(s -> mNavigator.closeCurrentScreen());
+        itemsRepository.addItem(itemToAdd.content, itemToAdd.details)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribe(s -> navigator.closeCurrentScreen());
     }
 
     private static class ItemToAdd {

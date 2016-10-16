@@ -10,26 +10,26 @@ import com.yoelglus.presentation.patterns.mvvm.MvvmItemDetailFragment;
 
 public class MvvmAppCompatActivityNavigator implements Navigator {
 
-    private AppCompatActivity mActivity;
+    private AppCompatActivity activity;
 
     public MvvmAppCompatActivityNavigator(AppCompatActivity activity) {
-        mActivity = activity;
+        this.activity = activity;
     }
 
     @Override
     public void navigateToAddItem() {
-        mActivity.startActivity(new Intent(mActivity, MvvmAddItemActivity.class));
+        activity.startActivity(new Intent(activity, MvvmAddItemActivity.class));
     }
 
     @Override
     public void navigateToItem(String id) {
-        Intent intent = new Intent(mActivity, MvvmItemDetailActivity.class);
+        Intent intent = new Intent(activity, MvvmItemDetailActivity.class);
         intent.putExtra(MvvmItemDetailFragment.ARG_ITEM_ID, id);
-        mActivity.startActivity(intent);
+        activity.startActivity(intent);
     }
 
     @Override
     public void closeCurrentScreen() {
-        mActivity.finish();
+        activity.finish();
     }
 }
