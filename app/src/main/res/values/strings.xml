@@ -2,10 +2,6 @@
     <string name="app_name">Presentation Patterns</string>
     <string name="title_item_detail">Item Detail</string>
     <string name="title_items_list">Items</string>
-    <string name="mvp_passive_button_text">MVP Passive</string>
-    <string name="mvp_passive_rx_button_text">MVP Passive Rx</string>
-    <string name="mvp_button_text">MVP</string>
-    <string name="mvp_vm_button_text">MVP + ViewModel</string>
+    <string name="rmvp_button_text">RMVP</string>
     <string name="mvvm_button_text">MVVM</string>
-    <string name="mvc_button_text">MVC</string>
 </resources>

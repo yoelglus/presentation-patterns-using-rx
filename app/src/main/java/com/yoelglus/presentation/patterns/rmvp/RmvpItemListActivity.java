@@ -1,4 +1,4 @@
-package com.yoelglus.presentation.patterns.mvvm;
+package com.yoelglus.presentation.patterns.rmvp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,7 +17,8 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import java.util.List;
 
-import rx.internal.util.SubscriptionList;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 import static java.util.Collections.emptyList;
 
@@ -25,58 +26,59 @@ import static java.util.Collections.emptyList;
  * An activity representing a list of Items. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link MvvmItemDetailActivity} representing
+ * lead to a {@link RmvpItemDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class MvvmItemListActivity extends AppCompatActivity {
+public class RmvpItemListActivity extends AppCompatActivity implements RmvpItemsListPresenter.View {
 
     private SimpleItemRecyclerViewAdapter mAdapter;
-    private ItemsListViewModel mViewModel;
-    private SubscriptionList mSubscriptionList;
+    private RmvpItemsListPresenter mPresenter;
+    private PublishSubject<String> mItemClicks = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = Shank.provideNew(ItemsListViewModel.class, this);
+        mPresenter = Shank.provideNew(RmvpItemsListPresenter.class, this);
 
         setContentView(R.layout.activity_item_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
-
-        mSubscriptionList = new SubscriptionList();
-        mSubscriptionList.add(RxView.clicks(findViewById(R.id.fab)).subscribe(aVoid -> mViewModel.addItemClicked()));
-
-        mSubscriptionList.add(mViewModel.itemModels().subscribe(this::showItems));
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mViewModel.onStart();
+        mPresenter.takeView(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mViewModel.onStop();
+        mPresenter.dropView(this);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mSubscriptionList.unsubscribe();
-    }
-
-    private void showItems(List<ItemModel> itemModels) {
+    public void showItems(List<ItemModel> itemModels) {
         mAdapter.setValues(itemModels);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public Observable<Void> addItemClicks() {
+        return RxView.clicks(findViewById(R.id.fab));
+    }
+
+    @Override
+    public Observable<String> itemClicks() {
+        return mItemClicks.asObservable();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -103,7 +105,8 @@ public class MvvmItemListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
-            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(mViewModel::itemClicked);
+
+            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(mItemClicks);
         }
 
         @Override
