@@ -2,7 +2,6 @@ apply plugin: 'java'
 apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'io.reactivex:rxjava:1.1.10'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.2.1'
