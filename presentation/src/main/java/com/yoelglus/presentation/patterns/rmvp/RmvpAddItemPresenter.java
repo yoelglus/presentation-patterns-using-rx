@@ -6,7 +6,6 @@ import com.yoelglus.presentation.patterns.navigator.Navigator;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.internal.util.SubscriptionList;
 
 public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter.View> {
 
@@ -14,9 +13,9 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
     private Navigator navigator;
     private Scheduler ioScheduler;
     private Scheduler mainScheduler;
-    private SubscriptionList subscriptionList = new SubscriptionList();
 
-    public RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator, Scheduler ioScheduler, Scheduler mainScheduler) {
+    public RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator, Scheduler ioScheduler,
+            Scheduler mainScheduler) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
         this.ioScheduler = ioScheduler;
@@ -24,22 +23,17 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
     }
 
     @Override
-    public void onTakeView() {
+    protected void onTakeView() {
 
         Observable<ItemToAdd> addEnabled = Observable.combineLatest(view.contentTextChanged(),
                 view.detailTextChanged(),
                 ItemToAdd::new).doOnNext(itemToAdd -> view.setAddButtonEnabled(itemToAdd.valid()));
 
-        subscriptionList.add(view.addButtonClicks()
+        unsubscribeOnViewDropped(view.addButtonClicks()
                 .withLatestFrom(addEnabled, (aVoid, itemToAdd) -> itemToAdd)
                 .subscribe(this::addItem));
 
-        subscriptionList.add(view.cancelButtonClicks().subscribe(aVoid -> navigator.closeCurrentScreen()));
-    }
-
-    @Override
-    public void onDropView() {
-        subscriptionList.unsubscribe();
+        unsubscribeOnViewDropped(view.cancelButtonClicks().subscribe(aVoid -> navigator.closeCurrentScreen()));
     }
 
     private void addItem(ItemToAdd itemToAdd) {
@@ -50,6 +44,7 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
     }
 
     private static class ItemToAdd {
+
         private String content;
         private String details;
 
@@ -64,6 +59,7 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
     }
 
     public interface View {
+
         void setAddButtonEnabled(boolean enabled);
 
         Observable<String> contentTextChanged();

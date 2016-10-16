@@ -11,15 +11,16 @@ abstract class AbstractPresenter<T> {
 
     protected abstract void onTakeView();
 
-    protected abstract void onDropView();
+    protected void onDropView() {
+    }
 
-    void takeView(T view) {
+    public void takeView(T view) {
         compositeSubscription = new CompositeSubscription();
         this.view = view;
         onTakeView();
     }
 
-    void dropView(T view) {
+    public void dropView(T view) {
         compositeSubscription.unsubscribe();
         compositeSubscription = null;
         if (this.view == view) {
