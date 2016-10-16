@@ -28,7 +28,7 @@ public class ItemsListViewModel extends AbstractViewModel {
         super.onStart();
         getItemsSubscription = itemsRepository.getItems()
                 .map(ItemModelsMapper::map)
-                .subscribe(itemModelsSubject);
+                .subscribe(itemModelsSubject::onNext);
     }
 
     @Override
@@ -48,5 +48,4 @@ public class ItemsListViewModel extends AbstractViewModel {
     void itemClicked(String itemId) {
         navigator.navigateToItem(itemId);
     }
-
 }
