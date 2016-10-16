@@ -40,21 +40,21 @@ public class ItemModel {
 
         ItemModel itemModel = (ItemModel) o;
 
-        if (mId != null ? !mId.equals(itemModel.mId) : itemModel.mId != null) {
+        if (id != null ? !id.equals(itemModel.id) : itemModel.id != null) {
             return false;
         }
-        if (mContent != null ? !mContent.equals(itemModel.mContent) : itemModel.mContent != null) {
+        if (content != null ? !content.equals(itemModel.content) : itemModel.content != null) {
             return false;
         }
-        return mDetail != null ? mDetail.equals(itemModel.mDetail) : itemModel.mDetail == null;
+        return detail != null ? detail.equals(itemModel.detail) : itemModel.detail == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = mId != null ? mId.hashCode() : 0;
-        result = 31 * result + (mContent != null ? mContent.hashCode() : 0);
-        result = 31 * result + (mDetail != null ? mDetail.hashCode() : 0);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (detail != null ? detail.hashCode() : 0);
         return result;
     }
 }
