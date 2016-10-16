@@ -8,35 +8,35 @@ import rx.Subscription;
 
 public class RmvpItemDetailsPresenter extends AbstractPresenter<RmvpItemDetailsPresenter.View> {
 
-    private ItemsRepository mItemsRepository;
-    private Subscription mGetItemSubscription;
-    private String mItemId;
-    private Scheduler mIoScheduler;
-    private rx.Scheduler mMainScheduler;
+    private ItemsRepository itemsRepository;
+    private Subscription getItemSubscription;
+    private String itemId;
+    private Scheduler ioScheduler;
+    private rx.Scheduler mainScheduler;
 
     public RmvpItemDetailsPresenter(ItemsRepository itemsRepository,
                                     String itemId,
                                     Scheduler ioScheduler,
                                     Scheduler mainScheduler) {
-        mItemsRepository = itemsRepository;
-        mItemId = itemId;
-        mIoScheduler = ioScheduler;
-        mMainScheduler = mainScheduler;
+        this.itemsRepository = itemsRepository;
+        this.itemId = itemId;
+        this.ioScheduler = ioScheduler;
+        this.mainScheduler = mainScheduler;
     }
 
 
     @Override
     public void onTakeView() {
-        mGetItemSubscription = mItemsRepository.getItem(mItemId)
-                .subscribeOn(mIoScheduler)
-                .observeOn(mMainScheduler)
+        getItemSubscription = itemsRepository.getItem(itemId)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .map(ItemModel::from)
-                .subscribe(mView::showItem);
+                .subscribe(view::showItem);
     }
 
     @Override
     public void onDropView() {
-        mGetItemSubscription.unsubscribe();
+        getItemSubscription.unsubscribe();
     }
 
     public interface View {

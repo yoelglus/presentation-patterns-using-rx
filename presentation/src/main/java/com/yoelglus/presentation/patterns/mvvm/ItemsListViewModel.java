@@ -14,49 +14,49 @@ import rx.subjects.PublishSubject;
 
 public class ItemsListViewModel extends AbstractViewModel {
 
-    private ItemsRepository mItemsRepository;
-    private Navigator mNavigator;
-    private PublishSubject<List<ItemModel>> mItemModelsSubject = PublishSubject.create();
-    private Subscription mGetItemsSubscription;
-    private Scheduler mIoScheduler;
-    private Scheduler mMainScheduler;
+    private ItemsRepository itemsRepository;
+    private Navigator navigator;
+    private PublishSubject<List<ItemModel>> itemModelsSubject = PublishSubject.create();
+    private Subscription getItemsSubscription;
+    private Scheduler ioScheduler;
+    private Scheduler mainScheduler;
 
     public ItemsListViewModel(ItemsRepository itemsRepository,
                               Navigator navigator,
                               Scheduler ioScheduler,
                               Scheduler mainScheduler) {
-        mItemsRepository = itemsRepository;
-        mNavigator = navigator;
-        mIoScheduler = ioScheduler;
-        mMainScheduler = mainScheduler;
+        this.itemsRepository = itemsRepository;
+        this.navigator = navigator;
+        this.ioScheduler = ioScheduler;
+        this.mainScheduler = mainScheduler;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mGetItemsSubscription = mItemsRepository.getItems()
-                .subscribeOn(mIoScheduler)
-                .observeOn(mMainScheduler)
+        getItemsSubscription = itemsRepository.getItems()
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .map(ItemModelsMapper::map)
-                .subscribe(mItemModelsSubject);
+                .subscribe(itemModelsSubject);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mGetItemsSubscription.unsubscribe();
+        getItemsSubscription.unsubscribe();
     }
 
     Observable<List<ItemModel>> itemModels() {
-        return mItemModelsSubject.asObservable();
+        return itemModelsSubject.asObservable();
     }
 
     void addItemClicked() {
-        mNavigator.navigateToAddItem();
+        navigator.navigateToAddItem();
     }
 
     void itemClicked(String itemId) {
-        mNavigator.navigateToItem(itemId);
+        navigator.navigateToItem(itemId);
     }
 
 }

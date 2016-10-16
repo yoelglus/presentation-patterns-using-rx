@@ -16,29 +16,29 @@ import rx.Observable;
 
 public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddItemPresenter.View {
 
-    private RmvpAddItemPresenter mPresenter;
-    private View mAddButton;
+    private RmvpAddItemPresenter presenter;
+    private View addButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = Shank.provideSingleton(RmvpAddItemPresenter.class, this);
+        presenter = Shank.provideSingleton(RmvpAddItemPresenter.class, this);
         setContentView(R.layout.activity_add_item);
-        mAddButton = findViewById(R.id.add_button);
-        mPresenter.takeView(this);
+        addButton = findViewById(R.id.add_button);
+        presenter.takeView(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (isFinishing()) {
-            mPresenter.dropView(this);
+            presenter.dropView(this);
         }
     }
 
     @Override
     public void setAddButtonEnabled(boolean enabled) {
-        mAddButton.setEnabled(enabled);
+        addButton.setEnabled(enabled);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddIte
 
     @Override
     public Observable<Void> addButtonClicks() {
-        return RxView.clicks(mAddButton);
+        return RxView.clicks(addButton);
     }
 
     @Override

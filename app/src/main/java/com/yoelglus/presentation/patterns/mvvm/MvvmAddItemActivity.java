@@ -16,37 +16,37 @@ import rx.internal.util.SubscriptionList;
 
 public class MvvmAddItemActivity extends AppCompatActivity {
 
-    private AddItemViewModel mAddItemViewModel;
-    private SubscriptionList mSubscriptionList;
+    private AddItemViewModel addItemViewModel;
+    private SubscriptionList subscriptionList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
-        mAddItemViewModel = Shank.provideNew(AddItemViewModel.class, this);
+        addItemViewModel = Shank.provideNew(AddItemViewModel.class, this);
 
         bindViewModel();
 
-        mAddItemViewModel.onStart();
+        addItemViewModel.onStart();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAddItemViewModel.onStop();
-        mSubscriptionList.unsubscribe();
+        addItemViewModel.onStop();
+        subscriptionList.unsubscribe();
     }
 
     private void bindViewModel() {
-        mSubscriptionList = new SubscriptionList();
-        mSubscriptionList.add(RxView.clicks(findViewById(R.id.add_button))
-                .subscribe(aVoid -> mAddItemViewModel.addItemClicked()));
-        mSubscriptionList.add(RxView.clicks(findViewById(R.id.cancel_button))
-                .subscribe(aVoid -> mAddItemViewModel.cancelClicked()));
-        mSubscriptionList.add(getTextChangeObservable(R.id.content).subscribe(mAddItemViewModel::contentTextChanged));
-        mSubscriptionList.add(getTextChangeObservable(R.id.detail).subscribe(mAddItemViewModel::detailTextChanged));
-        mSubscriptionList.add(mAddItemViewModel.addButtonEnabled()
+        subscriptionList = new SubscriptionList();
+        subscriptionList.add(RxView.clicks(findViewById(R.id.add_button))
+                .subscribe(aVoid -> addItemViewModel.addItemClicked()));
+        subscriptionList.add(RxView.clicks(findViewById(R.id.cancel_button))
+                .subscribe(aVoid -> addItemViewModel.cancelClicked()));
+        subscriptionList.add(getTextChangeObservable(R.id.content).subscribe(addItemViewModel::contentTextChanged));
+        subscriptionList.add(getTextChangeObservable(R.id.detail).subscribe(addItemViewModel::detailTextChanged));
+        subscriptionList.add(addItemViewModel.addButtonEnabled()
                 .subscribe(RxView.enabled(findViewById(R.id.add_button))));
     }
 

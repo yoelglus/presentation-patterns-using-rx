@@ -10,26 +10,26 @@ import com.yoelglus.presentation.patterns.rmvp.RmvpItemDetailFragment;
 
 public class ReactiveMvpAppCompatActivityNavigator implements Navigator {
 
-    private AppCompatActivity mActivity;
+    private AppCompatActivity activity;
 
     public ReactiveMvpAppCompatActivityNavigator(AppCompatActivity activity) {
-        mActivity = activity;
+        this.activity = activity;
     }
 
     @Override
     public void navigateToAddItem() {
-        mActivity.startActivity(new Intent(mActivity, RmvpAddItemActivity.class));
+        activity.startActivity(new Intent(activity, RmvpAddItemActivity.class));
     }
 
     @Override
     public void navigateToItem(String id) {
-        Intent intent = new Intent(mActivity, RmvpItemDetailActivity.class);
+        Intent intent = new Intent(activity, RmvpItemDetailActivity.class);
         intent.putExtra(RmvpItemDetailFragment.ARG_ITEM_ID, id);
-        mActivity.startActivity(intent);
+        activity.startActivity(intent);
     }
 
     @Override
     public void closeCurrentScreen() {
-        mActivity.finish();
+        activity.finish();
     }
 }

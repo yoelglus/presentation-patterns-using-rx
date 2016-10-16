@@ -3,26 +3,26 @@ package com.yoelglus.presentation.patterns.model;
 import com.yoelglus.presentation.patterns.entities.Item;
 
 public class ItemModel {
-    private final String mId;
-    private final String mContent;
-    private final String mDetail;
+    private final String id;
+    private final String content;
+    private final String detail;
 
     private ItemModel(String id, String content, String detail) {
-        mId = id;
-        mContent = content;
-        mDetail = detail;
+        this.id = id;
+        this.content = content;
+        this.detail = detail;
     }
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public String getContent() {
-        return mContent;
+        return content;
     }
 
     public String getDetail() {
-        return mDetail;
+        return detail;
     }
 
     public static ItemModel from(Item item) {

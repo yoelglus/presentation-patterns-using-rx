@@ -31,14 +31,14 @@ import static java.util.Collections.emptyList;
  */
 public class MvvmItemListActivity extends AppCompatActivity {
 
-    private SimpleItemRecyclerViewAdapter mAdapter;
-    private ItemsListViewModel mViewModel;
-    private SubscriptionList mSubscriptionList;
+    private SimpleItemRecyclerViewAdapter adapter;
+    private ItemsListViewModel viewModel;
+    private SubscriptionList subscriptionList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = Shank.provideNew(ItemsListViewModel.class, this);
+        viewModel = Shank.provideNew(ItemsListViewModel.class, this);
 
         setContentView(R.layout.activity_item_list);
 
@@ -49,39 +49,39 @@ public class MvvmItemListActivity extends AppCompatActivity {
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
-        mSubscriptionList = new SubscriptionList();
-        mSubscriptionList.add(RxView.clicks(findViewById(R.id.fab)).subscribe(aVoid -> mViewModel.addItemClicked()));
+        subscriptionList = new SubscriptionList();
+        subscriptionList.add(RxView.clicks(findViewById(R.id.fab)).subscribe(aVoid -> viewModel.addItemClicked()));
 
-        mSubscriptionList.add(mViewModel.itemModels().subscribe(this::showItems));
+        subscriptionList.add(viewModel.itemModels().subscribe(this::showItems));
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mViewModel.onStart();
+        viewModel.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mViewModel.onStop();
+        viewModel.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSubscriptionList.unsubscribe();
+        subscriptionList.unsubscribe();
     }
 
     private void showItems(List<ItemModel> itemModels) {
-        mAdapter.setValues(itemModels);
-        mAdapter.notifyDataSetChanged();
+        adapter.setValues(itemModels);
+        adapter.notifyDataSetChanged();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mAdapter = new SimpleItemRecyclerViewAdapter();
-        recyclerView.setAdapter(mAdapter);
+        adapter = new SimpleItemRecyclerViewAdapter();
+        recyclerView.setAdapter(adapter);
     }
 
     public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
@@ -103,7 +103,7 @@ public class MvvmItemListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
-            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(mViewModel::itemClicked);
+            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(viewModel::itemClicked);
         }
 
         @Override

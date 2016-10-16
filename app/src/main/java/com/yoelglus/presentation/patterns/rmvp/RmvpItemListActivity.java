@@ -32,14 +32,14 @@ import static java.util.Collections.emptyList;
  */
 public class RmvpItemListActivity extends AppCompatActivity implements RmvpItemsListPresenter.View {
 
-    private SimpleItemRecyclerViewAdapter mAdapter;
-    private RmvpItemsListPresenter mPresenter;
-    private PublishSubject<String> mItemClicks = PublishSubject.create();
+    private SimpleItemRecyclerViewAdapter adapter;
+    private RmvpItemsListPresenter presenter;
+    private PublishSubject<String> itemClicks = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = Shank.provideNew(RmvpItemsListPresenter.class, this);
+        presenter = Shank.provideNew(RmvpItemsListPresenter.class, this);
 
         setContentView(R.layout.activity_item_list);
 
@@ -56,19 +56,19 @@ public class RmvpItemListActivity extends AppCompatActivity implements RmvpItems
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.takeView(this);
+        presenter.takeView(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.dropView(this);
+        presenter.dropView(this);
     }
 
     @Override
     public void showItems(List<ItemModel> itemModels) {
-        mAdapter.setValues(itemModels);
-        mAdapter.notifyDataSetChanged();
+        adapter.setValues(itemModels);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -78,12 +78,12 @@ public class RmvpItemListActivity extends AppCompatActivity implements RmvpItems
 
     @Override
     public Observable<String> itemClicks() {
-        return mItemClicks.asObservable();
+        return itemClicks.asObservable();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mAdapter = new SimpleItemRecyclerViewAdapter();
-        recyclerView.setAdapter(mAdapter);
+        adapter = new SimpleItemRecyclerViewAdapter();
+        recyclerView.setAdapter(adapter);
     }
 
     public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
@@ -106,7 +106,7 @@ public class RmvpItemListActivity extends AppCompatActivity implements RmvpItems
             holder.mIdView.setText(mValues.get(position).getId());
             holder.mContentView.setText(mValues.get(position).getContent());
 
-            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(mItemClicks);
+            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(itemClicks);
         }
 
         @Override
