@@ -4,7 +4,6 @@ import com.yoelglus.presentation.patterns.data.ItemsRepository;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
 
 import rx.Observable;
-import rx.Scheduler;
 import rx.Subscription;
 import rx.subjects.PublishSubject;
 
@@ -16,17 +15,11 @@ public class AddItemViewModel extends AbstractViewModel {
     private String detailText = "";
     private ItemsRepository itemsRepository;
     private Navigator navigator;
-    private Scheduler ioScheduler;
-    private Scheduler mainScheduler;
 
     public AddItemViewModel(ItemsRepository itemsRepository,
-                            Navigator navigator,
-                            Scheduler ioScheduler,
-                            Scheduler mainScheduler) {
+            Navigator navigator) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
-        this.ioScheduler = ioScheduler;
-        this.mainScheduler = mainScheduler;
     }
 
     @Override
@@ -60,8 +53,6 @@ public class AddItemViewModel extends AbstractViewModel {
 
     void addItemClicked() {
         addItemSubscription = itemsRepository.addItem(contentText, detailText)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
                 .subscribe(s -> navigator.closeCurrentScreen());
     }
 

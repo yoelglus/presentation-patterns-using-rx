@@ -5,21 +5,15 @@ import com.yoelglus.presentation.patterns.data.ItemsRepository;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
 
 import rx.Observable;
-import rx.Scheduler;
 
 public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter.View> {
 
     private ItemsRepository itemsRepository;
     private Navigator navigator;
-    private Scheduler ioScheduler;
-    private Scheduler mainScheduler;
 
-    public RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator, Scheduler ioScheduler,
-            Scheduler mainScheduler) {
+    public RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
-        this.ioScheduler = ioScheduler;
-        this.mainScheduler = mainScheduler;
     }
 
     @Override
@@ -38,8 +32,6 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
 
     private void addItem(ItemToAdd itemToAdd) {
         itemsRepository.addItem(itemToAdd.content, itemToAdd.details)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
                 .subscribe(s -> navigator.closeCurrentScreen());
     }
 

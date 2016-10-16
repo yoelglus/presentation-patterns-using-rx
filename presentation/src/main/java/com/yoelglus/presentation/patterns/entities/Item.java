@@ -1,6 +1,7 @@
 package com.yoelglus.presentation.patterns.entities;
 
 public class Item {
+
     private String id;
     private String content;
     private String detail;

@@ -6,7 +6,6 @@ import com.yoelglus.presentation.patterns.navigator.Navigator;
 import org.junit.Before;
 import org.junit.Test;
 
-import rx.Scheduler;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -15,7 +14,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static rx.schedulers.Schedulers.immediate;
 
 public class RmvpAddItemPresenterTest {
 
@@ -23,8 +21,7 @@ public class RmvpAddItemPresenterTest {
     private Navigator navigator = mock(Navigator.class);
     private RmvpAddItemPresenter.View view = mock(RmvpAddItemPresenter.View.class);
 
-    private Scheduler scheduler = immediate();
-    private RmvpAddItemPresenter presenter = new RmvpAddItemPresenter(repository, navigator, scheduler, scheduler);
+    private RmvpAddItemPresenter presenter = new RmvpAddItemPresenter(repository, navigator);
     private PublishSubject<String> contentSubject = PublishSubject.create();
     private PublishSubject<String> detailsSubject = PublishSubject.create();
     private PublishSubject<Void> addButtonSubject = PublishSubject.create();

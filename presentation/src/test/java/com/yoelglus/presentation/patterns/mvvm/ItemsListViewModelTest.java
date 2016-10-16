@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import rx.Scheduler;
 import rx.observers.TestSubscriber;
 
 import static java.util.Collections.singletonList;
@@ -18,7 +17,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static rx.Observable.just;
-import static rx.schedulers.Schedulers.immediate;
 
 public class ItemsListViewModelTest {
 
@@ -26,14 +24,10 @@ public class ItemsListViewModelTest {
     private static final String DETAIL_TEXT = "detail";
     private static final String ITEM_ID = "123";
 
-    private Scheduler ioScheduler = immediate();
-    private Scheduler mainScheduler = immediate();
-
     private ItemsRepository itemsRepository = mock(ItemsRepository.class);
     private Navigator navigator = mock(Navigator.class);
 
-    private ItemsListViewModel itemsListViewModel =
-            new ItemsListViewModel(itemsRepository, navigator, ioScheduler, mainScheduler);
+    private ItemsListViewModel itemsListViewModel = new ItemsListViewModel(itemsRepository, navigator);
     private Item item = new Item(ITEM_ID, CONTENT_TEXT, DETAIL_TEXT);
     private List<Item> items = singletonList(item);
 

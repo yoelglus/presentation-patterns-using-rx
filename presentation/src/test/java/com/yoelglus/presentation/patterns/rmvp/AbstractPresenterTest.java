@@ -11,7 +11,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class AbstractPresenterTest {
+
     static class Presenter extends AbstractPresenter<Presenter.View> {
+
         @Override
         protected void onTakeView() {
             unsubscribeOnViewDropped(view.events().subscribe(v -> view.action()));
@@ -22,7 +24,9 @@ public class AbstractPresenterTest {
         }
 
         interface View {
+
             Observable<Void> events();
+
             void action();
         }
     }

@@ -9,17 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import rx.observers.TestSubscriber;
-import rx.schedulers.TestScheduler;
+import rx.subjects.PublishSubject;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static rx.Observable.just;
 import static rx.observers.TestSubscriber.create;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,24 +25,21 @@ public class AddItemViewModelTest {
     private static final String DETAIL_TEXT = "detail";
     private static final String NEW_ITEM_ID = "123";
     private AddItemViewModel addItemViewModel;
+    private PublishSubject<String> itemSubject = PublishSubject.create();
 
     @Mock
     private Navigator navigator;
     @Mock
     private ItemsRepository itemsRepository;
 
-    private AtomicBoolean addItemTriggered = new AtomicBoolean(false);
-
-    private TestScheduler ioScheduler = new TestScheduler();
-    private TestScheduler mainScheduler = new TestScheduler();
     private TestSubscriber<Boolean> addButtonEnabledSubscriber;
 
     @Before
     public void setUp() throws Exception {
         when(itemsRepository.addItem(CONTENT_TEXT,
-                DETAIL_TEXT)).thenReturn(just(NEW_ITEM_ID).doOnNext(s -> addItemTriggered.set(true)));
+                DETAIL_TEXT)).thenReturn(itemSubject);
 
-        addItemViewModel = new AddItemViewModel(itemsRepository, navigator, ioScheduler, mainScheduler);
+        addItemViewModel = new AddItemViewModel(itemsRepository, navigator);
         addButtonEnabledSubscriber = create();
         addItemViewModel.addButtonEnabled().subscribe(addButtonEnabledSubscriber);
         addItemViewModel.onStart();
@@ -95,24 +87,10 @@ public class AddItemViewModelTest {
     }
 
     @Test
-    public void should_subscribe_repository_on_io_scheduler() throws Exception {
+    public void should_close_current_screen_when_item_added() throws Exception {
         givenAddItem();
 
-        assertFalse(addItemTriggered.get());
-
-        ioScheduler.triggerActions();
-
-        assertTrue(addItemTriggered.get());
-    }
-
-    @Test
-    public void should_observe_repository_on_main_thread() throws Exception {
-        givenAddItem();
-
-        verify(navigator, never()).closeCurrentScreen();
-        ioScheduler.triggerActions();
-        verify(navigator, never()).closeCurrentScreen();
-        mainScheduler.triggerActions();
+        itemSubject.onNext(NEW_ITEM_ID);
 
         verify(navigator).closeCurrentScreen();
     }
@@ -120,9 +98,9 @@ public class AddItemViewModelTest {
     @Test
     public void should_unsubscribe_onStop() throws Exception {
         givenAddItem();
+
         addItemViewModel.onStop();
-        ioScheduler.triggerActions();
-        mainScheduler.triggerActions();
+        itemSubject.onNext(NEW_ITEM_ID);
 
         verify(navigator, never()).closeCurrentScreen();
     }

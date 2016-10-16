@@ -3,6 +3,7 @@ package com.yoelglus.presentation.patterns.model;
 import com.yoelglus.presentation.patterns.entities.Item;
 
 public class ItemModel {
+
     private final String id;
     private final String content;
     private final String detail;

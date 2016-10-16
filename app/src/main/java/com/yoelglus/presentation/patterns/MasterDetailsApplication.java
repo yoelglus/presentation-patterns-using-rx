@@ -1,25 +1,21 @@
 package com.yoelglus.presentation.patterns;
 
-import android.app.Application;
-import android.support.v7.app.AppCompatActivity;
-
 import com.memoizrlabs.Shank;
 import com.memoizrlabs.functions.Func0;
 import com.memoizrlabs.functions.Func1;
 import com.yoelglus.presentation.patterns.data.ItemsRepository;
+import com.yoelglus.presentation.patterns.mvvm.AddItemViewModel;
+import com.yoelglus.presentation.patterns.mvvm.ItemDetailViewModel;
+import com.yoelglus.presentation.patterns.mvvm.ItemsListViewModel;
 import com.yoelglus.presentation.patterns.navigator.MvvmAppCompatActivityNavigator;
 import com.yoelglus.presentation.patterns.navigator.Navigator;
 import com.yoelglus.presentation.patterns.navigator.ReactiveMvpAppCompatActivityNavigator;
 import com.yoelglus.presentation.patterns.rmvp.RmvpAddItemPresenter;
 import com.yoelglus.presentation.patterns.rmvp.RmvpItemDetailsPresenter;
 import com.yoelglus.presentation.patterns.rmvp.RmvpItemsListPresenter;
-import com.yoelglus.presentation.patterns.mvvm.AddItemViewModel;
-import com.yoelglus.presentation.patterns.mvvm.ItemDetailViewModel;
-import com.yoelglus.presentation.patterns.mvvm.ItemsListViewModel;
 
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import android.app.Application;
+import android.support.v7.app.AppCompatActivity;
 
 public class MasterDetailsApplication extends Application {
 
@@ -28,8 +24,6 @@ public class MasterDetailsApplication extends Application {
         super.onCreate();
 
         Shank.registerFactory(ItemsRepository.class, (Func0<ItemsRepository>) ItemsRepository::new);
-        Shank.registerNamedFactory(Scheduler.class, "io", (Func0<Scheduler>) Schedulers::io);
-        Shank.registerNamedFactory(Scheduler.class, "main", (Func0<Scheduler>) AndroidSchedulers::mainThread);
 
         Shank.registerNamedFactory(Navigator.class, "rmvp", new Func1<AppCompatActivity, Navigator>() {
             @Override
@@ -51,9 +45,8 @@ public class MasterDetailsApplication extends Application {
             @Override
             public RmvpItemsListPresenter call(AppCompatActivity activity) {
                 return new RmvpItemsListPresenter(Shank.provideNew(ItemsRepository.class),
-                        Shank.named("rmvp").provideNew(Navigator.class, activity),
-                        Shank.named("io").provideSingleton(Scheduler.class),
-                        Shank.named("main").provideSingleton(Scheduler.class));
+                        Shank.named("rmvp").provideNew(Navigator.class, activity)
+                );
             }
         });
 
@@ -61,9 +54,8 @@ public class MasterDetailsApplication extends Application {
             @Override
             public RmvpItemDetailsPresenter call(String id) {
                 return new RmvpItemDetailsPresenter(Shank.provideNew(ItemsRepository.class),
-                        id,
-                        Shank.named("io").provideSingleton(Scheduler.class),
-                        Shank.named("main").provideSingleton(Scheduler.class));
+                        id
+                );
             }
         });
 
@@ -71,9 +63,8 @@ public class MasterDetailsApplication extends Application {
             @Override
             public RmvpAddItemPresenter call(AppCompatActivity activity) {
                 return new RmvpAddItemPresenter(Shank.provideNew(ItemsRepository.class),
-                        Shank.named("rmvp").provideNew(Navigator.class, activity),
-                        Shank.named("io").provideSingleton(Scheduler.class),
-                        Shank.named("main").provideSingleton(Scheduler.class));
+                        Shank.named("rmvp").provideNew(Navigator.class, activity)
+                );
             }
         });
 
@@ -83,9 +74,8 @@ public class MasterDetailsApplication extends Application {
             @Override
             public ItemsListViewModel call(AppCompatActivity activity) {
                 return new ItemsListViewModel(Shank.provideNew(ItemsRepository.class),
-                        Shank.named("mvvm").provideNew(Navigator.class, activity),
-                        Shank.named("io").provideSingleton(Scheduler.class),
-                        Shank.named("main").provideSingleton(Scheduler.class));
+                        Shank.named("mvvm").provideNew(Navigator.class, activity)
+                );
             }
         });
 
@@ -93,9 +83,8 @@ public class MasterDetailsApplication extends Application {
             @Override
             public ItemDetailViewModel call(String id) {
                 return new ItemDetailViewModel(Shank.provideNew(ItemsRepository.class),
-                        id,
-                        Shank.named("io").provideSingleton(Scheduler.class),
-                        Shank.named("main").provideSingleton(Scheduler.class));
+                        id
+                );
             }
         });
 
@@ -103,9 +92,8 @@ public class MasterDetailsApplication extends Application {
             @Override
             public AddItemViewModel call(AppCompatActivity activity) {
                 return new AddItemViewModel(Shank.provideNew(ItemsRepository.class),
-                        Shank.named("mvvm").provideNew(Navigator.class, activity),
-                        Shank.named("io").provideSingleton(Scheduler.class),
-                        Shank.named("main").provideSingleton(Scheduler.class));
+                        Shank.named("mvvm").provideNew(Navigator.class, activity)
+                );
             }
         });
 

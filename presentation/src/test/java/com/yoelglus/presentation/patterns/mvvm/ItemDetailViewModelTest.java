@@ -10,9 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import rx.Scheduler;
 import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -27,10 +25,7 @@ public class ItemDetailViewModelTest {
 
     private ItemsRepository itemsRepository = Mockito.mock(ItemsRepository.class);
 
-    private Scheduler ioScheduler = Schedulers.immediate();
-    private Scheduler mainScheduler = Schedulers.immediate();
-    private ItemDetailViewModel itemDetailViewModel =
-            new ItemDetailViewModel(itemsRepository, ITEM_ID, ioScheduler, mainScheduler);
+    private ItemDetailViewModel itemDetailViewModel = new ItemDetailViewModel(itemsRepository, ITEM_ID);
 
     @Before
     public void setUp() {
