@@ -1,22 +1,35 @@
 package com.yoelglus.presentation.patterns.rmvp;
 
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
 abstract class AbstractPresenter<T> {
 
     T view;
 
-    public abstract void onTakeView();
+    private CompositeSubscription compositeSubscription;
 
-    public abstract void onDropView();
+    protected abstract void onTakeView();
 
-    void takeView(T view) {
+    protected void onDropView() {
+    }
+
+    public void takeView(T view) {
+        compositeSubscription = new CompositeSubscription();
         this.view = view;
         onTakeView();
     }
 
-    void dropView(T view) {
+    public void dropView(T view) {
+        compositeSubscription.unsubscribe();
+        compositeSubscription = null;
         if (this.view == view) {
             this.view = null;
             onDropView();
         }
+    }
+
+    protected void unsubscribeOnViewDropped(Subscription subscription) {
+        compositeSubscription.add(subscription);
     }
 }
