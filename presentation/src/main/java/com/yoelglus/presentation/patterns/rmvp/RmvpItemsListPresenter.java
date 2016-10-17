@@ -10,13 +10,13 @@ import java.util.List;
 import rx.Observable;
 import rx.internal.util.SubscriptionList;
 
-public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPresenter.View> {
+class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPresenter.View> {
 
     private ItemsRepository itemsRepository;
     private Navigator navigator;
     private SubscriptionList subscriptionList;
 
-    public RmvpItemsListPresenter(ItemsRepository itemsRepository, Navigator navigator) {
+    RmvpItemsListPresenter(ItemsRepository itemsRepository, Navigator navigator) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
     }
@@ -26,11 +26,7 @@ public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPrese
         subscriptionList = new SubscriptionList();
         subscriptionList.add(view.addItemClicks().subscribe(aVoid -> navigator.navigateToAddItem()));
 
-        subscriptionList.add(view.itemClicks().subscribe(navigator::navigateToItem));
-
-        subscriptionList.add(itemsRepository.getItems()
-                .map(ItemModelsMapper::map)
-                .subscribe(view::showItems));
+        subscriptionList.add(itemsRepository.getItems().map(ItemModelsMapper::map).subscribe(view::showItems));
     }
 
     @Override
@@ -44,7 +40,5 @@ public class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPrese
         void showItems(List<ItemModel> itemModels);
 
         Observable<Void> addItemClicks();
-
-        Observable<String> itemClicks();
     }
 }

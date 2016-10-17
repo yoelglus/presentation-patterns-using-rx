@@ -52,11 +52,4 @@ public class ItemsListViewModelTest {
 
         verify(navigator).navigateToAddItem();
     }
-
-    @Test
-    public void should_navigateToItem() {
-        itemsListViewModel.itemClicked("id");
-
-        verify(navigator).navigateToItem("id");
-    }
 }

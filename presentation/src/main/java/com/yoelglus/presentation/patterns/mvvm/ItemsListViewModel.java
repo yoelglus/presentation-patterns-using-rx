@@ -11,14 +11,14 @@ import rx.Observable;
 import rx.Subscription;
 import rx.subjects.PublishSubject;
 
-public class ItemsListViewModel extends AbstractViewModel {
+class ItemsListViewModel extends AbstractViewModel {
 
     private ItemsRepository itemsRepository;
     private Navigator navigator;
     private PublishSubject<List<ItemModel>> itemModelsSubject = PublishSubject.create();
     private Subscription getItemsSubscription;
 
-    public ItemsListViewModel(ItemsRepository itemsRepository, Navigator navigator) {
+    ItemsListViewModel(ItemsRepository itemsRepository, Navigator navigator) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
     }
@@ -45,7 +45,4 @@ public class ItemsListViewModel extends AbstractViewModel {
         navigator.navigateToAddItem();
     }
 
-    void itemClicked(String itemId) {
-        navigator.navigateToItem(itemId);
-    }
 }

@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import com.yoelglus.presentation.patterns.mvvm.MvvmAddItemActivity;
-import com.yoelglus.presentation.patterns.mvvm.MvvmItemDetailActivity;
-import com.yoelglus.presentation.patterns.mvvm.MvvmItemDetailFragment;
 
 
 public class MvvmAppCompatActivityNavigator implements Navigator {
@@ -19,13 +17,6 @@ public class MvvmAppCompatActivityNavigator implements Navigator {
     @Override
     public void navigateToAddItem() {
         activity.startActivity(new Intent(activity, MvvmAddItemActivity.class));
-    }
-
-    @Override
-    public void navigateToItem(String id) {
-        Intent intent = new Intent(activity, MvvmItemDetailActivity.class);
-        intent.putExtra(MvvmItemDetailFragment.ARG_ITEM_ID, id);
-        activity.startActivity(intent);
     }
 
     @Override

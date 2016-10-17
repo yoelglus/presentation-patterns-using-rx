@@ -17,9 +17,6 @@ public class RmvpModule implements ShankModule {
                 new RmvpItemsListPresenter(getItemRepository(),
                         provideNew(RmvpAppCompatActivityNavigator.class, activity)));
 
-        registerFactory(RmvpItemDetailsPresenter.class, (String id) ->
-                new RmvpItemDetailsPresenter(getItemRepository(), id));
-
         registerFactory(RmvpAddItemPresenter.class, (AppCompatActivity activity) ->
                 new RmvpAddItemPresenter(getItemRepository(),
                         provideNew(RmvpAppCompatActivityNavigator.class, activity)));

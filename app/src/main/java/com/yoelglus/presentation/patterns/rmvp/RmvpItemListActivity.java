@@ -18,23 +18,13 @@ import com.yoelglus.presentation.patterns.model.ItemModel;
 import java.util.List;
 
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 import static java.util.Collections.emptyList;
 
-/**
- * An activity representing a list of Items. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link RmvpItemDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
 public class RmvpItemListActivity extends AppCompatActivity implements RmvpItemsListPresenter.View {
 
     private SimpleItemRecyclerViewAdapter adapter;
     private RmvpItemsListPresenter presenter;
-    private PublishSubject<String> itemClicks = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +66,6 @@ public class RmvpItemListActivity extends AppCompatActivity implements RmvpItems
         return RxView.clicks(findViewById(R.id.fab));
     }
 
-    @Override
-    public Observable<String> itemClicks() {
-        return itemClicks.asObservable();
-    }
-
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         adapter = new SimpleItemRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
@@ -102,11 +87,9 @@ public class RmvpItemListActivity extends AppCompatActivity implements RmvpItems
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).getId());
-            holder.mContentView.setText(mValues.get(position).getContent());
-
-            RxView.clicks(holder.mView).map(aVoid -> holder.mItem.getId()).subscribe(itemClicks);
+            ItemModel itemModel = mValues.get(position);
+            holder.mIdView.setText(itemModel.getId());
+            holder.mContentView.setText(itemModel.getContent());
         }
 
         @Override
@@ -115,14 +98,11 @@ public class RmvpItemListActivity extends AppCompatActivity implements RmvpItems
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            private final View mView;
             private final TextView mIdView;
             private final TextView mContentView;
-            private ItemModel mItem;
 
             ViewHolder(View view) {
                 super(view);
-                mView = view;
                 mIdView = (TextView) view.findViewById(R.id.id);
                 mContentView = (TextView) view.findViewById(R.id.content);
             }

@@ -17,8 +17,6 @@ public class MvvmModule implements ShankModule {
                 new ItemsListViewModel(getItemRepository(),
                         provideNew(MvvmAppCompatActivityNavigator.class, activity)));
 
-        registerFactory(ItemDetailViewModel.class, (String id) -> new ItemDetailViewModel(getItemRepository(), id));
-
         registerFactory(AddItemViewModel.class, (AppCompatActivity activity) ->
                 new AddItemViewModel(getItemRepository(), provideNew(MvvmAppCompatActivityNavigator.class, activity)));
     }

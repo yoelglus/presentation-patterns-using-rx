@@ -3,9 +3,7 @@ package com.yoelglus.presentation.patterns.data;
 import com.yoelglus.presentation.patterns.entities.Item;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import rx.Observable;
 
@@ -14,15 +12,10 @@ import static rx.Observable.just;
 public class ItemsRepository {
 
     private static final List<Item> ITEMS = new ArrayList<>();
-    private static final Map<String, Item> ITEM_MAP = new HashMap<>();
     private static final int COUNT = 25;
 
     public Observable<List<Item>> getItems() {
         return just(ITEMS);
-    }
-
-    public Observable<Item> getItem(String id) {
-        return just(ITEM_MAP.get(id));
     }
 
     public Observable<String> addItem(String content, String detail) {
@@ -33,7 +26,6 @@ public class ItemsRepository {
 
     private static void addItem(Item item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.getId(), item);
     }
 
     private static Item createDummyItem(int position) {

@@ -14,13 +14,13 @@ abstract class AbstractPresenter<T> {
     protected void onDropView() {
     }
 
-    public void takeView(T view) {
+    void takeView(T view) {
         compositeSubscription = new CompositeSubscription();
         this.view = view;
         onTakeView();
     }
 
-    public void dropView(T view) {
+    void dropView(T view) {
         compositeSubscription.unsubscribe();
         compositeSubscription = null;
         if (this.view == view) {
@@ -29,7 +29,7 @@ abstract class AbstractPresenter<T> {
         }
     }
 
-    protected void unsubscribeOnViewDropped(Subscription subscription) {
+    void unsubscribeOnViewDropped(Subscription subscription) {
         compositeSubscription.add(subscription);
     }
 }

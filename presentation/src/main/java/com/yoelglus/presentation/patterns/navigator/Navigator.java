@@ -4,7 +4,5 @@ public interface Navigator {
 
     void navigateToAddItem();
 
-    void navigateToItem(String id);
-
     void closeCurrentScreen();
 }

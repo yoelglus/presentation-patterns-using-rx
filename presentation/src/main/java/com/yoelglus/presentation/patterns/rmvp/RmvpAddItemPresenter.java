@@ -6,14 +6,18 @@ import com.yoelglus.presentation.patterns.navigator.Navigator;
 
 import rx.Observable;
 
-public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter.View> {
+class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter.View> {
 
     private ItemsRepository itemsRepository;
     private Navigator navigator;
 
-    public RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator) {
+    RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
+    }
+
+    private void addItem(ItemToAdd itemToAdd) {
+        itemsRepository.addItem(itemToAdd.content, itemToAdd.details).subscribe(s -> navigator.closeCurrentScreen());
     }
 
     @Override
@@ -28,11 +32,6 @@ public class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter
                 .subscribe(this::addItem));
 
         unsubscribeOnViewDropped(view.cancelButtonClicks().subscribe(aVoid -> navigator.closeCurrentScreen()));
-    }
-
-    private void addItem(ItemToAdd itemToAdd) {
-        itemsRepository.addItem(itemToAdd.content, itemToAdd.details)
-                .subscribe(s -> navigator.closeCurrentScreen());
     }
 
     private static class ItemToAdd {

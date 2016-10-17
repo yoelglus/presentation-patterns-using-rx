@@ -7,7 +7,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.subjects.PublishSubject;
 
-public class AddItemViewModel extends AbstractViewModel {
+class AddItemViewModel extends AbstractViewModel {
 
     private PublishSubject<Boolean> addButtonEnabledSubject = PublishSubject.create();
     private String contentText = "";
@@ -16,8 +16,7 @@ public class AddItemViewModel extends AbstractViewModel {
     private ItemsRepository itemsRepository;
     private Navigator navigator;
 
-    public AddItemViewModel(ItemsRepository itemsRepository,
-            Navigator navigator) {
+    AddItemViewModel(ItemsRepository itemsRepository, Navigator navigator) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
     }
