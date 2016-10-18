@@ -28,7 +28,7 @@ class ItemsListViewModel extends AbstractViewModel {
         super.onStart();
         getItemsSubscription = itemsRepository.getItems()
                 .map(ItemModelsMapper::map)
-                .subscribe(itemModelsSubject::onNext);
+                .subscribe(itemModelsSubject);
     }
 
     @Override
