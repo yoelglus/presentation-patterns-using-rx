@@ -5,7 +5,7 @@ import rx.subscriptions.CompositeSubscription;
 
 abstract class AbstractPresenter<T> {
 
-    T view;
+    protected T view;
 
     private CompositeSubscription compositeSubscription;
 

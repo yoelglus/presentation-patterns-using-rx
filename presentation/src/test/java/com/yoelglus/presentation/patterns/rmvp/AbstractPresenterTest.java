@@ -1,7 +1,6 @@
 package com.yoelglus.presentation.patterns.rmvp;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -9,6 +8,7 @@ import rx.subjects.PublishSubject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AbstractPresenterTest {
 
@@ -37,7 +37,7 @@ public class AbstractPresenterTest {
 
     @Test
     public void should_unsubscribe_when_view_is_dropped() {
-        Mockito.when(view.events()).thenReturn(eventSubject);
+        when(view.events()).thenReturn(eventSubject);
         presenter.takeView(view);
 
         triggerEvent();
