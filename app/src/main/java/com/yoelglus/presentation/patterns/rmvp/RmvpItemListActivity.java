@@ -1,8 +1,5 @@
 package com.yoelglus.presentation.patterns.rmvp;
 
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import java.util.List;
 
@@ -33,14 +33,9 @@ public class RmvpItemListActivity extends AppCompatActivity implements ItemsList
 
         setContentView(R.layout.activity_item_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+        setUpToolbar();
 
-
-        View recyclerView = findViewById(R.id.item_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        setupRecyclerView((RecyclerView) findViewById(R.id.item_list));
     }
 
     @Override
@@ -64,6 +59,12 @@ public class RmvpItemListActivity extends AppCompatActivity implements ItemsList
     @Override
     public Observable<Void> addItemClicks() {
         return clicks(findViewById(R.id.fab));
+    }
+
+    private void setUpToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getTitle());
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
