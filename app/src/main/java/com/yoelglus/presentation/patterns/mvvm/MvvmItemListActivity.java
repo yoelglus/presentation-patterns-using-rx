@@ -19,6 +19,7 @@ import java.util.List;
 
 import rx.internal.util.SubscriptionList;
 
+import static com.jakewharton.rxbinding.view.RxView.clicks;
 import static java.util.Collections.emptyList;
 
 public class MvvmItemListActivity extends AppCompatActivity {
@@ -42,8 +43,8 @@ public class MvvmItemListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
 
         subscriptionList = new SubscriptionList();
-        subscriptionList.add(RxView.clicks(findViewById(R.id.fab)).subscribe(aVoid -> viewModel.addItemClicked()));
-
+        subscriptionList.add(clicks(findViewById(R.id.fab))
+                .subscribe(aVoid -> viewModel.addItemClicked()));
         subscriptionList.add(viewModel.itemModels().subscribe(this::showItems));
 
     }
