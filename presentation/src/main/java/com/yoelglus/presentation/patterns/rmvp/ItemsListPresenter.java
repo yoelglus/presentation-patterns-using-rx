@@ -10,13 +10,13 @@ import java.util.List;
 import rx.Observable;
 import rx.internal.util.SubscriptionList;
 
-class RmvpItemsListPresenter extends AbstractPresenter<RmvpItemsListPresenter.View> {
+class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.View> {
 
     private ItemsRepository itemsRepository;
     private Navigator navigator;
     private SubscriptionList subscriptionList;
 
-    RmvpItemsListPresenter(ItemsRepository itemsRepository, Navigator navigator) {
+    ItemsListPresenter(ItemsRepository itemsRepository, Navigator navigator) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
     }

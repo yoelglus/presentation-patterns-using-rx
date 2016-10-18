@@ -13,12 +13,12 @@ public class RmvpModule implements ShankModule {
 
     @Override
     public void registerFactories() {
-        registerFactory(RmvpItemsListPresenter.class, (AppCompatActivity activity) ->
-                new RmvpItemsListPresenter(getItemRepository(),
+        registerFactory(ItemsListPresenter.class, (AppCompatActivity activity) ->
+                new ItemsListPresenter(getItemRepository(),
                         provideNew(RmvpAppCompatActivityNavigator.class, activity)));
 
-        registerFactory(RmvpAddItemPresenter.class, (AppCompatActivity activity) ->
-                new RmvpAddItemPresenter(getItemRepository(),
+        registerFactory(AddItemPresenter.class, (AppCompatActivity activity) ->
+                new AddItemPresenter(getItemRepository(),
                         provideNew(RmvpAppCompatActivityNavigator.class, activity)));
     }
 }

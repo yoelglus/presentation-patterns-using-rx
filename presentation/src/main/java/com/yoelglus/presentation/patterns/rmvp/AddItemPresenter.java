@@ -6,12 +6,12 @@ import com.yoelglus.presentation.patterns.navigator.Navigator;
 
 import rx.Observable;
 
-class RmvpAddItemPresenter extends AbstractPresenter<RmvpAddItemPresenter.View> {
+class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
 
     private ItemsRepository itemsRepository;
     private Navigator navigator;
 
-    RmvpAddItemPresenter(ItemsRepository itemsRepository, Navigator navigator) {
+    AddItemPresenter(ItemsRepository itemsRepository, Navigator navigator) {
         this.itemsRepository = itemsRepository;
         this.navigator = navigator;
     }

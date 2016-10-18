@@ -15,15 +15,15 @@ import rx.Observable;
 import static com.jakewharton.rxbinding.view.RxView.clicks;
 import static com.jakewharton.rxbinding.widget.RxTextView.textChangeEvents;
 
-public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddItemPresenter.View {
+public class RmvpAddItemActivity extends AppCompatActivity implements AddItemPresenter.View {
 
-    private RmvpAddItemPresenter presenter;
+    private AddItemPresenter presenter;
     private View addButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = Shank.provideSingleton(RmvpAddItemPresenter.class, this);
+        presenter = Shank.provideSingleton(AddItemPresenter.class, this);
         setContentView(R.layout.activity_add_item);
         addButton = findViewById(R.id.add_button);
         presenter.takeView(this);

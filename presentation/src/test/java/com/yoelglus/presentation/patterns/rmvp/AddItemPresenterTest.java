@@ -15,13 +15,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class RmvpAddItemPresenterTest {
+public class AddItemPresenterTest {
 
     private ItemsRepository repository = mock(ItemsRepository.class);
     private Navigator navigator = mock(Navigator.class);
-    private RmvpAddItemPresenter.View view = mock(RmvpAddItemPresenter.View.class);
+    private AddItemPresenter.View view = mock(AddItemPresenter.View.class);
 
-    private RmvpAddItemPresenter presenter = new RmvpAddItemPresenter(repository, navigator);
+    private AddItemPresenter presenter = new AddItemPresenter(repository, navigator);
     private PublishSubject<String> contentSubject = PublishSubject.create();
     private PublishSubject<String> detailsSubject = PublishSubject.create();
     private PublishSubject<Void> addButtonSubject = PublishSubject.create();

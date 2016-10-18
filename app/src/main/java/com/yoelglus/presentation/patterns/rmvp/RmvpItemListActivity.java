@@ -21,15 +21,15 @@ import rx.Observable;
 
 import static java.util.Collections.emptyList;
 
-public class RmvpItemListActivity extends AppCompatActivity implements RmvpItemsListPresenter.View {
+public class RmvpItemListActivity extends AppCompatActivity implements ItemsListPresenter.View {
 
     private SimpleItemRecyclerViewAdapter adapter;
-    private RmvpItemsListPresenter presenter;
+    private ItemsListPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = Shank.provideNew(RmvpItemsListPresenter.class, this);
+        presenter = Shank.provideNew(ItemsListPresenter.class, this);
 
         setContentView(R.layout.activity_item_list);
 
