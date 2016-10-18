@@ -1,6 +1,5 @@
 package com.yoelglus.presentation.patterns.rmvp;
 
-import com.memoizrlabs.Shank;
 import com.yoelglus.presentation.patterns.R;
 
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import rx.Observable;
 
 import static com.jakewharton.rxbinding.view.RxView.clicks;
 import static com.jakewharton.rxbinding.widget.RxTextView.textChangeEvents;
+import static com.memoizrlabs.Shank.provideNew;
 
 public class RmvpAddItemActivity extends AppCompatActivity implements AddItemPresenter.View {
 
@@ -23,20 +23,17 @@ public class RmvpAddItemActivity extends AppCompatActivity implements AddItemPre
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = Shank.provideSingleton(AddItemPresenter.class, this);
+        presenter = provideNew(AddItemPresenter.class, this);
         setContentView(R.layout.activity_add_item);
         addButton = findViewById(R.id.add_button);
         presenter.takeView(this);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (isFinishing()) {
-            presenter.dropView(this);
-        }
+    protected void onStop() {
+        super.onStop();
+        presenter.dropView(this);
     }
-
     @Override
     public void setAddButtonEnabled(boolean enabled) {
         addButton.setEnabled(enabled);

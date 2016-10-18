@@ -15,12 +15,12 @@ public class AbstractPresenterTest {
     static class Presenter extends AbstractPresenter<Presenter.View> {
 
         @Override
-        protected void onTakeView() {
+        protected void onTakeView(Presenter.View view) {
             unsubscribeOnViewDropped(view.events().subscribe(v -> view.action()));
         }
 
         @Override
-        protected void onDropView() {
+        protected void onDropView(Presenter.View view) {
         }
 
         interface View {

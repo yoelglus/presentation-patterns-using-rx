@@ -8,13 +8,11 @@ import com.yoelglus.presentation.patterns.navigator.Navigator;
 import java.util.List;
 
 import rx.Observable;
-import rx.internal.util.SubscriptionList;
 
 class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.View> {
 
     private ItemsRepository itemsRepository;
     private Navigator navigator;
-    private SubscriptionList subscriptionList;
 
     ItemsListPresenter(ItemsRepository itemsRepository, Navigator navigator) {
         this.itemsRepository = itemsRepository;
@@ -22,17 +20,10 @@ class ItemsListPresenter extends AbstractPresenter<ItemsListPresenter.View> {
     }
 
     @Override
-    public void onTakeView() {
-        subscriptionList = new SubscriptionList();
-        subscriptionList.add(view.addItemClicks().subscribe(aVoid -> navigator.navigateToAddItem()));
+    public void onTakeView(ItemsListPresenter.View view) {
+        unsubscribeOnViewDropped(view.addItemClicks().subscribe(aVoid -> navigator.navigateToAddItem()));
 
-        subscriptionList.add(itemsRepository.getItems().map(ItemModelsMapper::map).subscribe(view::showItems));
-    }
-
-    @Override
-    public void onDropView() {
-        subscriptionList.unsubscribe();
-        subscriptionList = null;
+        unsubscribeOnViewDropped(itemsRepository.getItems().map(ItemModelsMapper::map).subscribe(view::showItems));
     }
 
     public interface View {

@@ -1,5 +1,8 @@
 package com.yoelglus.presentation.patterns.rmvp;
 
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,15 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import java.util.List;
 
 import rx.Observable;
 
+import static com.jakewharton.rxbinding.view.RxView.clicks;
+import static com.memoizrlabs.Shank.provideNew;
 import static java.util.Collections.emptyList;
 
 public class RmvpItemListActivity extends AppCompatActivity implements ItemsListPresenter.View {
@@ -29,7 +29,7 @@ public class RmvpItemListActivity extends AppCompatActivity implements ItemsList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = Shank.provideNew(ItemsListPresenter.class, this);
+        presenter = provideNew(ItemsListPresenter.class, this);
 
         setContentView(R.layout.activity_item_list);
 
@@ -63,7 +63,7 @@ public class RmvpItemListActivity extends AppCompatActivity implements ItemsList
 
     @Override
     public Observable<Void> addItemClicks() {
-        return RxView.clicks(findViewById(R.id.fab));
+        return clicks(findViewById(R.id.fab));
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {

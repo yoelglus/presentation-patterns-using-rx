@@ -17,11 +17,11 @@ class AddItemPresenter extends AbstractPresenter<AddItemPresenter.View> {
     }
 
     private void addItem(ItemToAdd itemToAdd) {
-        itemsRepository.addItem(itemToAdd.content, itemToAdd.details).subscribe(s -> navigator.closeCurrentScreen());
+        unsubscribeOnViewDropped(itemsRepository.addItem(itemToAdd.content, itemToAdd.details).subscribe(s -> navigator.closeCurrentScreen()));
     }
 
     @Override
-    protected void onTakeView() {
+    protected void onTakeView(AddItemPresenter.View view) {
 
         Observable<ItemToAdd> addEnabled = Observable.combineLatest(view.contentTextChanged(),
                 view.detailTextChanged(),

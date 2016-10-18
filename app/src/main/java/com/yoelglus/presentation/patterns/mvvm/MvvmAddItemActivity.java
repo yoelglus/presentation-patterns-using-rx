@@ -1,18 +1,19 @@
 package com.yoelglus.presentation.patterns.mvvm;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.yoelglus.presentation.patterns.R;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-
 import rx.Observable;
 import rx.internal.util.SubscriptionList;
+
+import static com.memoizrlabs.Shank.provideNew;
 
 public class MvvmAddItemActivity extends AppCompatActivity {
 
@@ -24,7 +25,7 @@ public class MvvmAddItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
-        addItemViewModel = Shank.provideNew(AddItemViewModel.class, this);
+        addItemViewModel = provideNew(AddItemViewModel.class, this);
 
         bindViewModel();
 

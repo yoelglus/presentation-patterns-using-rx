@@ -5,28 +5,22 @@ import rx.subscriptions.CompositeSubscription;
 
 abstract class AbstractPresenter<T> {
 
-    protected T view;
-
     private CompositeSubscription compositeSubscription;
 
-    protected abstract void onTakeView();
+    protected abstract void onTakeView(T view);
 
-    protected void onDropView() {
+    protected void onDropView(T view) {
     }
 
     void takeView(T view) {
         compositeSubscription = new CompositeSubscription();
-        this.view = view;
-        onTakeView();
+        onTakeView(view);
     }
 
     void dropView(T view) {
         compositeSubscription.unsubscribe();
         compositeSubscription = null;
-        if (this.view == view) {
-            this.view = null;
-            onDropView();
-        }
+        onDropView(view);
     }
 
     void unsubscribeOnViewDropped(Subscription subscription) {
