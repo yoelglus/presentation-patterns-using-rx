@@ -1,5 +1,8 @@
 package com.yoelglus.presentation.patterns.rmvp;
 
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,12 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-
 import rx.Observable;
+
+import static com.jakewharton.rxbinding.view.RxView.clicks;
+import static com.jakewharton.rxbinding.widget.RxTextView.textChangeEvents;
 
 public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddItemPresenter.View {
 
@@ -53,17 +54,17 @@ public class RmvpAddItemActivity extends AppCompatActivity implements RmvpAddIte
 
     @Override
     public Observable<Void> addButtonClicks() {
-        return RxView.clicks(addButton);
+        return clicks(addButton);
     }
 
     @Override
     public Observable<Void> cancelButtonClicks() {
-        return RxView.clicks(findViewById(R.id.cancel_button));
+        return clicks(findViewById(R.id.cancel_button));
     }
 
     @NonNull
     private Observable<String> getObservableForTextView(int viewId) {
-        return RxTextView.textChangeEvents((TextView) findViewById(viewId))
+        return textChangeEvents((TextView) findViewById(viewId))
                 .map(textViewTextChangeEvent -> textViewTextChangeEvent.text().toString());
     }
 }

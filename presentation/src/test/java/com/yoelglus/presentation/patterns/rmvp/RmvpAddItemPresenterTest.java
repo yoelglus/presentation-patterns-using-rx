@@ -36,11 +36,11 @@ public class RmvpAddItemPresenterTest {
         when(view.addButtonClicks()).thenReturn(addButtonSubject);
         when(view.cancelButtonClicks()).thenReturn(cancelButtonSubject);
         when(repository.addItem(anyString(), anyString())).thenReturn(addItemSubject);
+        presenter.takeView(view);
     }
 
     @Test
     public void should_show_add_enabled_when_content_and_detail_text_become_not_empty() {
-        presenter.takeView(view);
         verify(view, never()).setAddButtonEnabled(anyBoolean());
 
         detailsSubject.onNext("detail");
@@ -54,8 +54,6 @@ public class RmvpAddItemPresenterTest {
 
     @Test
     public void should_show_add_disabled_when_content_or_detail_text_become_not_empty() {
-        presenter.takeView(view);
-
         detailsSubject.onNext("detail");
         contentSubject.onNext("content");
 
@@ -68,8 +66,6 @@ public class RmvpAddItemPresenterTest {
 
     @Test
     public void should_add_item_to_repository_when_adding_item() {
-        presenter.takeView(view);
-
         detailsSubject.onNext("a detail");
         contentSubject.onNext("some content");
 
@@ -80,8 +76,6 @@ public class RmvpAddItemPresenterTest {
 
     @Test
     public void should_close_current_screen_when_item_has_been_added() {
-        presenter.takeView(view);
-
         detailsSubject.onNext("a detail");
         contentSubject.onNext("some content");
 
@@ -96,8 +90,6 @@ public class RmvpAddItemPresenterTest {
 
     @Test
     public void should_close_current_screen_when_cancel() {
-        presenter.takeView(view);
-
         cancelButtonSubject.onNext(null);
 
         verify(navigator).closeCurrentScreen();

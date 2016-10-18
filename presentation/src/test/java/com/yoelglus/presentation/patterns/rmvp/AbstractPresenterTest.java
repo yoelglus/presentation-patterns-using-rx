@@ -33,11 +33,11 @@ public class AbstractPresenterTest {
 
     private Presenter presenter = new Presenter();
     private Presenter.View view = mock(Presenter.View.class);
-    private PublishSubject<Void> subject = PublishSubject.create();
+    private PublishSubject<Void> eventSubject = PublishSubject.create();
 
     @Test
     public void should_unsubscribe_when_view_is_dropped() {
-        Mockito.when(view.events()).thenReturn(subject);
+        Mockito.when(view.events()).thenReturn(eventSubject);
         presenter.takeView(view);
 
         triggerEvent();
@@ -55,11 +55,11 @@ public class AbstractPresenterTest {
         verifyNumberOfResultingActions(3);
     }
 
-    private void verifyNumberOfResultingActions(int wantedNumberOfInvocations) {
-        verify(view, times(wantedNumberOfInvocations)).action();
+    private void verifyNumberOfResultingActions(int numberOfActions) {
+        verify(view, times(numberOfActions)).action();
     }
 
     private void triggerEvent() {
-        subject.onNext(null);
+        eventSubject.onNext(null);
     }
 }
