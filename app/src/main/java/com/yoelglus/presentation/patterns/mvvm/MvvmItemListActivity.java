@@ -1,10 +1,5 @@
 package com.yoelglus.presentation.patterns.mvvm;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.memoizrlabs.Shank;
-import com.yoelglus.presentation.patterns.R;
-import com.yoelglus.presentation.patterns.model.ItemModel;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.memoizrlabs.Shank;
+import com.yoelglus.presentation.patterns.R;
+import com.yoelglus.presentation.patterns.model.ItemModel;
 
 import java.util.List;
 
@@ -35,18 +34,13 @@ public class MvvmItemListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_item_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
-        View recyclerView = findViewById(R.id.item_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        setUpToolbar();
+
+        setupRecyclerView((RecyclerView) findViewById(R.id.item_list));
 
         subscriptionList = new SubscriptionList();
-        subscriptionList.add(clicks(findViewById(R.id.fab))
-                .subscribe(aVoid -> viewModel.addItemClicked()));
+        subscriptionList.add(clicks(findViewById(R.id.fab)).subscribe(aVoid -> viewModel.addItemClicked()));
         subscriptionList.add(viewModel.itemModels().subscribe(this::showItems));
-
     }
 
     @Override
@@ -65,6 +59,12 @@ public class MvvmItemListActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         subscriptionList.unsubscribe();
+    }
+
+    private void setUpToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getTitle());
     }
 
     private void showItems(List<ItemModel> itemModels) {
