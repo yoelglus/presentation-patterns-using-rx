@@ -72,7 +72,7 @@ public class RmvpItemListActivity extends AppCompatActivity implements ItemsList
         recyclerView.setAdapter(adapter);
     }
 
-    public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    public static class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private List<ItemModel> mValues = emptyList();
 
